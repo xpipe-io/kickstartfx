@@ -1,4 +1,3 @@
-
 plugins {
     id 'org.beryx.jlink' version '3.1.3'
     id("com.netflix.nebula.ospackage") version "12.1.0"
@@ -11,19 +10,6 @@ repositories {
 }
 
 tasks.register('dist', DefaultTask) {}
-
-
-run {
-    enabled = false
-}
-
-distTar {
-    enabled = false
-}
-
-distZip {
-    enabled = false
-}
 
 import org.gradle.crypto.checksum.Checksum
 
@@ -69,10 +55,6 @@ String getArtifactChecksumSha256Hex(String name) {
     return file.get().getAsFile().exists() ? file.get().getAsFile().text : ""
 }
 
-String getArtifactChecksumSha256Base64(String name) {
-    return Base64.getEncoder().encodeToString(HexFormat.of().parseHex(getArtifactChecksumSha256Hex(name)))
-}
-
 clean {
     doFirst {
         // Fix clean failing when file is read-only
@@ -89,7 +71,7 @@ if (true) {
     apply from: 'train.gradle'
     apply from: 'portable.gradle'
     apply from: 'github.gradle'
-    apply from: 'install.gradle'
+    apply from: 'reinstall.gradle'
     apply from: 'i18n.gradle'
 
     if (os.isLinux()) {
@@ -113,6 +95,10 @@ if (true) {
         def checksums = layout.buildDirectory.file("dist/checksums/sha256sums.txt").get().asFile
         sign(checksums)
     }
+}
+
+run {
+    enabled = false
 }
 
 distTar {

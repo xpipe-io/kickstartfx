@@ -34,66 +34,66 @@ public class AppI18nData {
         var translations = new HashMap<String, String>();
         {
             var basePath = AppInstallation.ofCurrent().getLangPath().resolve("strings");
-            AtomicInteger fileCounter = new AtomicInteger();
-            AtomicInteger lineCounter = new AtomicInteger();
-            Files.walkFileTree(basePath, new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                    if (!matchesLocale(file, l)) {
+            if (Files.exists(basePath)) {
+                Files.walkFileTree(basePath, new SimpleFileVisitor<>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                        if (!matchesLocale(file, l)) {
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        if (!file.getFileName().toString().endsWith(".properties")) {
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        try (var in = Files.newInputStream(file)) {
+                            var props = new Properties();
+                            props.load(new InputStreamReader(in, StandardCharsets.UTF_8));
+                            props.forEach((key, value) -> {
+                                translations.put(key.toString(), value.toString());
+                            });
+                        } catch (IOException ex) {
+                            ErrorEventFactory.fromThrowable(ex)
+                                    .omitted(true)
+                                    .build()
+                                    .handle();
+                        }
                         return FileVisitResult.CONTINUE;
                     }
-
-                    if (!file.getFileName().toString().endsWith(".properties")) {
-                        return FileVisitResult.CONTINUE;
-                    }
-
-                    fileCounter.incrementAndGet();
-                    try (var in = Files.newInputStream(file)) {
-                        var props = new Properties();
-                        props.load(new InputStreamReader(in, StandardCharsets.UTF_8));
-                        props.forEach((key, value) -> {
-                            translations.put(key.toString(), value.toString());
-                            lineCounter.incrementAndGet();
-                        });
-                    } catch (IOException ex) {
-                        ErrorEventFactory.fromThrowable(ex)
-                                .omitted(true)
-                                .build()
-                                .handle();
-                    }
-                    return FileVisitResult.CONTINUE;
-                }
-            });
+                });
+            }
         }
 
         var markdownDocumentations = new HashMap<String, String>();
         {
             var basePath = AppInstallation.ofCurrent().getLangPath().resolve("texts");
-            Files.walkFileTree(basePath, new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                    if (!matchesLocale(file, l)) {
+            if (Files.exists(basePath)) {
+                Files.walkFileTree(basePath, new SimpleFileVisitor<>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                        if (!matchesLocale(file, l)) {
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        if (!file.getFileName().toString().endsWith(".md")) {
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        var name = file.getFileName()
+                                .toString()
+                                .substring(0, file.getFileName().toString().lastIndexOf("_"));
+                        try (var in = Files.newInputStream(file)) {
+                            markdownDocumentations.put(name, new String(in.readAllBytes(), StandardCharsets.UTF_8));
+                        } catch (IOException ex) {
+                            ErrorEventFactory.fromThrowable(ex)
+                                    .omitted(true)
+                                    .build()
+                                    .handle();
+                        }
                         return FileVisitResult.CONTINUE;
                     }
-
-                    if (!file.getFileName().toString().endsWith(".md")) {
-                        return FileVisitResult.CONTINUE;
-                    }
-
-                    var name = file.getFileName()
-                            .toString()
-                            .substring(0, file.getFileName().toString().lastIndexOf("_"));
-                    try (var in = Files.newInputStream(file)) {
-                        markdownDocumentations.put(name, new String(in.readAllBytes(), StandardCharsets.UTF_8));
-                    } catch (IOException ex) {
-                        ErrorEventFactory.fromThrowable(ex)
-                                .omitted(true)
-                                .build()
-                                .handle();
-                    }
-                    return FileVisitResult.CONTINUE;
-                }
-            });
+                });
+            }
         }
 
         return new AppI18nData(l, translations, markdownDocumentations);

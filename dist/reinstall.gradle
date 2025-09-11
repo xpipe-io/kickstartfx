@@ -2,7 +2,7 @@ def distDir = "${project.layout.buildDirectory.get()}/dist"
 
 tasks.register('installProduction', Exec) {
     if (os.isWindows()) {
-        commandLine "$projectDir/tools/reinstall_windows.bat", productName, "$distDir/artifacts/$artifactBaseName-installer-windows-${arch}.msi"
+        commandLine "$projectDir/tools/reinstall_windows.bat", productName, file("$distDir/artifacts/$artifactBaseName-installer-windows-${arch}.msi").canonicalPath
     } else if (os.isLinux()) {
         commandLine "$projectDir/tools/reinstall_deb.sh", projectDir.toString(), kebapProductName
         standardInput = System.in
