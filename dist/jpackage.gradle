@@ -76,7 +76,7 @@ jlink {
             resourceDir = file("${project.layout.buildDirectory.get()}/macos_resources")
             appVersion = macVersion
         }
-        vendor = publisher
+        vendor = 'XPipe UG (haftungsbeschränkt)'
         skipInstaller = true
     }
 }

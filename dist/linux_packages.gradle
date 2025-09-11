@@ -3,20 +3,20 @@ def targetDir = "/opt/$pkgName"
 
 ospackage {
     packager = "crschnick"
-    vendor = "${publisher} <hello@xpipe.io>"
+    vendor = "XPipe UG (haftungsbeschränkt) <hello@xpipe.io>"
     packageName = pkgName
     packageGroup = 'default'
     version = project.canonicalVersionString
     release = versionReleaseNumber
-    packageDescription = shortDescription
-    url = website
+    packageDescription = 'Kickstart your JavaFX application'
+    url = 'https://kickstartfx.xpipe.io'
     user = 'root'
     maintainer = 'Christopher Schnick <crschnick@xpipe.io>'
 
     def desktopSource = replaceVariablesInFile("$projectDir/linux_packages/app.desktop", Map.of(
             '__NAME__', productName,
             '__TARGET__', targetDir,
-            '__DESCRIPTION__', shortDescription,
+            '__DESCRIPTION__', 'Kickstart your JavaFX application',
             '__ICON__', pkgName,
             '__EXECUTABLE_NAME__', jpackageExecutableName
     ))

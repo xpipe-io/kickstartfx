@@ -175,6 +175,6 @@ baseDist.dependsOn(licenses)
 baseDist.dependsOn(jpackage)
 dist.dependsOn(baseDist)
 
-if (bundleCds) {
+if (enableAot) {
     baseDist.finalizedBy(trainAot)
 }

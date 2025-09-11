@@ -87,14 +87,14 @@ def getJvmArgs() {
             "-Djdk.virtualThreadScheduler.parallelism=8"
     ]
 
-    // Virtual threads cause crashes on Windows ARM
+    // Virtual threads cause crashes on Windows ARM with Liberica
     if (os.isWindows() && arch == "arm64") {
         jvmRunArgs += [
                 "-D" + propertyName("useVirtualThreads") + "=false"
         ]
     }
 
-    // Disable JDK24 warnings
+    // Disable JDK24+ warnings
     jvmRunArgs += [
             "--enable-native-access=com.sun.jna",
             "--enable-native-access=javafx.graphics",
@@ -128,16 +128,13 @@ def getJvmArgs() {
                    '-XX:MaxHeapFreeRatio=30',
                    '-XX:GCTimeRatio=9',
                    // The default makes GC pauses longer for some reason
+                   // on older Windows systems
                    '-XX:G1HeapRegionSize=4m'
     ]
 
     // Fix platform theme detection on macOS
     if (os.isMacOsX()) {
         jvmRunArgs += ["-Dapple.awt.application.appearance=system"]
-    }
-
-    if (os.isLinux()) {
-        jvmRunArgs.addAll("--add-opens", "java.desktop/sun.awt.X11=" + packageName(null))
     }
 
     return jvmRunArgs
@@ -156,10 +153,10 @@ def getWindowsSchemaCanonicalVersion() {
 
 project.ext {
     // Release pipeline config
-    isFullRelease = System.getenv('RELEASE') != null && Boolean.parseBoolean(System.getenv('RELEASE'))
+    isFullRelease = Boolean.parseBoolean(System.getenv('RELEASE'))
     ci = System.getenv('CI') != null
-    obfuscate = true
-    bundleCds = ci
+    // Create AOT cache for runtime image
+    enableAot = ci
 
     // Names
     productName = 'Kickstart FX'
@@ -167,13 +164,6 @@ project.ext {
     flatcaseProductName = 'kickstartfx'
     snakeProductName = 'kickstart_fx'
     artifactBaseName = "kickstartfx"
-
-    // Info
-    publisher = 'XPipe UG (haftungsbeschränkt)'
-    shortDescription = 'Kickstart your JavaFX application'
-    website = 'https://kickstartfx.xpipe.io'
-    sourceWebsite = 'https://github.com/xpipe-io/kickstartfx'
-    authors = 'Christopher Schnick'
 
     // Version info
     rawVersion = file('version').text.strip()
@@ -201,24 +191,35 @@ project.ext {
     arch = getArchName()
     jvmRunArgs = getJvmArgs()
     useBundledJna = true
-    sentryUrl = "?"
+    // TODO: Set your own Sentry DSN. If you don't want to use Sentry, set this to null
+    // This value is not a secret
+    sentryUrl = "https://546869d72f781857d77d45ec610181bc@o1084459.ingest.us.sentry.io/4509999907405824"
 
     // JPackage config
     jpackageExecutableName = "kickstartfx"
     jpackageMacOsBundleName = groupName + '.kickstartfx'
     jpackageReleaseArguments = jvmRunArgs + [
             "-D" + propertyName("version") + "=" + versionString,
-            "-D" + propertyName("build") + "=$versionString/${new Date().format('yyyy-MM-dd-HH-mm')}\"",
-            "-D" + propertyName("buildId") + "=" + buildId,
-            "-D" + propertyName("sentryUrl") + "=" + sentryUrl,
-            '-Djna.nosys=false',
-            '-Djna.nounpack=true',
-            '-Djna.noclasspath=true'
-    ]
+            "-D" + propertyName("build") + "=$versionString/${new Date().format('yyyy-MM-dd-HH-mm')}",
+            "-D" + propertyName("buildId") + "=" + buildId
+            ]
+
+    if (useBundledJna) {
+        // Make sure that the dynamic library from jlink is loaded without any extraction
+        jpackageReleaseArguments += [
+                '-Djna.nosys=false',
+                '-Djna.nounpack=true',
+                '-Djna.noclasspath=true'
+        ]
+    }
+    if (sentryUrl != null) {
+        jpackageReleaseArguments += "-D" + propertyName("sentryUrl") + "=" + sentryUrl
+    }
     if (os.isMacOsX()) {
         jpackageReleaseArguments += "-Xdock:name=$productName"
     }
     if (isFullRelease) {
+        // Prevent debugger attach in production
         jpackageReleaseArguments += "-XX:+DisableAttachMechanism"
     }
 
@@ -229,9 +230,6 @@ project.ext {
     bundledJdkJavaFx = ModuleFinder.ofSystem().find("javafx.base").isPresent()
     // Define a custom JavaFX SDK location
     // customJavaFxPath = null
-
-    // Other
-    deeplApiKey = findProperty('DEEPL_API_KEY') != null ? findProperty('DEEPL_API_KEY') : ""
 }
 
 group = groupName

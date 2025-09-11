@@ -129,7 +129,7 @@ public class DesktopHelper {
                 LocalExec.readStdoutIfPossible("open", localFile.toString());
             }
             case OsType.Windows windows -> {
-                LocalExec.readStdoutIfPossible("start", "\"\"", localFile.toString());
+                LocalExec.readStdoutIfPossible("cmd", "/c", "start \"\" " + localFile.toString());
             }
         }
     }
