@@ -53,7 +53,6 @@ dependencies {
     implementation "org.slf4j:slf4j-api:2.0.17"
     implementation "org.slf4j:slf4j-jdk-platform-logging:2.0.17"
     implementation 'io.xpipe:modulefs:0.1.7'
-    implementation 'net.synedra:validatorfx:0.4.2'
     implementation 'io.github.mkpaz:atlantafx-base:2.1.0'
     implementation "org.kohsuke:github-api:1.330"
 

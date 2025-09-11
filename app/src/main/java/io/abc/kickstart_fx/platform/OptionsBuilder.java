@@ -17,7 +17,6 @@ import java.util.List;
 
 public class OptionsBuilder {
 
-    private final List<Check> allChecks = new ArrayList<>();
     private final List<OptionsComp.Entry> entries = new ArrayList<>();
     private final List<Property<?>> props = new ArrayList<>();
 
@@ -44,15 +43,7 @@ public class OptionsBuilder {
     }
 
     public OptionsBuilder sub(OptionsBuilder builder) {
-        return sub(builder, null);
-    }
-
-    public OptionsBuilder sub(OptionsBuilder builder, Property<?> prop) {
         props.addAll(builder.props);
-        allChecks.addAll(builder.allChecks);
-        if (prop != null) {
-            props.add(prop);
-        }
         var c = builder.lastCompHeadReference;
         var n = builder.lastNameReference;
         pushComp(builder.buildComp());
@@ -88,12 +79,6 @@ public class OptionsBuilder {
         } else {
             description(AppI18n.observable(key + "Description"));
         }
-        return this;
-    }
-
-    public OptionsBuilder check(Check c) {
-        lastCompHeadReference.apply(s -> c.decorates(s.get()));
-        allChecks.add(c);
         return this;
     }
 

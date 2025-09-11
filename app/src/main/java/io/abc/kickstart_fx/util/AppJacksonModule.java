@@ -19,8 +19,7 @@ public class AppJacksonModule extends SimpleModule {
     @Override
     public void setupModule(SetupContext context) {
         addSerializer(OsType.class, new OsTypeSerializer());
-        addDeserializer(OsType.Local.class, new OsTypeLocalDeserializer());
-        addDeserializer(OsType.Any.class, new OsTypeAnyDeserializer());
+        addDeserializer(OsType.class, new OsTypeDeserializer());
 
         addSerializer(Charset.class, new CharsetSerializer());
         addDeserializer(Charset.class, new CharsetDeserializer());
@@ -42,10 +41,10 @@ public class AppJacksonModule extends SimpleModule {
         }
     }
 
-    public static class OsTypeLocalDeserializer extends JsonDeserializer<OsType.Local> {
+    public static class OsTypeDeserializer extends JsonDeserializer<OsType> {
 
         @Override
-        public OsType.Local deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        public OsType deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
             var stream = Stream.of(OsType.WINDOWS, OsType.LINUX, OsType.MACOS);
             var n = p.getValueAsString();
             return stream.filter(osType ->
@@ -54,20 +53,6 @@ public class AppJacksonModule extends SimpleModule {
                     .orElse(null);
         }
     }
-
-    public static class OsTypeAnyDeserializer extends JsonDeserializer<OsType.Any> {
-
-        @Override
-        public OsType.Any deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-            var stream = Stream.of(OsType.WINDOWS, OsType.LINUX, OsType.BSD, OsType.SOLARIS, OsType.MACOS);
-            var n = p.getValueAsString();
-            return stream.filter(osType ->
-                            osType.getName().equals(n) || osType.getId().equals(n))
-                    .findFirst()
-                    .orElse(null);
-        }
-    }
-
 
     public static class CharsetSerializer extends JsonSerializer<Charset> {
 

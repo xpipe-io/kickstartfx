@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 @EqualsAndHashCode
 public class NativeWinWindowControl {
 
-    public static NativeWinWindowControl MAIN_WINDOW;
     private final WinDef.HWND windowHandle;
 
     public NativeWinWindowControl(Window stage) {

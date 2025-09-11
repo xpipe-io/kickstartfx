@@ -2,15 +2,13 @@ package io.abc.kickstart_fx.util;
 
 import java.util.Locale;
 
-public interface OsType {
+public sealed interface OsType permits OsType.Windows, OsType.Linux, OsType.MacOs {
 
     Windows WINDOWS = new Windows();
     Linux LINUX = new Linux();
     MacOs MACOS = new MacOs();
-    Bsd BSD = new Bsd();
-    Solaris SOLARIS = new Solaris();
 
-    static Local ofLocal() {
+    static OsType ofLocal() {
         String osName = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
         if ((osName.contains("mac")) || (osName.contains("darwin"))) {
             return MACOS;
@@ -25,17 +23,7 @@ public interface OsType {
 
     String getName();
 
-    sealed interface Local extends OsType permits OsType.Windows, OsType.Linux, OsType.MacOs {
-
-        default Any toAny() {
-            return (Any) this;
-        }
-    }
-
-    sealed interface Any extends OsType
-            permits OsType.Windows, OsType.Linux, OsType.MacOs, OsType.Solaris, OsType.Bsd {}
-
-    final class Windows implements OsType, Local, Any {
+    final class Windows implements OsType {
 
         @Override
         public String getName() {
@@ -48,7 +36,7 @@ public interface OsType {
         }
     }
 
-    final class Linux implements OsType, Local, Any {
+    final class Linux implements OsType {
 
         @Override
         public String getName() {
@@ -61,33 +49,7 @@ public interface OsType {
         }
     }
 
-    final class Solaris implements Any {
-
-        @Override
-        public String getId() {
-            return "solaris";
-        }
-
-        @Override
-        public String getName() {
-            return "Solaris";
-        }
-    }
-
-    final class Bsd implements Any {
-
-        @Override
-        public String getId() {
-            return "bsd";
-        }
-
-        @Override
-        public String getName() {
-            return "Bsd";
-        }
-    }
-
-    final class MacOs implements OsType, Local, Any {
+    final class MacOs implements OsType {
 
         @Override
         public String getId() {

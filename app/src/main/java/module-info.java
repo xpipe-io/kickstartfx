@@ -19,6 +19,8 @@ open module io.abc.kickstart_fx {
     exports io.abc.kickstart_fx.comp;
     exports io.abc.kickstart_fx.platform;
 
+    requires static lombok;
+
     requires com.sun.jna;
     requires com.sun.jna.platform;
     requires org.slf4j;
@@ -28,9 +30,7 @@ open module io.abc.kickstart_fx {
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
-    requires net.synedra.validatorfx;
     requires io.xpipe.modulefs;
-    requires static lombok;
     requires org.apache.commons.io;
     requires org.apache.commons.lang3;
     requires javafx.base;
@@ -38,6 +38,7 @@ open module io.abc.kickstart_fx {
     requires javafx.media;
     requires javafx.web;
     requires javafx.graphics;
+    requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
     requires io.sentry;
     requires info.picocli;
@@ -45,8 +46,6 @@ open module io.abc.kickstart_fx {
     requires java.management;
     requires jdk.management;
     requires jdk.management.agent;
-    requires org.kordamp.ikonli.core;
-    requires jdk.httpserver;
     requires java.net.http;
     requires org.jetbrains.annotations;
     requires org.kohsuke.github;
@@ -62,7 +61,7 @@ open module io.abc.kickstart_fx {
     requires org.kordamp.ikonli.feather;
     requires jdk.zipfs;
 
-    // Sampler stuff
+    // AtlantaFX Sampler modules
     requires atlantafx.sampler;
     requires datafaker;
     requires javafx.fxml;

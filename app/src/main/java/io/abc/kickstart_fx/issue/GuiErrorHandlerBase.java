@@ -1,5 +1,6 @@
 package io.abc.kickstart_fx.issue;
 
+import io.abc.kickstart_fx.core.App;
 import io.abc.kickstart_fx.core.AppProperties;
 import io.abc.kickstart_fx.core.window.AppMainWindow;
 import io.abc.kickstart_fx.platform.PlatformInit;
@@ -17,6 +18,10 @@ public class GuiErrorHandlerBase {
             });
 
             if (PlatformInit.isLoadingThread()) {
+                return false;
+            }
+
+            if (App.getApp() == null) {
                 return false;
             }
 
