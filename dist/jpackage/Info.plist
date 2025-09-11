@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>xpiped</string>
+	<string>__EXECUTABLE_NAME__</string>
 	<key>CFBundleIconFile</key>
 	<string>logo</string>
 	<key>CFBundleIconName</key>
@@ -22,18 +22,6 @@
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>io.xpipe.URLScheme</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>xpipe</string>
-				<string>ssh</string>
-			</array>
-		</dict>
-	</array>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.developer-tools</string>
 	<key>LSMinimumSystemVersion</key>

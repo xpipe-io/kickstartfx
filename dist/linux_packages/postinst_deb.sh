@@ -19,7 +19,7 @@ case "$1" in configure)
 
     abort-upgrade|abort-remove|abort-deconfigure)
     xdg-desktop-menu uninstall __TARGET__/__PACKAGE__.desktop || true
-    killall __TARGET__/bin/xpiped --signal SIGTERM 2>/dev/null || true
+    killall __TARGET__/bin/__EXECUTABLE_NAME__ --signal SIGTERM 2>/dev/null || true
     mandb > /dev/null 2>&1 || true
     ;;
 

@@ -1,0 +1,36 @@
+package io.abc.kickstart_fx.core.check;
+
+import io.abc.kickstart_fx.core.AppInstallation;
+import io.abc.kickstart_fx.util.OsType;
+
+import java.util.concurrent.TimeUnit;
+
+public class AppSystemFontCheck {
+
+    public static void init() {
+        if (OsType.ofLocal() != OsType.LINUX) {
+            return;
+        }
+
+        if (hasFonts()) {
+            return;
+        }
+
+        System.setProperty(
+                "prism.fontdir",
+                AppInstallation.ofCurrent().getBundledFontsPath().toString());
+        System.setProperty("prism.embeddedfonts", "true");
+    }
+
+    private static boolean hasFonts() {
+        var fc = new ProcessBuilder("fc-match").redirectError(ProcessBuilder.Redirect.DISCARD);
+        try {
+            var proc = fc.start();
+            var out = new String(proc.getInputStream().readAllBytes());
+            proc.waitFor(1, TimeUnit.SECONDS);
+            return proc.exitValue() == 0 && !out.isBlank();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}

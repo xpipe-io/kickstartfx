@@ -8,7 +8,4 @@ echo "Post installation process started"
 echo "Changing permissions in __PRODUCT__ home"
 cd "${PRODUCT_HOME}"
 chmod -R 755 .
-test -d /usr/local/bin || mkdir /usr/local/bin
-rm -f /usr/local/bin/__PRODUCT_KEBAP__
-ln -s "${PRODUCT_HOME}/Contents/MacOS/xpipe" /usr/local/bin/__PRODUCT_KEBAP__
 echo "Post installation process finished"

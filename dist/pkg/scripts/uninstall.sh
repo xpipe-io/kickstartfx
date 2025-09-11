@@ -12,8 +12,7 @@ fi
 
 echo "Uninstalling __PRODUCT__ ..."
 
-killall -SIGTERM xpipe 2>/dev/null || true
-killall -SIGTERM xpiped 2>/dev/null || true
+killall -SIGTERM __EXECUTABLE_NAME__ 2>/dev/null || true
 
 VERSION="__VERSION__"
 PRODUCT="__PRODUCT__"

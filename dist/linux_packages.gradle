@@ -17,7 +17,8 @@ ospackage {
             '__NAME__', productName,
             '__TARGET__', targetDir,
             '__DESCRIPTION__', shortDescription,
-            '__ICON__', pkgName
+            '__ICON__', pkgName,
+            '__EXECUTABLE_NAME__', jpackageExecutableName
     ))
     from(desktopSource.toString()) {
         into "$targetDir"
@@ -68,8 +69,8 @@ buildDeb {
     requires('hicolor-icon-theme')
 
     arch = project.arch == 'x86_64' ? 'amd64' : 'arm64'
-    preUninstall replaceVariablesInFile("$projectDir/linux_packages/prerm_deb.sh", Map.of('__PACKAGE__', pkgName, '__TARGET__', targetDir))
-    postInstall replaceVariablesInFile("$projectDir/linux_packages/postinst_deb.sh", Map.of('__PACKAGE__', pkgName, '__TARGET__', targetDir))
+    preUninstall replaceVariablesInFile("$projectDir/linux_packages/prerm_deb.sh", Map.of('__PACKAGE__', pkgName, '__TARGET__', targetDir, '__EXECUTABLE_NAME__', jpackageExecutableName))
+    postInstall replaceVariablesInFile("$projectDir/linux_packages/postinst_deb.sh", Map.of('__PACKAGE__', pkgName, '__TARGET__', targetDir, '__EXECUTABLE_NAME__', jpackageExecutableName))
 }
 
 buildRpm {
@@ -105,8 +106,8 @@ buildRpm {
 
     arch = project.arch == 'x86_64' ? X86_64 : AARCH64
     os = LINUX
-    postInstall replaceVariablesInFile("$projectDir/linux_packages/postinst_rpm.sh", Map.of('__PACKAGE__', pkgName, '__TARGET__', targetDir))
-    preUninstall replaceVariablesInFile("$projectDir/linux_packages/prerm_rpm.sh", Map.of('__PACKAGE__', pkgName, '__TARGET__', targetDir))
+    postInstall replaceVariablesInFile("$projectDir/linux_packages/postinst_rpm.sh", Map.of('__PACKAGE__', pkgName, '__TARGET__', targetDir, '__EXECUTABLE_NAME__', jpackageExecutableName))
+    preUninstall replaceVariablesInFile("$projectDir/linux_packages/prerm_rpm.sh", Map.of('__PACKAGE__', pkgName, '__TARGET__', targetDir, '__EXECUTABLE_NAME__', jpackageExecutableName))
 }
 
 tasks.register('copyLinuxPackage', Copy) {

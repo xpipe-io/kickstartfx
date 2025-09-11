@@ -14,7 +14,7 @@ tasks.register('createPkg', Exec) {
         if (System.getenv("MACOS_NOTARIZATION_APPLE_ID") != null) {
             System.out.println(System.getenv("MACOS_NOTARIZATION_APPLE_ID"))
             providers.exec {
-                commandLine "$projectDir/pkg/notarize_pkg.sh", "$projectDir", arch.toString()
+                commandLine "$projectDir/pkg/notarize_pkg.sh", "${project.layout.buildDirectory.get()}/dist/pkg_target/pkg/${artifactBaseName}-installer-macos-${arch}.pkg"
             }.getResult().get()
         }
 
