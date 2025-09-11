@@ -16,7 +16,7 @@ jobs:
       - name: Set up GraalVM
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '24.0.1'
+          java-version: '25-ea'
           distribution: 'graalvm-community'
           cache: gradle
           github-token: ${{ secrets.GITHUB_TOKEN }}

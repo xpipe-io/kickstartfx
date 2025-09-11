@@ -64,40 +64,37 @@ clean {
     }
 }
 
+apply from: 'train.gradle'
 apply from: 'base.gradle'
 apply from: 'jpackage.gradle'
+apply from: 'portable.gradle'
+apply from: 'github.gradle'
+apply from: 'reinstall.gradle'
 
-if (true) {
-    apply from: 'train.gradle'
-    apply from: 'portable.gradle'
-    apply from: 'github.gradle'
-    apply from: 'reinstall.gradle'
+if (file("i18n.gradle").exists()) {
+    apply from: 'i18n.gradle'
+}
 
-    if (file("i18n.gradle").exists()) {
-        apply from: 'i18n.gradle'
-    }
+if (os.isLinux()) {
+    apply from: 'linux_packages.gradle'
+} else if (os.isWindows()) {
+    apply from: 'msi/msi.gradle'
+} else if (os.isMacOsX()) {
+    apply from: 'pkg/pkg.gradle'
+}
 
-    if (os.isLinux()) {
-        apply from: 'linux_packages.gradle'
-    } else if (os.isWindows()) {
-        apply from: 'msi/msi.gradle'
-    } else if (os.isMacOsX()) {
-        apply from: 'pkg/pkg.gradle'
-    }
+signing {
+    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+}
 
-    signing {
-        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-    }
+tasks.register('signArtifacts', Sign) {
+    def dir = layout.buildDirectory.dir("dist/artifacts").get()
+    dir.asFileTree.files.forEach { sign(it) }
+}
 
-    tasks.register('signArtifacts', Sign) {
-        def dir = layout.buildDirectory.dir("dist/artifacts").get()
-        dir.asFileTree.files.forEach { sign(it) }
-    }
-
-    tasks.register('signChecksums', Sign) {
-        def checksums = layout.buildDirectory.file("dist/checksums/sha256sums.txt").get().asFile
-        sign(checksums)
-    }
+tasks.register('signChecksums', Sign) {
+    def checksums = layout.buildDirectory.file("dist/checksums/sha256sums.txt").get().asFile
+    sign(checksums)
 }
 
 run {
