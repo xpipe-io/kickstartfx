@@ -1,0 +1,28 @@
+tasks.register('createPkg', Exec) {
+    dependsOn baseDist
+    commandLine "$projectDir/pkg/build-pkg.sh",
+                versionString,
+                canonicalVersionString,
+                arch.toString(),
+                productName,
+                kebapProductName,
+                groupName + "." + kebapProductName,
+                productName.replaceAll(' ', '%20'),
+                "${artifactBaseName}-installer-macos-${arch}.pkg"
+
+    doLast {
+        if (System.getenv("MACOS_NOTARIZATION_APPLE_ID") != null) {
+            System.out.println(System.getenv("MACOS_NOTARIZATION_APPLE_ID"))
+            providers.exec {
+                commandLine "$projectDir/pkg/notarize_pkg.sh", "$projectDir", arch.toString()
+            }.getResult().get()
+        }
+
+        copy {
+            from "${project.layout.buildDirectory.get()}/dist/pkg_target/pkg/"
+            into "${project.layout.buildDirectory.get()}/dist/artifacts"
+        }
+    }
+}
+
+dist.finalizedBy(createPkg)

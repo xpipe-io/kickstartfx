@@ -1,0 +1,46 @@
+name: Windows Build
+
+on: workflow_call
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install AzureSignTool
+        run: |
+          dotnet tool install --global AzureSignTool
+
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '24.0.1'
+          distribution: 'graalvm-community'
+          cache: gradle
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Execute dist build
+        run: |
+          echo Setting up vars
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          echo Building
+          gradlew.bat clean dist --stacktrace
+        shell: cmd
+        env:
+          AZURE_KEY_VAULT_URI: ${{ secrets.AZURE_KEY_VAULT_URI }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME}}
+          RELEASE: ${{ contains(github.event.head_commit.message, '[release]') == true }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifacts
+          retention-days: 1
+          compression-level: 1
+          path: |
+            dist/build/dist/artifacts/*

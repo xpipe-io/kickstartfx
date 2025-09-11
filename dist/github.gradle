@@ -1,0 +1,25 @@
+def distDir = layout.buildDirectory.get().dir('dist')
+
+tasks.register("prepareGitHubRelease") {
+    doLast {
+        file("$distDir/github-release").mkdirs()
+
+        copy {
+            from "$distDir/artifacts/"
+            into "$distDir/github-release"
+            exclude '*mapping*'
+        }
+
+        copy {
+            from "$distDir/checksums/sha256sums.txt"
+            from "$distDir/checksums/sha256sums.txt.asc"
+            into "$distDir/github-release"
+        }
+
+        copy {
+            from changelogFile
+            into "$distDir/github-release"
+            rename {s -> 'changelog.md'}
+        }
+    }
+}

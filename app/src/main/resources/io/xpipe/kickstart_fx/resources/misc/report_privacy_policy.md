@@ -1,0 +1,1 @@
+TODO: Create your privacy policy for the error reporter

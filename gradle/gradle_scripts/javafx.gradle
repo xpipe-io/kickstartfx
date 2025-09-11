@@ -1,0 +1,41 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
+def currentOS = DefaultNativePlatform.currentOperatingSystem
+def platform = null
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+} else {
+    platform = 'linux'
+}
+
+if (System.getProperty ("os.arch") == 'aarch64') {
+    platform += '-aarch64'
+}
+
+configurations {
+    javafx
+}
+
+if (hasProperty("customJavaFxPath")) {
+    repositories {
+        flatDir {
+            dirs customJavaFxPath
+        }
+    }
+    dependencies {
+        javafx fileTree(dir: customJavaFxPath, include: '*.jar')
+    }
+} else if (!bundledJdkJavaFx) {
+    // Always use maven version for development
+    // The jpackage script uses the jmod sdk files for JavaFX
+    dependencies {
+        javafx "org.openjfx:javafx-base:${devJavafxVersion}:${platform}"
+        javafx "org.openjfx:javafx-controls:${devJavafxVersion}:${platform}"
+        javafx "org.openjfx:javafx-graphics:${devJavafxVersion}:${platform}"
+        javafx "org.openjfx:javafx-media:${devJavafxVersion}:${platform}"
+        javafx "org.openjfx:javafx-web:${devJavafxVersion}:${platform}"
+        javafx "org.openjfx:javafx-fxml:${devJavafxVersion}:${platform}"
+    }
+}

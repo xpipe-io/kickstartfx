@@ -1,0 +1,73 @@
+name: MacOS Build
+
+on: workflow_call
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-13, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '24.0.1'
+          distribution: 'graalvm-community'
+          cache: gradle
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install create-dmg
+        run: brew install create-dmg
+        shell: bash
+
+      - name: Install certificates
+        env:
+          MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE }}
+          MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
+          MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE: ${{ secrets.MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE }}
+          MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_PASSWORD }}
+        run: |
+          # create variables
+          APPLICATION_CERTIFICATE_PATH=$RUNNER_TEMP/application_certificate.p12
+          INSTALLER_CERTIFICATE_PATH=$RUNNER_TEMP/installer_certificate.p12
+          
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          
+          # import certificate and provisioning profile from secrets
+          echo -n "$MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE" | base64 --decode -o $APPLICATION_CERTIFICATE_PATH
+          echo -n "$MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE" | base64 --decode -o $INSTALLER_CERTIFICATE_PATH
+
+          # import certificate to keychain
+          security import $APPLICATION_CERTIFICATE_PATH -P "$MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security import $INSTALLER_CERTIFICATE_PATH -P "$MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+      - name: Execute dist build
+        env:
+          MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_NAME: ${{ secrets.MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_NAME }}
+          MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_USER_NAME: ${{ secrets.MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_USER_NAME }}
+          MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_NAME: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_NAME }}
+          MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_USER_NAME: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_USER_NAME }}
+          MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.MACOS_NOTARIZATION_APPLE_ID }}
+          MACOS_NOTARIZATION_APP_SPECIFIC_PASSWORD: ${{ secrets.MACOS_NOTARIZATION_APP_SPECIFIC_PASSWORD }}
+          MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.MACOS_NOTARIZATION_TEAM_ID }}
+          RELEASE: ${{ contains(github.event.head_commit.message, '[release]') == true }}
+        run: gradlew clean dist --info --stacktrace
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-artifacts
+          retention-days: 1
+          path: |
+            dist/build/dist/artifacts/*
+          compression-level: 1

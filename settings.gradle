@@ -1,0 +1,4 @@
+rootProject.name = 'kickstartfx'
+
+include 'app'
+include 'dist'
