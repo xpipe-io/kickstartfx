@@ -72,7 +72,10 @@ if (true) {
     apply from: 'portable.gradle'
     apply from: 'github.gradle'
     apply from: 'reinstall.gradle'
-    apply from: 'i18n.gradle'
+
+    if (file("i18n.gradle").exists()) {
+        apply from: 'i18n.gradle'
+    }
 
     if (os.isLinux()) {
         apply from: 'linux_packages.gradle'
