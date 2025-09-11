@@ -1,0 +1,5 @@
+writeSysOut=true
+writeLogs=false
+logLevel=trace
+developerMode=true
+useVirtualThreads=false

@@ -1,0 +1,41 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+  xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+  xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+
+	<?define UpgradeCode = "$(var.DynamicProductCode)" ?>
+
+	<!-- TODO: Do you want the installer to install into AppData, ProgramFiles, or both? Adapt the scope based on that -->
+	<Package Name="$(var.DynamicProductName)" Language="!(loc.Language)" Version="$(var.BuildVersion)"
+			 Manufacturer="!(loc.Company)" UpgradeCode="$(var.UpgradeCode)" InstallerVersion="500"
+			 Scope="perUserOrMachine">
+
+		<SummaryInformation Manufacturer="!(loc.Company)" Description="!(loc.Description)" Keywords="!(loc.Keywords)" />
+
+		<MajorUpgrade Schedule="afterInstallExecute" DowngradeErrorMessage="!(loc.NewerVersionInstalled)" AllowSameVersionUpgrades="yes" />
+		
+		<MediaTemplate EmbedCab="yes" />
+
+		<Icon Id="Icon" SourceFile="$(var.ProjectDir)\..\logo\logo.ico" />
+		<Icon Id="StartMenuIcon" SourceFile="$(var.ProjectDir)\..\logo\logo.ico" />
+		
+		<Property Id="ARPPRODUCTICON" Value="Icon" />
+		<!-- TODO: Put your own links here, they will show up in the control panel -->
+		<Property Id="ARPHELPLINK" Value="https://kickstartfx.xpipe.io/" />
+		<Property Id="ARPURLINFOABOUT" Value="https://kickstartfx.xpipe.io" />
+		<Property Id="ARPURLUPDATEINFO" Value="https://kickstartfx.xpipe.io" />
+		
+		<SetProperty Id="ARPINSTALLLOCATION" Value="[APPLICATIONFOLDER]" After="CostFinalize" />
+
+		<Feature Id="FileComponents" Title="!(loc.CoreName)" Description="!(loc.CoreDesc)" Level="1" AllowAbsent="no">
+			<ComponentGroupRef Id="FileComponents" />
+		</Feature>
+		<Feature Id="DesktopShortcut" Title="!(loc.DesktopName)" Description="!(loc.DesktopDesc)" Level="1">
+			<ComponentRef Id="DesktopShortcut" />
+		</Feature>
+		<Feature Id="StartMenuShortcut" Title="!(loc.StartMenuName)" Description="!(loc.StartMenuDesc)" Level="1">
+			<ComponentRef Id="StartMenuShortcut" />
+		</Feature>
+		
+		<ui:WixUI Id="WixUI_Custom" />
+	</Package>
+</Wix>

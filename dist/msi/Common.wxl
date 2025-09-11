@@ -1,0 +1,17 @@
+﻿<WixLocalization Culture="en-us" xmlns="http://wixtoolset.org/schemas/v4/wxl">
+	<String Id="Company" Value="XPipe UG (haftungsbeschränkt)" />
+	<String Id="Language" Value="1033" />
+
+	<String Id="CoreName" Value="KickstartFX Core" />
+	<String Id="DesktopName" Value="Desktop Shortcut" />
+	<String Id="StartMenuName" Value="Start Menu Shortcut" />
+
+	<String Id="CoreDesc" Value="The essential KickstartFX component files." />
+	<String Id="DesktopDesc" Value="Creates a desktop shortcut." />
+	<String Id="StartMenuDesc" Value="Creates a start menu shortcut." />
+
+	<String Id="NewerVersionInstalled" Value="A newer version is already installed." />
+	<String Id="DesktopShortcutDescription" Value="Starts KickstartFX" />
+	<String Id="Description" Value="An installer for the KickstartFX desktop application" />
+	<String Id="Keywords" Value="application,installer,msi" />
+</WixLocalization>
