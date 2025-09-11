@@ -5,6 +5,7 @@ import io.abc.kickstart_fx.issue.TrackEvent;
 
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.IMarkerFactory;
 import org.slf4j.Logger;
@@ -211,7 +212,7 @@ public class AppLogs {
     public void logException(String description, Throwable e) {
         var event = TrackEvent.builder()
                 .type("error")
-                .message((description != null ? description : "") + "\n" + e)
+                .message((description != null ? description : "") + "\n" + ExceptionUtils.getStackTrace(e))
                 .build();
         logEvent(event);
     }

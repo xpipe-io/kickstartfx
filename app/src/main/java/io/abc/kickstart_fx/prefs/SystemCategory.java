@@ -27,13 +27,13 @@ public class SystemCategory extends AppPrefsCategory {
                                         prefs.startupBehaviour,
                                         PrefsChoiceValue.getSupported(StartupBehaviour.class),
                                         false)
-                                .maxWidth(getCompWidth()))
+                                .maxWidth(300.0))
                         .pref(prefs.closeBehaviour)
                         .addComp(ChoiceComp.ofTranslatable(
                                         prefs.closeBehaviour,
                                         PrefsChoiceValue.getSupported(CloseBehaviour.class),
                                         false)
-                                .maxWidth(getCompWidth())));
+                                .maxWidth(300.0)));
         return builder.buildComp();
     }
 }

@@ -16,7 +16,7 @@ tasks.register('licenses', DefaultTask) {
 }
 
 def debugArguments = file("$projectDir/debug/debug_arguments.txt").text.lines()
-        .map(s -> '"' + groupName + '.' + artifactName + '.' + s + '"')
+        .map(s -> '"-D' + groupName + '.' + artifactName + '.' + s + '"')
         .collect(Collectors.joining(' '))
 
 if (os.isWindows()) {

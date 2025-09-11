@@ -5,10 +5,6 @@ import io.abc.kickstart_fx.platform.LabelGraphic;
 
 public abstract class AppPrefsCategory {
 
-    protected int getCompWidth() {
-        return 600;
-    }
-
     protected boolean show() {
         return true;
     }

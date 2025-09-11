@@ -38,7 +38,6 @@ open module io.abc.kickstart_fx {
     requires javafx.media;
     requires javafx.web;
     requires javafx.graphics;
-    requires javafx.fxml;
     requires org.kordamp.ikonli.javafx;
     requires io.sentry;
     requires info.picocli;
@@ -50,6 +49,7 @@ open module io.abc.kickstart_fx {
     requires jdk.httpserver;
     requires java.net.http;
     requires org.jetbrains.annotations;
+    requires org.kohsuke.github;
 
     // Required runtime modules
     requires jdk.charsets;
@@ -61,9 +61,11 @@ open module io.abc.kickstart_fx {
     requires org.kordamp.ikonli.bootstrapicons;
     requires org.kordamp.ikonli.feather;
     requires jdk.zipfs;
-    requires java.rmi;
-    requires org.kohsuke.github;
+
+    // Sampler stuff
     requires atlantafx.sampler;
+    requires datafaker;
+    requires javafx.fxml;
 
     uses ModuleLayerLoader;
 

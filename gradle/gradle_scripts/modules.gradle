@@ -44,3 +44,11 @@ extraJavaModuleInfo {
         exportAllPackages()
     }
 }
+
+extraJavaModuleInfo {
+    module("net.datafaker:datafaker", "datafaker") {
+        requires('java.logging')
+
+        exportAllPackages()
+    }
+}

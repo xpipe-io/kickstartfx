@@ -1,5 +1,6 @@
 package io.abc.kickstart_fx.issue;
 
+import com.fasterxml.jackson.databind.util.ExceptionUtil;
 import io.abc.kickstart_fx.comp.Comp;
 import io.abc.kickstart_fx.comp.base.ModalButton;
 import io.abc.kickstart_fx.comp.base.ModalOverlay;
@@ -13,6 +14,7 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -86,7 +88,7 @@ public class ErrorHandlerDialog {
 
     private static Region createStrackTraceContent(ErrorEvent event) {
         if (event.getThrowable() != null) {
-            var stackTrace = event.getThrowable().toString().replace("\t", "");
+            var stackTrace = ExceptionUtils.getStackTrace(event.getThrowable()).replace("\t", "");
             var tf = new TextArea(stackTrace);
             AppFontSizes.xs(tf);
             tf.setWrapText(true);
