@@ -4,7 +4,16 @@ on: workflow_call
 
 jobs:
   build:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [
+          windows-latest
+          # TODO: Configure your own GitHub runner with a specific name to run Windows ARM
+          # If you don't want to build on that platform, just remove this entry
+          windows-arm
+        ]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -20,6 +29,16 @@ jobs:
           distribution: 'zulu'
           cache: gradle
           java-package: jdk
+        if: ${{ contains(runner.arch, 'X64') == true }}
+
+      - name: Set up ARM JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25-ea'
+          distribution: 'liberica'
+          cache: gradle
+          java-package: jdk+fx
+        if: ${{ contains(runner.arch, 'ARM64') == true }}
 
       - name: Execute dist build
         run: |
