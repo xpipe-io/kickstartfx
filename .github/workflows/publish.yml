@@ -44,7 +44,7 @@ jobs:
         uses: actions/github-script@v8
         continue-on-error: true
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_PAT }}
           script: |
             github.rest.git.createRef({
               owner: context.repo.owner,
@@ -83,7 +83,7 @@ jobs:
         if: ${{ contains(github.event.head_commit.message, '[release]') }}
         with:
           body_path: dist/build/dist/release/github-changelog.md
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
           preserve_order: true
           make_latest: true
           tag_name: ${{ env.VERSION }}
