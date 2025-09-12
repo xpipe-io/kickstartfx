@@ -75,7 +75,7 @@ jlink {
             icon = "$rootDir/dist/logo/logo.icns"
             resourceDir = file("${project.layout.buildDirectory.get()}/macos_resources")
             appVersion = macVersion
-            imageOptions = ["--mac-package-identifier", "${groupName}.${kebapProductName}"]
+            imageOptions = ["--mac-package-identifier", "${groupName.replaceAll("_", "-")}.${artifactName.replaceAll("_", "-")}"]
         }
         vendor = 'XPipe UG (haftungsbeschränkt)'
         skipInstaller = true
