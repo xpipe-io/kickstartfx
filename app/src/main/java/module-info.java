@@ -1,23 +1,23 @@
-import io.abc.kickstart_fx.core.AppLogs;
-import io.abc.kickstart_fx.util.AppJacksonModule;
-import io.abc.kickstart_fx.util.ModuleLayerLoader;
+import io.abc_def.kickstart_fx.core.AppLogs;
+import io.abc_def.kickstart_fx.util.AppJacksonModule;
+import io.abc_def.kickstart_fx.util.ModuleLayerLoader;
 
 import com.fasterxml.jackson.databind.Module;
 import org.slf4j.spi.SLF4JServiceProvider;
 
-open module io.abc.kickstart_fx {
-    exports io.abc.kickstart_fx.core;
-    exports io.abc.kickstart_fx.util;
-    exports io.abc.kickstart_fx;
-    exports io.abc.kickstart_fx.issue;
-    exports io.abc.kickstart_fx.comp.base;
-    exports io.abc.kickstart_fx.core.mode;
-    exports io.abc.kickstart_fx.prefs;
-    exports io.abc.kickstart_fx.update;
-    exports io.abc.kickstart_fx.core.check;
-    exports io.abc.kickstart_fx.core.window;
-    exports io.abc.kickstart_fx.comp;
-    exports io.abc.kickstart_fx.platform;
+open module io.abc_def.kickstart_fx {
+    exports io.abc_def.kickstart_fx.core;
+    exports io.abc_def.kickstart_fx.util;
+    exports io.abc_def.kickstart_fx;
+    exports io.abc_def.kickstart_fx.issue;
+    exports io.abc_def.kickstart_fx.comp.base;
+    exports io.abc_def.kickstart_fx.core.mode;
+    exports io.abc_def.kickstart_fx.prefs;
+    exports io.abc_def.kickstart_fx.update;
+    exports io.abc_def.kickstart_fx.core.check;
+    exports io.abc_def.kickstart_fx.core.window;
+    exports io.abc_def.kickstart_fx.comp;
+    exports io.abc_def.kickstart_fx.platform;
 
     requires static lombok;
 

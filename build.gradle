@@ -186,7 +186,7 @@ project.ext {
 
     // Build config
     os = org.gradle.internal.os.OperatingSystem.current()
-    groupName = 'io.abc'
+    groupName = 'io.abc_def'
     artifactName = 'kickstart_fx'
     arch = getArchName()
     jvmRunArgs = getJvmArgs()
