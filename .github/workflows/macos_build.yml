@@ -13,13 +13,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Set up GraalVM
-        uses: graalvm/setup-graalvm@v1
+      - name: Set up JDK
+        uses: actions/setup-java@v5
         with:
-          java-version: '25-ea+36'
-          distribution: 'graalvm-community'
+          java-version: '25-ea'
+          distribution: 'temurin'
           cache: gradle
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install create-dmg
         run: brew install create-dmg
