@@ -20,3 +20,4 @@ ComponentsGenerated.wxs
 !dist/javafx/**/bin
 i18n.gradle
 
+dist/javafx/**
