@@ -6,12 +6,11 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [
-          windows-latest
-          # TODO: Configure your own GitHub runner with a specific name to run Windows ARM
-          # If you don't want to build on that platform, just remove this entry
-          windows-arm
-        ]
+        os:
+          - windows-latest
+            # TODO: Configure your own GitHub runner with a specific name to run Windows ARM
+            # If you don't want to build on that platform, just remove this entry
+          - windows-arm
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     steps:
