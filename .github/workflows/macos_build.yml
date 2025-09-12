@@ -42,14 +42,14 @@ jobs:
             echo "Adding application certificate"
             APPLICATION_CERTIFICATE_PATH=$RUNNER_TEMP/application_certificate.p12
             echo -n "$MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE" | base64 --decode -o $APPLICATION_CERTIFICATE_PATH
-            security import $APPLICATION_CERTIFICATE_PATH -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+            security import $APPLICATION_CERTIFICATE_PATH -P "$MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           fi
           
           if [[ -n "$MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE" ]]; then
             echo "Adding installer certificate"
             INSTALLER_CERTIFICATE_PATH=$RUNNER_TEMP/installer_certificate.p12
             echo -n "$MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE" | base64 --decode -o $INSTALLER_CERTIFICATE_PATH
-            security import $INSTALLER_CERTIFICATE_PATH -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+            security import $INSTALLER_CERTIFICATE_PATH -P "$MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           fi
 
           security list-keychain -d user -s $KEYCHAIN_PATH
