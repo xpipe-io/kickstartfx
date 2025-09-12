@@ -32,5 +32,10 @@ tasks.register('buildInstaller', Exec) {
     environment('ARTIFACT_NAME', artifactBaseName)
 }
 
-buildInstaller.finalizedBy(signInstaller)
+var signEnv = System.getenv("AZURE_KEY_VAULT_URI")
+if (signEnv != null && !signEnv.isEmpty()) {
+    buildInstaller.finalizedBy(signInstaller)
+}
+
+
 dist.finalizedBy(buildInstaller)

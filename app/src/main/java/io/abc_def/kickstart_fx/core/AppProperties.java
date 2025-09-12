@@ -133,15 +133,6 @@ public class AppProperties {
                 .orElse(null);
     }
 
-    private static boolean isJUnitTest() {
-        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-            if (element.getClassName().startsWith("org.junit.")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static void init() {
         init(new String[0]);
     }

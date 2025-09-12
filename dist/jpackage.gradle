@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 apply from: "$rootDir/gradle/gradle_scripts/javafx.gradle"
 apply from: "$rootDir/gradle/gradle_scripts/jna.gradle"
 
@@ -11,11 +13,6 @@ application {
 
 dependencies {
     implementation project(':app')
-    if (!useBundledJavaFx) {
-        configurations.javafx.getAsFileTree().getFiles().forEach {
-            implementation files(it)
-        }
-    }
     if (!useBundledJna) {
         configurations.jna.getAsFileTree().getFiles().forEach {
             implementation files(it)
@@ -28,6 +25,20 @@ def macVersion = canonicalVersionString
 if (Integer.parseInt(macVersion.substring(0, 1)) == 0) {
     macVersion = "1" + macVersion.substring(1)
 }
+
+def getPlatformName() {
+    def currentOS = DefaultNativePlatform.currentOperatingSystem
+    def platform
+    if (currentOS.isWindows()) {
+        platform = 'windows'
+    }  else if (currentOS.isMacOsX()) {
+        platform = 'osx'
+    } else {
+        platform = 'linux'
+    }
+    return platform
+}
+
 
 jlink {
     imageDir = file("${project.layout.buildDirectory.get()}/image")
@@ -44,13 +55,14 @@ jlink {
         options.addAll('--strip-native-debug-symbols', 'exclude-debuginfo-files')
     }
 
-    if (useBundledJavaFx && !bundledJdkJavaFx) {
+    if (!jdkHasBundledJavaFx) {
         addExtraModulePath(layout.projectDirectory.dir("javafx/${platformName}/${arch}").toString())
     }
     if (useBundledJna) {
         addExtraModulePath(layout.projectDirectory.dir("jna/${platformName}/${arch}").toString())
     }
 
+    // Include debugger module in dev build
     if (!ci || !isFullRelease) {
         addOptions("--add-modules", "jdk.jdwp.agent")
     }
@@ -75,14 +87,12 @@ jlink {
             icon = "$rootDir/dist/logo/logo.icns"
             resourceDir = file("${project.layout.buildDirectory.get()}/macos_resources")
             appVersion = macVersion
-            imageOptions = ["--mac-package-identifier", "${groupName.replaceAll("_", "-")}.${artifactName.replaceAll("_", "-")}"]
+            imageOptions = ["--mac-package-identifier", jpackageMacOsBundleName]
         }
         vendor = 'XPipe UG (haftungsbeschränkt)'
         skipInstaller = true
     }
 }
-
-tasks.named('jlink').get().dependsOn(rootProject.getTasksByName("jar", true))
 
 tasks.register('prepareMacOSResources', DefaultTask) {
     doLast {
@@ -102,15 +112,15 @@ tasks.register('prepareMacOSResources', DefaultTask) {
     }
 }
 
-def outputName = os.isMacOsX() ? "${jpackageExecutableName}.app/Contents/Resources" : jpackageExecutableName
 tasks.register('finalizeMacOSResources', DefaultTask) {
     doLast {
         copy {
             from file("$projectDir/logo/Assets.car")
-            into file("$distDir/jpackage/$outputName")
+            into file("$distDir/jpackage/${jpackageExecutableName}.app/Contents/Resources")
         }
 
-        file("$distDir/jpackage/$outputName/${jpackageExecutableName}.icns").renameTo(file("$distDir/jpackage/$outputName/logo.icns"))
+        file("$distDir/jpackage/${jpackageExecutableName}.app/Contents/Resources/${jpackageExecutableName}.icns")
+                .renameTo(file("$distDir/jpackage/${jpackageExecutableName}.app/Contents/Resources/logo.icns"))
     }
 }
 
@@ -118,4 +128,6 @@ if (os.isMacOsX()) {
     jpackageImage.finalizedBy(finalizeMacOSResources)
     jpackageImage.dependsOn(prepareMacOSResources)
 }
+
+jpackageImage.dependsOn(downloadJavafxJmods)
 

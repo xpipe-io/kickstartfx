@@ -57,12 +57,15 @@ if (os.isWindows()) {
                 into "$distDir/base/licenses"
             }
 
-            file("$distDir/base/${jpackageExecutableName}.exe").writable = true
-            providers.exec {
-                commandLine "$projectDir\\tools\\sign.bat", "$distDir/base/${jpackageExecutableName}.exe"
-                ignoreExitValue = !ci
-            }.getResult().get()
-            file("$distDir/base/${jpackageExecutableName}.exe").writable = false
+            var signEnv = System.getenv("AZURE_KEY_VAULT_URI")
+            if (signEnv != null && !signEnv.isEmpty()) {
+                file("$distDir/base/${jpackageExecutableName}.exe").writable = true
+                providers.exec {
+                    commandLine "$projectDir\\tools\\sign.bat", "$distDir/base/${jpackageExecutableName}.exe"
+                    ignoreExitValue = !ci
+                }.getResult().get()
+                file("$distDir/base/${jpackageExecutableName}.exe").writable = false
+            }
         }
     }
 } else if (os.isLinux()) {

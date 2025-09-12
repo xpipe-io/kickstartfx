@@ -6,6 +6,7 @@ import java.util.stream.Stream
 plugins {
     id 'org.gradlex.extra-java-module-info' version '1.13.1' apply false
     id("com.diffplug.spotless") version "7.2.1" apply false
+    id 'de.undercouch.download' version '5.6.0'
 }
 
 allprojects { subproject ->
@@ -64,19 +65,6 @@ static def getArchName() {
     }
 
     return arch
-}
-
-static def getPlatformName() {
-    def currentOS = DefaultNativePlatform.currentOperatingSystem
-    def platform
-    if (currentOS.isWindows()) {
-        platform = 'windows'
-    }  else if (currentOS.isMacOsX()) {
-        platform = 'osx'
-    } else {
-        platform = 'linux'
-    }
-    return platform
 }
 
 def getJvmArgs() {
@@ -155,7 +143,7 @@ project.ext {
     // Release pipeline config
     isFullRelease = Boolean.parseBoolean(System.getenv('RELEASE'))
     ci = System.getenv('CI') != null
-    // Create AOT cache for runtime image
+    // Create AOT cache for runtime image only in build pipeline
     enableAot = ci
 
     // Names
@@ -179,7 +167,7 @@ project.ext {
             file("$rootDir/dist/changelog/${versionString}.md") :
             file("$rootDir/dist/changelog/${canonicalVersionString}.md")
 
-    // Signing config
+    // GPG signing config
     signingKeyId = project.hasProperty('signingKeyId') ? project.property("signingKeyId") : (System.getenv('GPG_KEY_ID') != null ? System.getenv('GPG_KEY_ID') : "")
     signingKey = project.hasProperty('signingKeyFile') ? file(project.property("signingKeyFile")).text : (System.getenv('GPG_KEY') != null ? System.getenv('GPG_KEY') : "")
     signingPassword = project.hasProperty('signingKeyPassword') ? project.property("signingKeyPassword") : (System.getenv('GPG_KEY_PASSWORD') != null ? System.getenv('GPG_KEY_PASSWORD') : "")
@@ -197,7 +185,7 @@ project.ext {
 
     // JPackage config
     jpackageExecutableName = "kickstartfx"
-    jpackageMacOsBundleName = groupName + '.kickstartfx'
+    jpackageMacOsBundleName = "${groupName.replaceAll("_", "-")}.${artifactName.replaceAll("_", "-")}"
     jpackageReleaseArguments = jvmRunArgs + [
             "-D" + propertyName("version") + "=" + versionString,
             "-D" + propertyName("build") + "=$versionString/${new Date().format('yyyy-MM-dd-HH-mm')}",
@@ -224,12 +212,14 @@ project.ext {
     }
 
     // JavaFX config
+    // Development and production javafx versions can be different
+    // Dev uses the maven dependencies and production uses jmods
+    // unless jdkHasBundledJavaFx is set to true
     devJavafxVersion = '26-ea+3'
-    platformName = getPlatformName()
-    useBundledJavaFx = true
-    bundledJdkJavaFx = ModuleFinder.ofSystem().find("javafx.base").isPresent()
-    // Define a custom JavaFX SDK location
-    // customJavaFxPath = null
+    productionJavafxVersion = '26-ea+3'
+    jdkHasBundledJavaFx = ModuleFinder.ofSystem().find("javafx.base").isPresent()
+    // Define a custom JavaFX SDK location to use a custom JavaFX build instead of the default one
+    customJavaFxPath = null
 }
 
 group = groupName
