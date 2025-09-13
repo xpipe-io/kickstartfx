@@ -178,7 +178,6 @@ project.ext {
     artifactName = 'kickstart_fx'
     arch = getArchName()
     jvmRunArgs = getJvmArgs()
-    useBundledJna = true
     // TODO: Set your own Sentry DSN. If you don't want to use Sentry, set this to null
     // This value is not a secret
     sentryUrl = "https://546869d72f781857d77d45ec610181bc@o1084459.ingest.us.sentry.io/4509999907405824"
@@ -192,14 +191,13 @@ project.ext {
             "-D" + propertyName("buildId") + "=" + buildId
             ]
 
-    if (useBundledJna) {
-        // Make sure that the dynamic library from jlink is loaded without any extraction
-        jpackageReleaseArguments += [
-                '-Djna.nosys=false',
-                '-Djna.nounpack=true',
-                '-Djna.noclasspath=true'
-        ]
-    }
+    // Make sure that the dynamic library from jna is loaded without any extraction
+    jpackageReleaseArguments += [
+            '-Djna.nosys=false',
+            '-Djna.nounpack=true',
+            '-Djna.noclasspath=true'
+    ]
+
     if (sentryUrl != null) {
         jpackageReleaseArguments += "-D" + propertyName("sentryUrl") + "=" + sentryUrl
     }

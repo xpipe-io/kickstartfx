@@ -13,11 +13,6 @@ application {
 
 dependencies {
     implementation project(':app')
-    if (!useBundledJna) {
-        configurations.jna.getAsFileTree().getFiles().forEach {
-            implementation files(it)
-        }
-    }
 }
 
 // Mac does not like a zero major version
@@ -30,9 +25,9 @@ def getPlatformName() {
     def currentOS = DefaultNativePlatform.currentOperatingSystem
     def platform
     if (currentOS.isWindows()) {
-        platform = 'windows'
+        platform = 'win'
     }  else if (currentOS.isMacOsX()) {
-        platform = 'osx'
+        platform = 'mac'
     } else {
         platform = 'linux'
     }
@@ -58,9 +53,7 @@ jlink {
     if (!jdkHasBundledJavaFx) {
         addExtraModulePath(layout.projectDirectory.dir("javafx/${platformName}/${arch}").toString())
     }
-    if (useBundledJna) {
-        addExtraModulePath(layout.projectDirectory.dir("jna/${platformName}/${arch}").toString())
-    }
+    addExtraModulePath(layout.projectDirectory.dir("jna/${platformName}/${arch}").toString())
 
     // Include debugger module in dev build
     if (!ci || !isFullRelease) {
@@ -129,5 +122,7 @@ if (os.isMacOsX()) {
     jpackageImage.dependsOn(prepareMacOSResources)
 }
 
-jpackageImage.dependsOn(downloadJavafxJmods)
+if (!jdkHasBundledJavaFx) {
+    jpackageImage.dependsOn(downloadJavafxJmods)
+}
 
