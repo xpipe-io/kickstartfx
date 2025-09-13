@@ -117,6 +117,7 @@ public abstract class AppOperationMode {
             });
             AppI18n.init();
             AppPrefs.initLocal();
+            AppBeacon.init();
             AppInstance.init();
             // Initialize early to load in parallel
             PlatformInit.init(false);

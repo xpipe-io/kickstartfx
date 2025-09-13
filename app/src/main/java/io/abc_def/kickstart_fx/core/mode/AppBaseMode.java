@@ -44,8 +44,6 @@ public class AppBaseMode extends AppOperationMode {
         AppDirectoryPermissionsCheck.checkDirectory(AppSystemInfo.ofCurrent().getTemp());
         WindowsRegistry.init();
         AppJavaOptionsCheck.check();
-        AppSid.init();
-        AppBeacon.init();
         AppLayoutModel.init();
 
         // If we downloaded an update, and decided to no longer automatically update, don't remind us!

@@ -32,7 +32,7 @@ public class AppInstance {
 //    }
 //
     private static void checkStart(int attemptCounter) {
-        var reachable = AppBeacon.isExistingBeaconRunning();
+        var reachable = AppBeacon.get().isExistingBeaconRunning();
         if (!reachable) {
             // Even in case we are unable to reach another beacon server
             // there might be another instance running, for example
@@ -51,11 +51,12 @@ public class AppInstance {
         try {
             var inputs = AppProperties.get().getArguments().getOpenArgs();
             // Assume that we want to open the GUI if we launched again
-            AppBeacon.sendRequest(new AppBeaconMessage.FocusRequest());
+            AppBeacon.get().sendRequest(new AppBeaconMessage.FocusRequest());
             if (!inputs.isEmpty()) {
-                AppBeacon.sendRequest(new AppBeaconMessage.OpenRequest(inputs));
+                AppBeacon.get().sendRequest(new AppBeaconMessage.OpenRequest(inputs));
             }
         } catch (Exception ex) {
+            ErrorEventFactory.fromThrowable(ex).handle();
             // Wait until shutdown has completed
             if (ex.getMessage() != null
                     && ex.getMessage().contains("Daemon is currently in shutdown")
@@ -69,7 +70,7 @@ public class AppInstance {
         if (OsType.ofLocal() == OsType.MACOS) {
             Desktop.getDesktop().setOpenURIHandler(e -> {
                 try {
-                    AppBeacon.sendRequest(new AppBeaconMessage.OpenRequest(List.of(e.getURI().toString())));
+                    AppBeacon.get().sendRequest(new AppBeaconMessage.OpenRequest(List.of(e.getURI().toString())));
                 } catch (Exception ex) {
                     ErrorEventFactory.fromThrowable(ex).expected().omit().handle();
                 }
