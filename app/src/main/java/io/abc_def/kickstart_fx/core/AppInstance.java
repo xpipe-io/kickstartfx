@@ -1,9 +1,24 @@
 package io.abc_def.kickstart_fx.core;
 
+import com.sun.jna.platform.win32.Kernel32;
+import com.sun.jna.platform.win32.WinBase;
+import com.sun.jna.platform.win32.WinError;
+import com.sun.jna.platform.win32.WinNT;
+import io.abc_def.kickstart_fx.core.mode.AppOperationMode;
+import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
+import io.abc_def.kickstart_fx.issue.TrackEvent;
+import io.abc_def.kickstart_fx.util.OsType;
+import io.abc_def.kickstart_fx.util.ThreadHelper;
+
+import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
 public class AppInstance {
 
-    public static void init() {
-        // checkStart(0);
+    public static void init() throws IOException {
+        checkStart(0);
     }
 
 //    public static Optional<BeaconClient> tryEstablishConnection(int port) {
@@ -16,81 +31,52 @@ public class AppInstance {
 //        }
 //    }
 //
-//    private static void checkStart(int attemptCounter) {
-//        var port = AppBeaconServer.get().getPort();
-//        var reachable = BeaconServer.isReachable(port);
-//        if (!reachable) {
-//            // Even in case we are unable to reach another beacon server
-//            // there might be another instance running, for example
-//            // starting up or listening on another port
-//            if (!AppDataLock.lock()) {
-//                TrackEvent.info(
-//                        "Data directory " + AppProperties.get().getDataDir().toString()
-//                                + " is already locked. Is another instance running?");
-//                AppOperationMode.halt(1);
-//            }
-//
-//            // We are good to start up!
-//            return;
-//        }
-//
-//        var client = tryEstablishConnection(port);
-//        if (client.isEmpty()) {
-//            // If an instance is running as another user, we cannot connect to it as the xpipe_auth file is inaccessible
-//            // Therefore the beacon client is not present.
-//            // We still should check whether it is somehow occupied, otherwise beacon server startup will fail
-//            TrackEvent.info(
-//                    "Another instance is already running on this port as another user or is not reachable. Quitting ...");
-//            AppOperationMode.halt(1);
-//            return;
-//        }
-//
-//        try {
-//            var inputs = AppProperties.get().getArguments().getOpenArgs();
-//            // Assume that we want to open the GUI if we launched again
-//            client.get().performRequest(DaemonFocusExchange.Request.builder().build());
-//            if (!inputs.isEmpty()) {
-//                client.get()
-//                        .performRequest(DaemonOpenExchange.Request.builder()
-//                                .arguments(inputs)
-//                                .build());
-//            }
-//        } catch (Exception ex) {
-//            // Wait until shutdown has completed
-//            if (ex.getMessage() != null
-//                    && ex.getMessage().contains("Daemon is currently in shutdown")
-//                    && attemptCounter < 10) {
-//                ThreadHelper.sleep(1000);
-//                checkStart(++attemptCounter);
-//                return;
-//            }
-//
-//            var cli = AppInstallation.ofCurrent().getCliExecutablePath();
-//            ErrorEventFactory.fromThrowable(
-//                            "Unable to connect to existing running daemon instance as it did not respond."
-//                                    + " Either try to kill the process xpiped manually or use the command \""
-//                                    + cli
-//                                    + "\" daemon stop --force.",
-//                            ex)
-//                    .term()
-//                    .expected()
-//                    .handle();
-//        }
-//
-//        if (OsType.ofLocal() == OsType.MACOS) {
-//            Desktop.getDesktop().setOpenURIHandler(e -> {
-//                try {
-//                    client.get()
-//                            .performRequest(DaemonOpenExchange.Request.builder()
-//                                    .arguments(List.of(e.getURI().toString()))
-//                                    .build());
-//                } catch (Exception ex) {
-//                    ErrorEventFactory.fromThrowable(ex).expected().omit().handle();
-//                }
-//            });
-//            ThreadHelper.sleep(1000);
-//        }
-//        TrackEvent.info("Another instance is already running on this port. Quitting ...");
-//        AppOperationMode.halt(1);
-//    }
+    private static void checkStart(int attemptCounter) {
+        var reachable = AppBeacon.isExistingBeaconRunning();
+        if (!reachable) {
+            // Even in case we are unable to reach another beacon server
+            // there might be another instance running, for example
+            // starting up or listening on another port
+            if (!AppDataLock.lock()) {
+                TrackEvent.info(
+                        "Data directory " + AppProperties.get().getDataDir().toString()
+                                + " is already locked. Is another instance running?");
+                AppOperationMode.halt(1);
+            }
+
+            // We are good to start up!
+            return;
+        }
+
+        try {
+            var inputs = AppProperties.get().getArguments().getOpenArgs();
+            // Assume that we want to open the GUI if we launched again
+            AppBeacon.sendRequest(new AppBeaconMessage.FocusRequest());
+            if (!inputs.isEmpty()) {
+                AppBeacon.sendRequest(new AppBeaconMessage.OpenRequest(inputs));
+            }
+        } catch (Exception ex) {
+            // Wait until shutdown has completed
+            if (ex.getMessage() != null
+                    && ex.getMessage().contains("Daemon is currently in shutdown")
+                    && attemptCounter < 10) {
+                ThreadHelper.sleep(1000);
+                checkStart(++attemptCounter);
+                return;
+            }
+        }
+
+        if (OsType.ofLocal() == OsType.MACOS) {
+            Desktop.getDesktop().setOpenURIHandler(e -> {
+                try {
+                    AppBeacon.sendRequest(new AppBeaconMessage.OpenRequest(List.of(e.getURI().toString())));
+                } catch (Exception ex) {
+                    ErrorEventFactory.fromThrowable(ex).expected().omit().handle();
+                }
+            });
+            ThreadHelper.sleep(1000);
+        }
+        TrackEvent.info("Another instance is already running on this port. Quitting ...");
+        AppOperationMode.halt(1);
+    }
 }

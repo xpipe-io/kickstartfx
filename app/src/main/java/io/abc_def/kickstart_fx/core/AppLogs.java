@@ -99,7 +99,7 @@ public class AppLogs {
             } catch (Exception ex) {
                 // It can happen that another instance is running that is locking a log file
                 // Since we initialized before checking for another instance, this might fail
-                ErrorEventFactory.fromThrowable(ex).expected().omit().handle();
+                ErrorEventFactory.fromThrowable(ex).ignore().handle();
             }
         }
 
