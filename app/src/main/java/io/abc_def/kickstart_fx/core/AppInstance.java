@@ -18,25 +18,11 @@ import java.util.List;
 public class AppInstance {
 
     public static void init() throws IOException {
-        checkStart(0);
-    }
-
-//    public static Optional<BeaconClient> tryEstablishConnection(int port) {
-//        try {
-//            return Optional.of(BeaconClient.establishConnection(
-//                    port, BeaconClientInformation.Daemon.builder().build()));
-//        } catch (Exception ex) {
-//            ErrorEventFactory.fromThrowable(ex).omit().expected().handle();
-//            return Optional.empty();
-//        }
-//    }
-//
-    private static void checkStart(int attemptCounter) {
         var reachable = AppBeacon.get().isExistingBeaconRunning();
         if (!reachable) {
             // Even in case we are unable to reach another beacon server
             // there might be another instance running, for example
-            // starting up or listening on another port
+            // starting up
             if (!AppDataLock.lock()) {
                 TrackEvent.info(
                         "Data directory " + AppProperties.get().getDataDir().toString()
@@ -57,14 +43,7 @@ public class AppInstance {
             }
         } catch (Exception ex) {
             ErrorEventFactory.fromThrowable(ex).handle();
-            // Wait until shutdown has completed
-            if (ex.getMessage() != null
-                    && ex.getMessage().contains("Daemon is currently in shutdown")
-                    && attemptCounter < 10) {
-                ThreadHelper.sleep(1000);
-                checkStart(++attemptCounter);
-                return;
-            }
+            return;
         }
 
         if (OsType.ofLocal() == OsType.MACOS) {
