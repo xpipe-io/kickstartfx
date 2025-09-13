@@ -58,9 +58,7 @@ public class AppPrefsSidebarComp extends SimpleComp {
         buttons.add(restartButton);
 
         var vbox = new VerticalComp(buttons)
-                .styleClass("sidebar")
-                .styleClass("color-box")
-                .styleClass("gray");
+                .styleClass("sidebar");
         vbox.apply(struc -> {
             AppPrefs.get().getSelectedCategory().subscribe(val -> {
                 PlatformThread.runLaterIfNeeded(() -> {
