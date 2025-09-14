@@ -57,8 +57,9 @@ dependencies {
     implementation "org.kohsuke:github-api:1.330"
 
     implementation files("$rootDir/gradle/gradle_scripts/atlantafx-sampler-2.1.0.jar")
-    implementation("net.datafaker:datafaker:1.3.0")
-    implementation("io.github.mkpaz:devtoolsfx-gui:1.0.1")
+    implementation ("net.datafaker:datafaker:1.3.0") {
+        exclude group: "com.github.mifmif", module: "generex"
+    }
 }
 
 application {
@@ -72,7 +73,6 @@ run {
     systemProperty propertyName('mode'), 'gui'
     systemProperty propertyName('writeLogs'), "true"
     systemProperty propertyName('writeSysOut'), "true"
-    systemProperty propertyName('developerMode'), "true"
     systemProperty propertyName('logLevel'), "trace"
 
     // Apply passed properties

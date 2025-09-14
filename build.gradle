@@ -12,8 +12,7 @@ plugins {
 allprojects { subproject ->
     apply plugin: 'org.gradlex.extra-java-module-info'
     extraJavaModuleInfo {
-        failOnMissingModuleInfo.set(false)
-        skipLocalJars.set(true)
+        failOnMissingModuleInfo.set(true)
     }
     apply from: "$rootDir/gradle/gradle_scripts/modules.gradle"
 
@@ -39,13 +38,6 @@ subprojects {subproject ->
             importOrder(groupName, 'javafx', '', 'java', '\\#')
         }
     }
-}
-
-// Developer config file setup
-
-var devProps = file("$rootDir/app/dev.properties")
-if (!devProps.exists()) {
-    devProps.text = file("$rootDir/gradle/gradle_scripts/dev_default.properties").text
 }
 
 // Project variable functions
@@ -125,6 +117,10 @@ def getJvmArgs() {
         jvmRunArgs += ["-Dapple.awt.application.appearance=system"]
     }
 
+    if (os.isMacOsX()) {
+        jvmRunArgs += "-Xdock:name=$productName"
+    }
+
     return jvmRunArgs
 }
 
@@ -197,11 +193,8 @@ project.ext {
             '-Djna.nounpack=true',
             '-Djna.noclasspath=true'
     ]
-    if (os.isMacOsX()) {
-        jpackageReleaseArguments += "-Xdock:name=$productName"
-    }
     if (isFullRelease) {
-        // Prevent debugger attach in production
+        // Prevent debugger attach in production release
         jpackageReleaseArguments += "-XX:+DisableAttachMechanism"
     }
 
@@ -212,7 +205,7 @@ project.ext {
     devJavafxVersion = '26-ea+3'
     productionJavafxVersion = '26-ea+3'
     jdkHasBundledJavaFx = ModuleFinder.ofSystem().find("javafx.base").isPresent()
-    // Define a custom JavaFX SDK location to use a custom JavaFX build instead of the default one
+    // Define a custom JavaFX SDK location to use custom JavaFX jars instead of the default one
     customJavaFxPath = null
 
     // TODO: Set your own Sentry DSN. If you don't want to use Sentry, set this to null
@@ -232,22 +225,8 @@ def propertyName(String s) {
     return groupName + "." + artifactName + "." + s
 }
 
-def propertyName(String module, String s) {
-    return groupName + "." + module + "." + s
-}
-
 def packageName(String s) {
     return groupName + "." + artifactName + (s != null ? "." + s : "")
-}
-
-def packageName(String module, String s) {
-    return groupName + "." + module + (s != null ? "." + s : "")
-}
-
-def replaceVariablesInFileAsString(String f, Map<String, String> replacements) {
-    def text = file(f).text
-    def replaced = text.replace(replacements)
-    return replaced
 }
 
 def replaceVariablesInFile(String f, Map<String, String> replacements) {
@@ -259,6 +238,13 @@ def replaceVariablesInFile(String f, Map<String, String> replacements) {
     def temp = "$build/$fileName"
     file(temp).text = replaced
     return file(temp)
+}
+
+// Developer config file setup
+
+var devProps = file("$rootDir/app/dev.properties")
+if (!devProps.exists()) {
+    devProps.text = file("$rootDir/gradle/gradle_scripts/dev_default.properties").text
 }
 
 // Checks

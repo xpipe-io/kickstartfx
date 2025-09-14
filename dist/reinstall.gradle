@@ -12,4 +12,7 @@ tasks.register('installProduction', Exec) {
     }
 }
 
-tasks.register('distAndInstall', DefaultTask) { dependsOn([dist, installProduction]) }
+tasks.register('distAndInstall', DefaultTask) {
+    dependsOn(dist)
+    finalizedBy(installProduction)
+}

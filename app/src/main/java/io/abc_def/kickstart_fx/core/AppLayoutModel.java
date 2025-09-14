@@ -5,6 +5,8 @@ import atlantafx.sampler.page.showcase.OverviewPage;
 import atlantafx.sampler.page.showcase.filemanager.FileManagerPage;
 import atlantafx.sampler.page.showcase.musicplayer.MusicPlayerPage;
 import io.abc_def.kickstart_fx.comp.Comp;
+import io.abc_def.kickstart_fx.comp.base.MarkdownComp;
+import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.platform.LabelGraphic;
 import io.abc_def.kickstart_fx.platform.PlatformThread;
 import io.abc_def.kickstart_fx.prefs.AppPrefsComp;
@@ -27,9 +29,12 @@ import lombok.*;
 import lombok.experimental.NonFinal;
 import lombok.extern.jackson.Jacksonized;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 @Getter
 public class AppLayoutModel {
@@ -157,6 +162,20 @@ public class AppLayoutModel {
                         }),
                         null),
                 new Entry(
+                        AppI18n.observable("markdown"),
+                        new LabelGraphic.IconGraphic("mdi2l-language-markdown-outline"),
+                        Comp.of(() -> {
+                            try {
+                                var md = AppResources.getResourcePath(AppResources.MAIN_MODULE, "misc/markdown.md").orElseThrow();
+                                var string = Files.readString(md);
+                                return new MarkdownComp(string, UnaryOperator.identity(), true).createRegion();
+                            } catch (Exception e) {
+                                ErrorEventFactory.fromThrowable(e).handle();
+                                return null;
+                            }
+                        }),
+                        null),
+                new Entry(
                         AppI18n.observable("settings"),
                         new LabelGraphic.IconGraphic("mdsmz-miscellaneous_services"),
                         new AppPrefsComp(),
@@ -170,12 +189,7 @@ public class AppLayoutModel {
                         AppI18n.observable("visitGithubRepository"),
                         new LabelGraphic.IconGraphic("mdi2g-github"),
                         null,
-                        () -> Hyperlinks.open(Hyperlinks.GITHUB)),
-                new Entry(
-                        AppI18n.observable("discord"),
-                        new LabelGraphic.IconGraphic("bi-discord"),
-                        null,
-                        () -> Hyperlinks.open(Hyperlinks.DISCORD))));
+                        () -> Hyperlinks.open(Hyperlinks.GITHUB))));
         return l;
     }
 

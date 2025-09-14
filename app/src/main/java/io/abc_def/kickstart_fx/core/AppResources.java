@@ -42,6 +42,17 @@ public class AppResources {
         return fs;
     }
 
+    public static Optional<Path> getResourcePath(String module, String file) {
+        try {
+            var fs = openFileSystemIfNeeded(module);
+            var f = fs.getPath(module.replace('.', '/') + "/resources/" + file);
+            return Optional.of(f);
+        } catch (IOException e) {
+            ErrorEventFactory.fromThrowable(e).omitted(true).build().handle();
+            return Optional.empty();
+        }
+    }
+
     public static Optional<URL> getResourceURL(String module, String file) {
         try {
             var fs = openFileSystemIfNeeded(module);

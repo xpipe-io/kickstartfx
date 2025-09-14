@@ -19,6 +19,7 @@ It features the following noteworthy features that you won't get with any other 
 - A ready-to-deploy GitHub actions pipeline to automatically build end release your application
 - Close-to-native theming capabilities with AtlantaFX themes as the basis combined with many manual adjustments
 - Advanced error handling and issue tracking with support for Sentry
+- Markdown rendering capabilities out-of-the-box with flexmark
 - Integrated ability to automatically codesign the application on Windows and macOS
 - Solid state management for caches, persistent data, and more
 - Many customization options available to users in a comprehensible settings menu

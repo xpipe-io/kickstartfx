@@ -34,7 +34,7 @@ import java.util.function.UnaryOperator;
 public class MarkdownComp extends Comp<CompStructure<StackPane>> {
 
     private static Boolean WEB_VIEW_SUPPORTED;
-    private static Path TEMP;
+
     private final ObservableValue<String> markdown;
     private final UnaryOperator<String> htmlTransformation;
     private final boolean bodyPadding;
@@ -53,10 +53,6 @@ public class MarkdownComp extends Comp<CompStructure<StackPane>> {
     }
 
     private Path getHtmlFile(String markdown) {
-        if (TEMP == null) {
-            TEMP = AppSystemInfo.ofCurrent().getTemp().resolve("webview");
-        }
-
         if (markdown == null) {
             return null;
         }
@@ -68,7 +64,7 @@ public class MarkdownComp extends Comp<CompStructure<StackPane>> {
         } else {
             hash = markdown.hashCode();
         }
-        var file = TEMP.resolve("md-" + hash + ".html");
+        var file = AppSystemInfo.ofCurrent().getTemp().resolve("webview").resolve("md-" + hash + ".html");
         if (Files.exists(file)) {
             return file;
         }

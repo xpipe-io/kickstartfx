@@ -63,8 +63,7 @@ public class AppDesktopIntegration {
 
                 // Set dock icon explicitly on macOS
                 // This is necessary in case the app was started through a script as it will have no icon otherwise
-                if (AppProperties.get().isDeveloperMode()
-                        && AppLogs.get().isWriteToSysout()
+                if (AppLogs.get().isWriteToSysout()
                         && Taskbar.isTaskbarSupported()) {
                     try {
                         var iconUrl = Main.class.getResourceAsStream("resources/img/logo/padded/logo_128x128.png");

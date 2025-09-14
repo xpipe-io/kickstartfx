@@ -31,7 +31,6 @@ public class AppProperties {
     UUID uuid;
     boolean initialLaunch;
     UUID sessionId;
-    boolean developerMode;
     boolean newBuildSession;
     boolean aotTrainMode;
     boolean debugPlatformThreadAccess;
@@ -87,9 +86,6 @@ public class AppProperties {
                 .map(Boolean::parseBoolean)
                 .orElse(false);
         canonicalVersion = AppVersion.parse(version).orElse(null);
-        developerMode = Optional.ofNullable(System.getProperty(AppNames.propertyName("developerMode")))
-                .map(Boolean::parseBoolean)
-                .orElse(false);
         logToSysOut = Optional.ofNullable(System.getProperty(AppNames.propertyName("writeSysOut")))
                 .map(Boolean::parseBoolean)
                 .orElse(false);
@@ -170,7 +166,7 @@ public class AppProperties {
     }
 
     public boolean isDevelopmentEnvironment() {
-        return !isImage() && isDeveloperMode();
+        return !isImage();
     }
 
     public Optional<AppVersion> getCanonicalVersion() {

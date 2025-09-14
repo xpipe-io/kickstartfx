@@ -98,7 +98,7 @@ public class AppMainWindowContentComp extends SimpleComp {
                 struc.get().setOpacity(0.8);
             });
 
-            var vbox = new VBox(
+            var loadingVbox = new VBox(
                     Comp.vspacer().createRegion(),
                     loadingIcon,
                     Comp.vspacer(19).createRegion(),
@@ -106,9 +106,9 @@ public class AppMainWindowContentComp extends SimpleComp {
                     Comp.vspacer().createRegion(),
                     text.createRegion(),
                     Comp.vspacer(20).createRegion());
-            vbox.setAlignment(Pos.CENTER);
+            loadingVbox.setAlignment(Pos.CENTER);
 
-            var pane = new StackPane(vbox);
+            var pane = new StackPane(loadingVbox);
             pane.setAlignment(Pos.TOP_LEFT);
             pane.getStyleClass().add("background");
 
@@ -119,7 +119,7 @@ public class AppMainWindowContentComp extends SimpleComp {
                     struc.prepareAddition();
                     pane.getStyleClass().remove("background");
                     loadingAnimation.stop();
-                    pane.getChildren().remove(vbox);
+                    pane.getChildren().remove(loadingVbox);
                     pane.getChildren().add(struc.get());
                     sidebarPresent.set(true);
                     PlatformThread.runNestedLoopIteration();
