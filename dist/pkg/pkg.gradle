@@ -8,13 +8,13 @@ tasks.register('createPkg', Exec) {
                 kebapProductName,
                 groupName + "." + kebapProductName,
                 productName.replaceAll(' ', '%20'),
-                "${artifactBaseName}-installer-macos-${arch}.pkg"
+                "${distName}-installer-macos-${arch}.pkg"
 
     doLast {
         def certName = System.getenv("MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_NAME")
         if (certName != null && !certName.isEmpty()) {
             providers.exec {
-                commandLine "$projectDir/pkg/notarize_pkg.sh", "${project.layout.buildDirectory.get()}/dist/pkg_target/pkg/${artifactBaseName}-installer-macos-${arch}.pkg"
+                commandLine "$projectDir/pkg/notarize_pkg.sh", "${project.layout.buildDirectory.get()}/dist/pkg_target/pkg/${distName}-installer-macos-${arch}.pkg"
             }.getResult().get()
         }
 

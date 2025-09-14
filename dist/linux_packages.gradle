@@ -113,10 +113,10 @@ buildRpm {
 tasks.register('copyLinuxPackage', Copy) {
     from "${project.layout.buildDirectory.get()}/distributions"
     into "${project.layout.buildDirectory.get()}/dist/artifacts"
-    rename "${pkgName}_$canonicalVersionString-${versionReleaseNumber}_amd64.deb", "${artifactBaseName}-installer-linux-x86_64.deb"
-    rename "${pkgName}_$canonicalVersionString-${versionReleaseNumber}_arm64.deb", "${artifactBaseName}-installer-linux-arm64.deb"
-    rename "${pkgName}-$canonicalVersionString-${versionReleaseNumber}.x86_64.rpm", "${artifactBaseName}-installer-linux-x86_64.rpm"
-    rename "${pkgName}-$canonicalVersionString-${versionReleaseNumber}.aarch64.rpm", "${artifactBaseName}-installer-linux-arm64.rpm"
+    rename "${pkgName}_$canonicalVersionString-${versionReleaseNumber}_amd64.deb", "${distName}-installer-linux-x86_64.deb"
+    rename "${pkgName}_$canonicalVersionString-${versionReleaseNumber}_arm64.deb", "${distName}-installer-linux-arm64.deb"
+    rename "${pkgName}-$canonicalVersionString-${versionReleaseNumber}.x86_64.rpm", "${distName}-installer-linux-x86_64.rpm"
+    rename "${pkgName}-$canonicalVersionString-${versionReleaseNumber}.aarch64.rpm", "${distName}-installer-linux-arm64.rpm"
     exclude '*.changes'
 }
 buildDeb.finalizedBy(copyLinuxPackage)

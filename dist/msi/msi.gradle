@@ -18,7 +18,7 @@ tasks.register('installerDist', DefaultTask) {
 }
 
 tasks.register('signInstaller', Exec) {
-    commandLine "$projectDir\\tools\\sign.bat", "$distDir/artifacts/$artifactBaseName-installer-windows-${arch}.msi"
+    commandLine "$projectDir\\tools\\sign.bat", "$distDir/artifacts/$distName-installer-windows-${arch}.msi"
     ignoreExitValue = !ci
 }
 
@@ -29,7 +29,7 @@ tasks.register('buildInstaller', Exec) {
     environment('PRODUCT_NAME', productName)
     environment('CANONICAL_VERSION', windowsSchemaCanonicalVersion)
     environment('EXECUTABLE_NAME', jpackageExecutableName)
-    environment('ARTIFACT_NAME', artifactBaseName)
+    environment('ARTIFACT_NAME', distName)
 }
 
 var signEnv = System.getenv("AZURE_KEY_VAULT_URI")

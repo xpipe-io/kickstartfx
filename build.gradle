@@ -140,18 +140,23 @@ def getWindowsSchemaCanonicalVersion() {
 // Project variables
 
 project.ext {
-    // Release pipeline config
+    // Enable release pipeline if variable is present
     isFullRelease = Boolean.parseBoolean(System.getenv('RELEASE'))
+    // Check if in build pipeline
     ci = System.getenv('CI') != null
     // Create AOT cache for runtime image only in build pipeline
     enableAot = ci
 
-    // Names
+    // Names of your app
     productName = 'Kickstart FX'
     kebapProductName = 'kickstart-fx'
     flatcaseProductName = 'kickstartfx'
     snakeProductName = 'kickstart_fx'
-    artifactBaseName = "kickstartfx"
+    // The names of your packages
+    groupName = 'io.abc_def'
+    artifactName = 'kickstart_fx'
+    // The base name of the generated packages
+    distName = "kickstartfx"
 
     // Version info
     rawVersion = file('version').text.strip()
@@ -174,13 +179,8 @@ project.ext {
 
     // Build config
     os = org.gradle.internal.os.OperatingSystem.current()
-    groupName = 'io.abc_def'
-    artifactName = 'kickstart_fx'
     arch = getArchName()
     jvmRunArgs = getJvmArgs()
-    // TODO: Set your own Sentry DSN. If you don't want to use Sentry, set this to null
-    // This value is not a secret
-    sentryUrl = "https://546869d72f781857d77d45ec610181bc@o1084459.ingest.us.sentry.io/4509999907405824"
 
     // JPackage config
     jpackageExecutableName = "kickstartfx"
@@ -197,10 +197,6 @@ project.ext {
             '-Djna.nounpack=true',
             '-Djna.noclasspath=true'
     ]
-
-    if (sentryUrl != null) {
-        jpackageReleaseArguments += "-D" + propertyName("sentryUrl") + "=" + sentryUrl
-    }
     if (os.isMacOsX()) {
         jpackageReleaseArguments += "-Xdock:name=$productName"
     }
@@ -218,6 +214,13 @@ project.ext {
     jdkHasBundledJavaFx = ModuleFinder.ofSystem().find("javafx.base").isPresent()
     // Define a custom JavaFX SDK location to use a custom JavaFX build instead of the default one
     customJavaFxPath = null
+
+    // TODO: Set your own Sentry DSN. If you don't want to use Sentry, set this to null
+    // This value is not a secret
+    sentryUrl = "https://546869d72f781857d77d45ec610181bc@o1084459.ingest.us.sentry.io/4509999907405824"
+    if (sentryUrl != null) {
+        jpackageReleaseArguments += "-D" + propertyName("sentryUrl") + "=" + sentryUrl
+    }
 }
 
 group = groupName

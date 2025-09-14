@@ -44,7 +44,6 @@ public class AppBaseMode extends AppOperationMode {
         AppDirectoryPermissionsCheck.checkDirectory(AppSystemInfo.ofCurrent().getTemp());
         WindowsRegistry.init();
         AppJavaOptionsCheck.check();
-        AppSid.init();
         // AppBeaconServer.init();
         AppLayoutModel.init();
 

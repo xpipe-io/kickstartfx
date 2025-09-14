@@ -11,7 +11,7 @@
       <option name="taskNames">
         <list>
           <option value="clean" />
-          <option value=":dist:distAndInstall" />
+          <option value="distAndInstall" />
         </list>
       </option>
       <option name="vmOptions" />
