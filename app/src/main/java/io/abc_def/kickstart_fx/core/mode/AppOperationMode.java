@@ -15,6 +15,7 @@ import io.abc_def.kickstart_fx.util.*;
 import javafx.application.Platform;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 
 import java.time.Duration;
@@ -29,6 +30,7 @@ public abstract class AppOperationMode {
     private static final Object HALT_LOCK = new Object();
 
     @Getter
+    @Setter
     private static boolean inStartup;
 
     @Getter
@@ -56,126 +58,6 @@ public abstract class AppOperationMode {
         inShutdownHook = true;
         TrackEvent.info("Received SIGTERM externally");
         AppOperationMode.shutdown(false);
-    }
-
-    private static void setup(String[] args) {
-        try {
-            // Only for handling SIGTERM
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                externalShutdown();
-            }));
-
-            // Handle uncaught exceptions
-            Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
-                // It seems like a few exceptions are thrown in the quantum renderer
-                // when in shutdown. We can ignore these
-                if (AppOperationMode.isInShutdown()
-                        && Platform.isFxApplicationThread()
-                        && ex instanceof NullPointerException) {
-                    return;
-                }
-
-                // There are some accessibility exceptions on macOS, nothing we can do about that
-                if (Platform.isFxApplicationThread()
-                        && ex instanceof NullPointerException
-                        && ex.getMessage() != null
-                        && ex.getMessage().contains("Accessible")) {
-                    ErrorEventFactory.fromThrowable(ex)
-                            .expected()
-                            .description(
-                                    "An error occurred with the Accessibility implementation. A screen reader might not be supported right now")
-                            .build()
-                            .handle();
-                    return;
-                }
-
-                // Handle any startup uncaught errors
-                if (AppOperationMode.isInStartup() && thread.threadId() == 1) {
-                    ex.printStackTrace();
-                    AppOperationMode.halt(1);
-                }
-
-                if (ex instanceof OutOfMemoryError) {
-                    ex.printStackTrace();
-                    AppOperationMode.halt(1);
-                }
-
-                ErrorEventFactory.fromThrowable(ex).unhandled(true).build().handle();
-            });
-
-            TrackEvent.info("Initial setup");
-            AppMainWindow.loadingText("initializingApp");
-            GlobalTimer.init();
-            AppProperties.init(args);
-            PlatformThreadWatcher.init();
-            AppLogs.init();
-            AppDebugModeCheck.printIfNeeded();
-            AppProperties.get().logArguments();
-            AppDistributionType.init();
-            ModuleLayerLoader.loadAll(ModuleLayer.boot(), t -> {
-                ErrorEventFactory.fromThrowable(t).handle();
-            });
-            AppI18n.init();
-            AppPrefs.initLocal();
-            AppInstance.init();
-            // Initialize early to load in parallel
-            PlatformInit.init(false);
-            ThreadHelper.runAsync(() -> {
-                PlatformInit.init(true);
-                AppMainWindow.init(AppOperationMode.getStartupMode() == AppOperationModeSelection.GUI);
-            });
-            TrackEvent.info("Finished initial setup");
-        } catch (Throwable ex) {
-            ErrorEventFactory.fromThrowable(ex).term().handle();
-        }
-    }
-
-    public static AppOperationModeSelection getStartupMode() {
-        var event = TrackEvent.withInfo("Startup mode determined");
-        if (AppMainWindow.get() != null && AppMainWindow.get().getStage().isShowing()) {
-            event.tag("mode", "gui").tag("reason", "windowShowing").handle();
-            return AppOperationModeSelection.GUI;
-        }
-
-        var prop = AppProperties.get().getExplicitMode();
-        if (prop != null) {
-            event.tag("mode", prop.getDisplayName())
-                    .tag("reason", "modePropertyPassed")
-                    .handle();
-            return prop;
-        }
-
-        if (AppPrefs.get() != null) {
-            var pref = AppPrefs.get().startupBehaviour().getValue().getMode();
-            event.tag("mode", pref.getDisplayName())
-                    .tag("reason", "prefSetting")
-                    .handle();
-            return pref;
-        }
-
-        event.tag("mode", "gui").tag("reason", "fallback").handle();
-        return AppOperationModeSelection.GUI;
-    }
-
-    @SneakyThrows
-    public static void init(String[] args) {
-        inStartup = true;
-        setup(args);
-
-        if (AppProperties.get().isAotTrainMode()) {
-            AppOperationMode.switchToSyncOrThrow(BACKGROUND);
-            inStartup = false;
-            AppAotTrain.runTrainingMode();
-            AppOperationMode.shutdown(false);
-            return;
-        }
-
-        var startupMode = getStartupMode();
-        switchToSyncOrThrow(map(startupMode));
-        // If it doesn't find time, the JVM will not gc the startup workload
-        System.gc();
-        inStartup = false;
-        AppOpenArguments.init();
     }
 
     public static void switchToAsync(AppOperationMode newMode) {

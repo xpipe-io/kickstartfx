@@ -1,5 +1,6 @@
 package io.abc_def.kickstart_fx;
 
+import io.abc_def.kickstart_fx.core.AppInit;
 import io.abc_def.kickstart_fx.core.AppProperties;
 import io.abc_def.kickstart_fx.core.mode.AppOperationMode;
 
@@ -12,6 +13,6 @@ public class Main {
             return;
         }
 
-        AppOperationMode.init(args);
+        AppInit.init(args);
     }
 }
