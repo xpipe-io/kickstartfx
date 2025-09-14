@@ -1,6 +1,5 @@
 package io.abc_def.kickstart_fx.prefs;
 
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 

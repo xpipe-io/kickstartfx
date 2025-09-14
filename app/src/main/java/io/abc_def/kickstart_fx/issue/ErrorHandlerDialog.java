@@ -9,10 +9,10 @@ import io.abc_def.kickstart_fx.core.window.AppDialog;
 import io.abc_def.kickstart_fx.platform.LabelGraphic;
 
 import javafx.application.Platform;
-
 import javafx.geometry.Insets;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Region;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -98,5 +98,4 @@ public class ErrorHandlerDialog {
 
         return new Region();
     }
-
 }

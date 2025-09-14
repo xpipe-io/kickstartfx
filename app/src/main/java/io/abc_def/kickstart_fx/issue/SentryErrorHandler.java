@@ -108,9 +108,7 @@ public class SentryErrorHandler implements ErrorHandler {
         s.setTag("initial", AppProperties.get() != null ? AppProperties.get().isInitialLaunch() + "" : "false");
 
         var exMessage = ee.getThrowable() != null ? ee.getThrowable().getMessage() : null;
-        if (ee.getDescription() != null
-                && !ee.getDescription().equals(exMessage)
-                && ee.isShouldSendDiagnostics()) {
+        if (ee.getDescription() != null && !ee.getDescription().equals(exMessage) && ee.isShouldSendDiagnostics()) {
             s.setTag("message", ee.getDescription().lines().collect(Collectors.joining(" ")));
         }
 

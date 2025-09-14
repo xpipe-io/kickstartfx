@@ -41,7 +41,8 @@ public abstract class UpdateHandler {
                     ThreadHelper.sleep(Duration.ofMinutes(1).toMillis());
                     event("Starting background updater thread");
                     while (true) {
-                        if (AppPrefs.get() != null && AppPrefs.get().automaticallyUpdate().get()) {
+                        if (AppPrefs.get() != null
+                                && AppPrefs.get().automaticallyUpdate().get()) {
                             event("Performing background update");
                             refreshUpdateCheckSilent();
                         }

@@ -1,9 +1,9 @@
 package io.abc_def.kickstart_fx.core;
 
 import io.abc_def.kickstart_fx.core.check.AppDirectoryPermissionsCheck;
+import io.abc_def.kickstart_fx.core.mode.AppOperationModeSelection;
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.issue.TrackEvent;
-import io.abc_def.kickstart_fx.core.mode.AppOperationModeSelection;
 
 import lombok.Value;
 
@@ -96,7 +96,9 @@ public class AppProperties {
                 .filter(AppLogs.LOG_LEVELS::contains)
                 .orElse("info");
 
-        defaultDataDir = AppSystemInfo.ofCurrent().getUserHome().resolve("." + AppNames.ofCurrent().getKebapName());
+        defaultDataDir = AppSystemInfo.ofCurrent()
+                .getUserHome()
+                .resolve("." + AppNames.ofCurrent().getKebapName());
         dataDir = Optional.ofNullable(System.getProperty(AppNames.propertyName("dataDir")))
                 .map(s -> {
                     var p = Path.of(s);

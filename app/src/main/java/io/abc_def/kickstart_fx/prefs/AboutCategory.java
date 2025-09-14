@@ -1,6 +1,5 @@
 package io.abc_def.kickstart_fx.prefs;
 
-import atlantafx.base.controls.Spacer;
 import io.abc_def.kickstart_fx.comp.Comp;
 import io.abc_def.kickstart_fx.comp.base.LabelComp;
 import io.abc_def.kickstart_fx.comp.base.PrettyImageHelper;
@@ -13,12 +12,13 @@ import io.abc_def.kickstart_fx.platform.OptionsBuilder;
 import io.abc_def.kickstart_fx.update.AppDistributionType;
 
 import javafx.geometry.Insets;
-
-import atlantafx.base.theme.Styles;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import atlantafx.base.controls.Spacer;
+import atlantafx.base.theme.Styles;
 
 import java.util.List;
 
@@ -63,7 +63,8 @@ public class AboutCategory extends AppPrefsCategory {
             text.setAlignment(Pos.CENTER_LEFT);
 
             var size = 40;
-            var graphic = PrettyImageHelper.ofFixedSizeSquare("logo/logo.png", size).createRegion();
+            var graphic =
+                    PrettyImageHelper.ofFixedSizeSquare("logo/logo.png", size).createRegion();
 
             var hbox = new HBox(graphic, text);
             hbox.setAlignment(Pos.CENTER_LEFT);

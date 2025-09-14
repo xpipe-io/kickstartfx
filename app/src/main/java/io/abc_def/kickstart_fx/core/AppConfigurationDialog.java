@@ -6,8 +6,8 @@ import io.abc_def.kickstart_fx.comp.base.ScrollComp;
 import io.abc_def.kickstart_fx.core.window.AppDialog;
 import io.abc_def.kickstart_fx.platform.OptionsBuilder;
 import io.abc_def.kickstart_fx.prefs.AppearanceCategory;
-
 import io.abc_def.kickstart_fx.util.Hyperlinks;
+
 import javafx.scene.layout.Region;
 
 public class AppConfigurationDialog {

@@ -1,8 +1,8 @@
 package io.abc_def.kickstart_fx.core;
 
+import io.abc_def.kickstart_fx.core.mode.AppOperationModeSelection;
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.issue.LogErrorHandler;
-import io.abc_def.kickstart_fx.core.mode.AppOperationModeSelection;
 
 import lombok.Value;
 import picocli.CommandLine;

@@ -60,8 +60,8 @@ public class AppStyle {
             FONT_CONTENTS = "data:text/css;base64," + Base64.getEncoder().encodeToString(bytes);
         });
 
-            // Use data URLs because module path URLs are not accepted
-            // by JavaFX as it does not use Path objects to load stylesheets
+        // Use data URLs because module path URLs are not accepted
+        // by JavaFX as it does not use Path objects to load stylesheets
         AppResources.with(AppResources.MAIN_MODULE, "style", path -> {
             if (!Files.exists(path)) {
                 return;

@@ -1,8 +1,8 @@
 package io.abc_def.kickstart_fx.core;
 
 import io.abc_def.kickstart_fx.core.mode.AppOperationMode;
-import io.abc_def.kickstart_fx.util.ThreadHelper;
 import io.abc_def.kickstart_fx.util.OsType;
+import io.abc_def.kickstart_fx.util.ThreadHelper;
 
 public class AppAotTrain {
 

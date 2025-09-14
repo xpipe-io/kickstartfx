@@ -4,8 +4,8 @@ import io.abc_def.kickstart_fx.core.*;
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.issue.TrackEvent;
 import io.abc_def.kickstart_fx.util.LocalExec;
-import io.abc_def.kickstart_fx.util.Translatable;
 import io.abc_def.kickstart_fx.util.OsType;
+import io.abc_def.kickstart_fx.util.Translatable;
 
 import javafx.beans.value.ObservableValue;
 
@@ -52,8 +52,7 @@ public enum AppDistributionType implements Translatable {
         if (!AppProperties.get().isNewBuildSession() && !isDifferentDaemonExecutable()) {
             var cached = AppCache.getNonNull("dist", String.class, () -> null);
             var cachedType = Arrays.stream(values())
-                    .filter(d ->
-                            d.getId().equals(cached))
+                    .filter(d -> d.getId().equals(cached))
                     .findAny()
                     .orElse(null);
             if (cachedType != null) {

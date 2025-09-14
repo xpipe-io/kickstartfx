@@ -28,7 +28,7 @@ public class AppJacksonModule extends SimpleModule {
         addDeserializer(Path.class, new LocalPathDeserializer());
 
         context.setMixInAnnotations(Throwable.class, ThrowableTypeMixIn.class);
-        
+
         context.addSerializers(_serializers);
         context.addDeserializers(_deserializers);
     }

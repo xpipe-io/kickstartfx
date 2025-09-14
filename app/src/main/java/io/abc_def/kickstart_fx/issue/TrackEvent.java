@@ -1,6 +1,7 @@
 package io.abc_def.kickstart_fx.issue;
 
 import io.abc_def.kickstart_fx.core.AppLogs;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;

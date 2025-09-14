@@ -36,8 +36,7 @@ public enum AppOperationModeSelection {
 
     public static AppOperationModeSelection get(String name) {
         return Arrays.stream(AppOperationModeSelection.values())
-                .filter(m ->
-                        m.getDisplayName().equalsIgnoreCase(name))
+                .filter(m -> m.getDisplayName().equalsIgnoreCase(name))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Unknown mode: " + name + ". Possible values: "
                         + Arrays.stream(values())

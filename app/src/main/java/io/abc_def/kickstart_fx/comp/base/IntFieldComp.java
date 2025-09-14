@@ -4,11 +4,13 @@ import io.abc_def.kickstart_fx.comp.Comp;
 import io.abc_def.kickstart_fx.comp.CompStructure;
 import io.abc_def.kickstart_fx.comp.SimpleCompStructure;
 import io.abc_def.kickstart_fx.platform.PlatformThread;
+
 import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 

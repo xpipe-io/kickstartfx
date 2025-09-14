@@ -1,19 +1,15 @@
 package io.abc_def.kickstart_fx.core;
 
-import atlantafx.sampler.page.showcase.BlueprintsPage;
-import atlantafx.sampler.page.showcase.OverviewPage;
-import atlantafx.sampler.page.showcase.filemanager.FileManagerPage;
-import atlantafx.sampler.page.showcase.musicplayer.MusicPlayerPage;
 import io.abc_def.kickstart_fx.comp.Comp;
 import io.abc_def.kickstart_fx.comp.base.MarkdownComp;
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.platform.LabelGraphic;
 import io.abc_def.kickstart_fx.platform.PlatformThread;
 import io.abc_def.kickstart_fx.prefs.AppPrefsComp;
-
 import io.abc_def.kickstart_fx.util.GlobalTimer;
 import io.abc_def.kickstart_fx.util.Hyperlinks;
 import io.abc_def.kickstart_fx.util.ThreadHelper;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,16 +17,19 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+
+import atlantafx.sampler.page.showcase.BlueprintsPage;
+import atlantafx.sampler.page.showcase.OverviewPage;
+import atlantafx.sampler.page.showcase.filemanager.FileManagerPage;
+import atlantafx.sampler.page.showcase.musicplayer.MusicPlayerPage;
 import lombok.*;
 import lombok.experimental.NonFinal;
 import lombok.extern.jackson.Jacksonized;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -172,7 +171,8 @@ public class AppLayoutModel {
                         new LabelGraphic.IconGraphic("mdi2l-language-markdown-outline"),
                         Comp.of(() -> {
                             try {
-                                var md = AppResources.getResourcePath(AppResources.MAIN_MODULE, "misc/markdown.md").orElseThrow();
+                                var md = AppResources.getResourcePath(AppResources.MAIN_MODULE, "misc/markdown.md")
+                                        .orElseThrow();
                                 var string = Files.readString(md);
                                 return new MarkdownComp(string, UnaryOperator.identity(), true).createRegion();
                             } catch (Exception e) {
@@ -208,12 +208,7 @@ public class AppLayoutModel {
         double browserConnectionsWidth;
     }
 
-    public record Entry(
-            ObservableValue<String> name,
-            LabelGraphic icon,
-            Comp<?> comp,
-            Runnable action
-    ) {}
+    public record Entry(ObservableValue<String> name, LabelGraphic icon, Comp<?> comp, Runnable action) {}
 
     @Value
     @NonFinal

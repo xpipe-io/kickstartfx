@@ -14,10 +14,18 @@ public class AppRestart {
                 : AppInstallation.ofCurrent();
         var suffix = (arguments.size() > 0 ? " " + String.join(" ", arguments) : "");
         if (OsType.ofLocal() == OsType.LINUX) {
-            return new String[] {"sh", "-c", "nohup \"" + loc.getDaemonExecutablePath() + "\"" + suffix + " </dev/null >/dev/null 2>&1 & disown"};
+            return new String[] {
+                "sh",
+                "-c",
+                "nohup \"" + loc.getDaemonExecutablePath() + "\"" + suffix + " </dev/null >/dev/null 2>&1 & disown"
+            };
         } else if (OsType.ofLocal() == OsType.MACOS) {
-            return new String[] {"sh", "-c", "(sleep 1;open \"" + loc.getBaseInstallationPath() + "\" --args" + suffix
-                    + " </dev/null &>/dev/null) & disown" };
+            return new String[] {
+                "sh",
+                "-c",
+                "(sleep 1;open \"" + loc.getBaseInstallationPath() + "\" --args" + suffix
+                        + " </dev/null &>/dev/null) & disown"
+            };
         } else {
             var exe = loc.getDaemonExecutablePath();
             var base = "\"" + exe + "\"" + suffix;

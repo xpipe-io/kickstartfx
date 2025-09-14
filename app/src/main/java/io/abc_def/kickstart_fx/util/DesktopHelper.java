@@ -1,10 +1,11 @@
 package io.abc_def.kickstart_fx.util;
 
+import io.abc_def.kickstart_fx.core.AppSystemInfo;
+import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
+
 import com.sun.jna.platform.win32.Shell32;
 import com.sun.jna.platform.win32.ShellAPI;
 import com.sun.jna.platform.win32.User32;
-import io.abc_def.kickstart_fx.core.AppSystemInfo;
-import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 
 import java.awt.*;
 import java.nio.file.Files;

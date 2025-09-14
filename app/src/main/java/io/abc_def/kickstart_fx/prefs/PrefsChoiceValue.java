@@ -2,7 +2,9 @@ package io.abc_def.kickstart_fx.prefs;
 
 import io.abc_def.kickstart_fx.core.AppI18n;
 import io.abc_def.kickstart_fx.util.Translatable;
+
 import javafx.beans.value.ObservableValue;
+
 import lombok.SneakyThrows;
 
 import java.util.Arrays;

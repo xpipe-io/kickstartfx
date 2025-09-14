@@ -8,13 +8,11 @@ import io.abc_def.kickstart_fx.core.window.AppWindowTitle;
 import io.abc_def.kickstart_fx.issue.TrackEvent;
 import io.abc_def.kickstart_fx.platform.PlatformInit;
 import io.abc_def.kickstart_fx.platform.PlatformState;
-import io.abc_def.kickstart_fx.platform.PlatformThread;
 import io.abc_def.kickstart_fx.prefs.AppPrefs;
 import io.abc_def.kickstart_fx.update.UpdateAvailableDialog;
 import io.abc_def.kickstart_fx.util.GlobalTimer;
 import io.abc_def.kickstart_fx.util.ThreadHelper;
 import io.abc_def.kickstart_fx.util.WindowsRegistry;
-import javafx.application.Platform;
 
 public class AppBaseMode extends AppOperationMode {
 

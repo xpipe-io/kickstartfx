@@ -1,12 +1,12 @@
 package io.abc_def.kickstart_fx.issue;
 
 import io.abc_def.kickstart_fx.comp.Comp;
-
 import io.abc_def.kickstart_fx.comp.base.*;
 import io.abc_def.kickstart_fx.core.AppFontSizes;
 import io.abc_def.kickstart_fx.core.AppI18n;
 import io.abc_def.kickstart_fx.core.AppLogs;
 import io.abc_def.kickstart_fx.core.AppResources;
+
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;

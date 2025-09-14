@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import static io.abc_def.kickstart_fx.prefs.PrefsChoiceValue.getAll;
 import static io.abc_def.kickstart_fx.prefs.PrefsChoiceValue.getSupported;
 
-
 public class AppPrefsStorageHandler {
 
     private final Path file;

@@ -1,6 +1,5 @@
 package io.abc_def.kickstart_fx.prefs;
 
-import com.sun.management.HotSpotDiagnosticMXBean;
 import io.abc_def.kickstart_fx.comp.Comp;
 import io.abc_def.kickstart_fx.comp.base.ModalOverlay;
 import io.abc_def.kickstart_fx.comp.base.TileButtonComp;
@@ -13,12 +12,14 @@ import io.abc_def.kickstart_fx.platform.LabelGraphic;
 import io.abc_def.kickstart_fx.platform.OptionsBuilder;
 import io.abc_def.kickstart_fx.util.DesktopHelper;
 import io.abc_def.kickstart_fx.util.ThreadHelper;
+
+import com.sun.management.HotSpotDiagnosticMXBean;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
-import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
+import javax.management.MBeanServer;
 
 public class TroubleshootCategory extends AppPrefsCategory {
 

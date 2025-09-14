@@ -20,7 +20,6 @@ open module io.abc_def.kickstart_fx {
     exports io.abc_def.kickstart_fx.platform;
 
     requires static lombok;
-
     requires com.sun.jna;
     requires com.sun.jna.platform;
     requires org.slf4j;
@@ -67,6 +66,7 @@ open module io.abc_def.kickstart_fx {
     requires javafx.fxml;
 
     uses ModuleLayerLoader;
+    uses Module;
 
     provides Module with
             AppJacksonModule;

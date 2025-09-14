@@ -1,6 +1,7 @@
 package io.abc_def.kickstart_fx.update;
 
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
+
 import org.kohsuke.github.GHRelease;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHubBuilder;

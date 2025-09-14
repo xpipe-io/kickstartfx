@@ -1,6 +1,5 @@
 package io.abc_def.kickstart_fx.platform;
 
-import atlantafx.base.controls.Spacer;
 import io.abc_def.kickstart_fx.comp.Comp;
 import io.abc_def.kickstart_fx.comp.base.LabelComp;
 import io.abc_def.kickstart_fx.comp.base.OptionsComp;
@@ -11,6 +10,8 @@ import io.abc_def.kickstart_fx.prefs.AppPrefs;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Orientation;
+
+import atlantafx.base.controls.Spacer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,14 +66,11 @@ public class OptionsBuilder {
 
     public OptionsBuilder pref(Object property) {
         var mapping = AppPrefs.get().getMapping(property);
-        pref(
-                mapping.getKey(),
-                mapping.isRequiresRestart());
+        pref(mapping.getKey(), mapping.isRequiresRestart());
         return this;
     }
 
-    public OptionsBuilder pref(
-            String key, boolean requiresRestart) {
+    public OptionsBuilder pref(String key, boolean requiresRestart) {
         name(key);
         if (requiresRestart) {
             description(AppI18n.observable(key + "Description").map(s -> s + "\n\n" + AppI18n.get("requiresRestart")));
@@ -138,5 +136,4 @@ public class OptionsBuilder {
         finishCurrent();
         return new OptionsComp(entries);
     }
-
 }

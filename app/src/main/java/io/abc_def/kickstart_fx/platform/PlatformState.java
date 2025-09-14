@@ -3,8 +3,8 @@ package io.abc_def.kickstart_fx.platform;
 import io.abc_def.kickstart_fx.core.check.AppSystemFontCheck;
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.prefs.AppPrefs;
-import io.abc_def.kickstart_fx.util.ThreadHelper;
 import io.abc_def.kickstart_fx.util.OsType;
+import io.abc_def.kickstart_fx.util.ThreadHelper;
 
 import javafx.application.Platform;
 import javafx.scene.text.Font;

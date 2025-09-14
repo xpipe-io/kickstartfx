@@ -64,7 +64,7 @@ public class UpdateCheckComp extends SimpleComp {
                             UpdateAvailableDialog.showIfNeeded(false);
                         }
                     });
-            actionEvent.consume();
+                    actionEvent.consume();
                 })
                 .styleClass("update-button")
                 .disable(uh.getBusy())

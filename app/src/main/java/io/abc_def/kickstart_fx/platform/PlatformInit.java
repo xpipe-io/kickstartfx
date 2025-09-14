@@ -4,8 +4,8 @@ import io.abc_def.kickstart_fx.core.*;
 import io.abc_def.kickstart_fx.core.check.AppGpuCheck;
 import io.abc_def.kickstart_fx.core.window.AppModifiedStage;
 import io.abc_def.kickstart_fx.issue.TrackEvent;
-import io.abc_def.kickstart_fx.util.ThreadHelper;
 import io.abc_def.kickstart_fx.util.OsType;
+import io.abc_def.kickstart_fx.util.ThreadHelper;
 
 import javafx.application.Application;
 import javafx.application.Platform;

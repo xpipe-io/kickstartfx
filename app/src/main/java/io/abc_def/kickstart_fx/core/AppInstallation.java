@@ -10,19 +10,13 @@ public abstract class AppInstallation {
 
     private static final Windows WINDOWS = AppProperties.get().isImage()
             ? new Windows(determineCurrentInstallationBasePath())
-            : new WindowsDev(
-                    determineDefaultInstallationBasePath(),
-                    determineCurrentInstallationBasePath());
+            : new WindowsDev(determineDefaultInstallationBasePath(), determineCurrentInstallationBasePath());
     private static final Linux LINUX = AppProperties.get().isImage()
             ? new Linux(determineCurrentInstallationBasePath())
-            : new LinuxDev(
-                    determineDefaultInstallationBasePath(),
-                    determineCurrentInstallationBasePath());
+            : new LinuxDev(determineDefaultInstallationBasePath(), determineCurrentInstallationBasePath());
     private static final MacOs MACOS = AppProperties.get().isImage()
             ? new MacOs(determineCurrentInstallationBasePath())
-            : new MacOsDev(
-                    determineDefaultInstallationBasePath(),
-                    determineCurrentInstallationBasePath());
+            : new MacOsDev(determineDefaultInstallationBasePath(), determineCurrentInstallationBasePath());
     private final Path base;
 
     private AppInstallation(Path base) {
@@ -49,7 +43,8 @@ public abstract class AppInstallation {
     private static Path determineDefaultInstallationBasePath() {
         return switch (OsType.ofLocal()) {
             case OsType.Linux ignored -> Path.of("/opt/" + AppNames.ofCurrent().getKebapName());
-            case OsType.MacOs ignored -> Path.of("/Applications/" + AppNames.ofCurrent().getName() + ".app");
+            case OsType.MacOs ignored ->
+                Path.of("/Applications/" + AppNames.ofCurrent().getName() + ".app");
             case OsType.Windows ignored -> {
                 var pg = AppSystemInfo.ofWindows().getProgramFiles();
                 var systemPath = pg.resolve(AppNames.ofCurrent().getName());
@@ -107,14 +102,16 @@ public abstract class AppInstallation {
     private static Path getInstallationBasePathForJavaExecutable(Path executable) {
         // Resolve root path of installation relative to executable in a JPackage installation
         return switch (OsType.ofLocal()) {
-            case OsType.Linux ignored -> executable.getParent().getParent().getParent().getParent();
-            case OsType.MacOs ignored -> executable
-                    .getParent()
-                    .getParent()
-                    .getParent()
-                    .getParent()
-                    .getParent()
-                    .getParent();
+            case OsType.Linux ignored ->
+                executable.getParent().getParent().getParent().getParent();
+            case OsType.MacOs ignored ->
+                executable
+                        .getParent()
+                        .getParent()
+                        .getParent()
+                        .getParent()
+                        .getParent()
+                        .getParent();
             case OsType.Windows ignored -> executable.getParent().getParent().getParent();
         };
     }
@@ -266,7 +263,6 @@ public abstract class AppInstallation {
             return getBaseInstallationPath()
                     .resolve("Contents", "MacOS", AppNames.ofCurrent().getExecutableName());
         }
-
 
         @Override
         public Path getLogoPath() {

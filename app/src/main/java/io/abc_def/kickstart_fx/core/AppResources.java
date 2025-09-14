@@ -2,6 +2,7 @@ package io.abc_def.kickstart_fx.core;
 
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.util.FailableConsumer;
+
 import io.xpipe.modulefs.ModuleFileSystem;
 
 import java.io.IOException;
@@ -37,8 +38,7 @@ public class AppResources {
 
     private static ModuleFileSystem openFileSystemIfNeeded(String module) throws IOException {
         var layer = ModuleLayer.boot();
-        var fs = (ModuleFileSystem)
-                FileSystems.newFileSystem(URI.create("module:/" + module), Map.of("layer", layer));
+        var fs = (ModuleFileSystem) FileSystems.newFileSystem(URI.create("module:/" + module), Map.of("layer", layer));
         return fs;
     }
 

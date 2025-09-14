@@ -4,12 +4,12 @@ import io.abc_def.kickstart_fx.core.AppLayoutModel;
 import io.abc_def.kickstart_fx.core.AppProperties;
 import io.abc_def.kickstart_fx.core.AppTheme;
 import io.abc_def.kickstart_fx.core.mode.AppOperationMode;
-
 import io.abc_def.kickstart_fx.platform.GlobalBooleanProperty;
 import io.abc_def.kickstart_fx.platform.GlobalDoubleProperty;
 import io.abc_def.kickstart_fx.platform.GlobalObjectProperty;
 import io.abc_def.kickstart_fx.platform.PlatformThread;
 import io.abc_def.kickstart_fx.util.OsType;
+
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableBooleanValue;
@@ -47,7 +47,6 @@ public final class AppPrefs {
         return INSTANCE;
     }
 
-
     @Getter
     private final BooleanProperty requiresRestart = new GlobalBooleanProperty(false);
 
@@ -57,76 +56,65 @@ public final class AppPrefs {
             .valueClass(Boolean.class)
             .requiresRestart(true)
             .build());
-    public final BooleanProperty performanceMode =
-            map(Mapping.builder()
-                    .property(new GlobalBooleanProperty())
-                    .key("performanceMode")
-                    .valueClass(Boolean.class)
-                    .build());
-    public final ObjectProperty<AppTheme.Theme> theme =
-            map(Mapping.builder()
-                    .property(new GlobalObjectProperty<>())
-                    .key("theme")
-                    .valueClass(AppTheme.Theme.class)
-                    .build());
-    final BooleanProperty useSystemFont =
-            map(Mapping.builder()
-                    .property(new GlobalBooleanProperty(OsType.ofLocal() != OsType.MACOS))
-                    .key("useSystemFont")
-                    .valueClass(Boolean.class)
-                    .build());
-    final Property<Integer> uiScale =
-            map(Mapping.builder()
-                    .property(new GlobalObjectProperty<>())
-                    .key("uiScale")
-                    .valueClass(Integer.class)
-                    .requiresRestart(true)
-                    .build());
-    final BooleanProperty saveWindowLocation =
-            map(Mapping.builder()
-                    .property(new GlobalBooleanProperty(true))
-                    .key("saveWindowLocation")
-                    .valueClass(Boolean.class)
-                    .requiresRestart(false)
-                    .build());
-    final DoubleProperty windowOpacity =
-            map(Mapping.builder()
-                    .property(new GlobalDoubleProperty(1.0))
-                    .key("windowOpacity")
-                    .valueClass(Double.class)
-                    .requiresRestart(false)
-                    .build());
-    public final BooleanProperty focusWindowOnNotifications =
-            map(Mapping.builder()
-                    .property(new GlobalBooleanProperty(false))
-                    .key("focusWindowOnNotifications")
-                    .valueClass(Boolean.class)
-                    .build());
-    final ObjectProperty<StartupBehaviour> startupBehaviour =
-            map(Mapping.builder()
-                    .property(new GlobalObjectProperty<>(StartupBehaviour.GUI))
-                    .key("startupBehaviour")
-                    .valueClass(StartupBehaviour.class)
-                    .requiresRestart(true)
-                    .build());
-    final ObjectProperty<CloseBehaviour> closeBehaviour =
-            map(Mapping.builder()
-                    .property(new GlobalObjectProperty<>(CloseBehaviour.QUIT))
-                    .key("closeBehaviour")
-                    .valueClass(CloseBehaviour.class)
-                    .build());
-    final ObjectProperty<SupportedLocale> language =
-            map(Mapping.builder()
-                    .property(new GlobalObjectProperty<>(SupportedLocale.ENGLISH))
-                    .key("language")
-                    .valueClass(SupportedLocale.class)
-                    .build());
-    final BooleanProperty automaticallyCheckForUpdates =
-            map(Mapping.builder()
-                    .property(new GlobalBooleanProperty(true))
-                    .key("automaticallyCheckForUpdates")
-                    .valueClass(Boolean.class)
-                    .build());
+    public final BooleanProperty performanceMode = map(Mapping.builder()
+            .property(new GlobalBooleanProperty())
+            .key("performanceMode")
+            .valueClass(Boolean.class)
+            .build());
+    public final ObjectProperty<AppTheme.Theme> theme = map(Mapping.builder()
+            .property(new GlobalObjectProperty<>())
+            .key("theme")
+            .valueClass(AppTheme.Theme.class)
+            .build());
+    final BooleanProperty useSystemFont = map(Mapping.builder()
+            .property(new GlobalBooleanProperty(OsType.ofLocal() != OsType.MACOS))
+            .key("useSystemFont")
+            .valueClass(Boolean.class)
+            .build());
+    final Property<Integer> uiScale = map(Mapping.builder()
+            .property(new GlobalObjectProperty<>())
+            .key("uiScale")
+            .valueClass(Integer.class)
+            .requiresRestart(true)
+            .build());
+    final BooleanProperty saveWindowLocation = map(Mapping.builder()
+            .property(new GlobalBooleanProperty(true))
+            .key("saveWindowLocation")
+            .valueClass(Boolean.class)
+            .requiresRestart(false)
+            .build());
+    final DoubleProperty windowOpacity = map(Mapping.builder()
+            .property(new GlobalDoubleProperty(1.0))
+            .key("windowOpacity")
+            .valueClass(Double.class)
+            .requiresRestart(false)
+            .build());
+    public final BooleanProperty focusWindowOnNotifications = map(Mapping.builder()
+            .property(new GlobalBooleanProperty(false))
+            .key("focusWindowOnNotifications")
+            .valueClass(Boolean.class)
+            .build());
+    final ObjectProperty<StartupBehaviour> startupBehaviour = map(Mapping.builder()
+            .property(new GlobalObjectProperty<>(StartupBehaviour.GUI))
+            .key("startupBehaviour")
+            .valueClass(StartupBehaviour.class)
+            .requiresRestart(true)
+            .build());
+    final ObjectProperty<CloseBehaviour> closeBehaviour = map(Mapping.builder()
+            .property(new GlobalObjectProperty<>(CloseBehaviour.QUIT))
+            .key("closeBehaviour")
+            .valueClass(CloseBehaviour.class)
+            .build());
+    final ObjectProperty<SupportedLocale> language = map(Mapping.builder()
+            .property(new GlobalObjectProperty<>(SupportedLocale.ENGLISH))
+            .key("language")
+            .valueClass(SupportedLocale.class)
+            .build());
+    final BooleanProperty automaticallyCheckForUpdates = map(Mapping.builder()
+            .property(new GlobalBooleanProperty(true))
+            .key("automaticallyCheckForUpdates")
+            .valueClass(Boolean.class)
+            .build());
 
     @Getter
     private final List<AppPrefsCategory> categories = List.of(

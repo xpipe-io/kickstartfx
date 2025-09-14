@@ -103,8 +103,7 @@ public class OptionsComp extends Comp<CompStructure<VBox>> {
                         tt.setShowDelay(Duration.millis(1));
                         Tooltip.install(link, tt);
 
-                        var descriptionBox =
-                                new HBox(description, new Spacer(Orientation.HORIZONTAL), link);
+                        var descriptionBox = new HBox(description, new Spacer(Orientation.HORIZONTAL), link);
                         descriptionBox.getStyleClass().add("description-box");
                         descriptionBox.setSpacing(5);
                         HBox.setHgrow(descriptionBox, Priority.ALWAYS);

@@ -28,10 +28,10 @@ public class AppDesktopIntegration {
                         // If we run this at the same time as the system is sleeping, there might be exceptions
                         // because the platform does not like being shut down while sleeping
                         // This assures that it will be run later, on system wake
-//                        ThreadHelper.runAsync(() -> {
-//                            ThreadHelper.sleep(1000);
-//                            AppOperationMode.close();
-//                        });
+                        //                        ThreadHelper.runAsync(() -> {
+                        //                            ThreadHelper.sleep(1000);
+                        //                            AppOperationMode.close();
+                        //                        });
                     }
                 });
             }
@@ -63,8 +63,7 @@ public class AppDesktopIntegration {
 
                 // Set dock icon explicitly on macOS
                 // This is necessary in case the app was started through a script as it will have no icon otherwise
-                if (AppLogs.get().isWriteToSysout()
-                        && Taskbar.isTaskbarSupported()) {
+                if (AppLogs.get().isWriteToSysout() && Taskbar.isTaskbarSupported()) {
                     try {
                         var iconUrl = Main.class.getResourceAsStream("resources/img/logo/padded/logo_128x128.png");
                         if (iconUrl != null) {

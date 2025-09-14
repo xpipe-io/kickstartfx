@@ -128,9 +128,6 @@ public class ModalOverlayComp extends SimpleComp {
 
                 if (oldValue != null) {
                     if (oldValue.getContent() instanceof ModalOverlayContentComp mocc) {
-                        mocc.onClose();
-                    }
-                    if (oldValue.getContent() instanceof ModalOverlayContentComp mocc) {
                         mocc.setModalOverlay(null);
                     }
                 }
@@ -256,14 +253,6 @@ public class ModalOverlayComp extends SimpleComp {
                 content.requestFocus();
             }
         });
-
-        if (newValue.getContent() instanceof ModalOverlayContentComp mocc) {
-            var busy = mocc.busy();
-            if (busy != null) {
-                var loading = new LoadingOverlayComp(Comp.of(() -> modalBox), busy, true);
-                return loading.createRegion();
-            }
-        }
 
         return modalBox;
     }

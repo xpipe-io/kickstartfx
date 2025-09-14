@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+
 import org.apache.commons.io.FilenameUtils;
 
 import java.util.function.Consumer;
@@ -98,7 +99,8 @@ public class PrettyImageComp extends SimpleComp {
                         && AppPrefs.get().theme().getValue() != null
                         && AppPrefs.get().theme().getValue().isDark();
                 var fixed = val != null
-                        ? FilenameUtils.removeExtension(val) + (useDark ? "-dark" : "") + "." + FilenameUtils.getExtension(val)
+                        ? FilenameUtils.removeExtension(val) + (useDark ? "-dark" : "") + "."
+                                + FilenameUtils.getExtension(val)
                         : null;
                 image.set(fixed);
 
