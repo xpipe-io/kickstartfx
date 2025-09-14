@@ -117,9 +117,15 @@ public class AppLayoutModel {
         });
     }
 
-    public void selectSettings() {
+    public void selectMarkdown() {
         PlatformThread.runLaterIfNeeded(() -> {
             selected.setValue(entries.get(5));
+        });
+    }
+
+    public void selectSettings() {
+        PlatformThread.runLaterIfNeeded(() -> {
+            selected.setValue(entries.get(6));
         });
     }
 

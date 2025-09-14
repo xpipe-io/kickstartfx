@@ -8,10 +8,13 @@ import io.abc_def.kickstart_fx.core.window.AppWindowTitle;
 import io.abc_def.kickstart_fx.issue.TrackEvent;
 import io.abc_def.kickstart_fx.platform.PlatformInit;
 import io.abc_def.kickstart_fx.platform.PlatformState;
+import io.abc_def.kickstart_fx.platform.PlatformThread;
 import io.abc_def.kickstart_fx.prefs.AppPrefs;
 import io.abc_def.kickstart_fx.update.UpdateAvailableDialog;
 import io.abc_def.kickstart_fx.util.GlobalTimer;
+import io.abc_def.kickstart_fx.util.ThreadHelper;
 import io.abc_def.kickstart_fx.util.WindowsRegistry;
+import javafx.application.Platform;
 
 public class AppBaseMode extends AppOperationMode {
 
@@ -58,6 +61,9 @@ public class AppBaseMode extends AppOperationMode {
         AppMainWindow.loadingText("loadingUserInterface");
         PlatformInit.init(true);
         AppImages.init();
+
+        // TODO: This delay is just here to demo the loading screen
+        ThreadHelper.sleep(1000);
         AppMainWindow.initContent();
 
         TrackEvent.info("Waiting for startup dialogs to close");
