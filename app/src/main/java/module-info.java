@@ -65,6 +65,10 @@ open module io.abc_def.kickstart_fx {
     requires datafaker;
     requires javafx.fxml;
 
+    // Monkey tester stuff
+    requires monkey_tester;
+    requires javafx.swing;
+
     uses ModuleLayerLoader;
     uses Module;
 

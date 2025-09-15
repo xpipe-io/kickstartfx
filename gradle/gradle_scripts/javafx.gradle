@@ -35,6 +35,7 @@ if (customJavaFxPath != null) {
         javafx "org.openjfx:javafx-media:${devJavafxVersion}:${platformClassifier}"
         javafx "org.openjfx:javafx-web:${devJavafxVersion}:${platformClassifier}"
         javafx "org.openjfx:javafx-fxml:${devJavafxVersion}:${platformClassifier}"
+        javafx "org.openjfx:javafx-swing:${devJavafxVersion}:${platformClassifier}"
     }
 }
 

@@ -37,7 +37,7 @@ tasks.register('createChecksums', Checksum) {
         def artifactChecksumsSha256Hex = new HashMap<String, String>()
         for (final def file in outputDirectory.get().getAsFileTree().files) {
             def name = file.name.lastIndexOf('.').with { it != -1 ? file.name[0..<it] : file.name }
-            if (name.endsWith('mapping.map') || name.endsWith('.asc')) {
+            if (name.endsWith('.asc')) {
                 continue
             }
 

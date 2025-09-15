@@ -60,6 +60,8 @@ dependencies {
     implementation ("net.datafaker:datafaker:1.3.0") {
         exclude group: "com.github.mifmif", module: "generex"
     }
+
+    implementation files("$rootDir/gradle/gradle_scripts/MonkeyTester.jar")
 }
 
 application {

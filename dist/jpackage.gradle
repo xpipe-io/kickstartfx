@@ -98,7 +98,7 @@ tasks.register('prepareMacOSResources', DefaultTask) {
                                                versionString,
                                                '__BUNDLE__',
                                                jpackageMacOsBundleName,
-                                                '__EXECUTABLE_NAME',
+                                                '__EXECUTABLE_NAME__',
                                                 jpackageExecutableName))
             into file("${project.layout.buildDirectory.get()}/macos_resources")
         }

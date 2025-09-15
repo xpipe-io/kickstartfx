@@ -21,3 +21,4 @@ ComponentsGenerated.wxs
 i18n.gradle
 dist/javafx/**
 gradle.properties
+hs_err_*

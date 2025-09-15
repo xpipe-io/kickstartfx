@@ -1,6 +1,6 @@
 def distDir = "${project.layout.buildDirectory.get()}/dist"
 
-// TODO: Change this to a random UUID!
+// TODO: Change this to a random UUID
 def RELEASE_PRODUCT_CODE = '{fb687ed1-5446-4d4b-be8a-b98e3b6f6039}'
 
 tasks.register('installerDist', DefaultTask) {

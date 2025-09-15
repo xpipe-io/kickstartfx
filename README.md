@@ -10,13 +10,13 @@
 
 KickstartFX is a ready-to-use template for JavaFX applications. It can serve as a solid foundation for your own JavaFX application as everything is fully customizable and extendable. You can find the documentation at [https://kickstartfx.xpipe.io](https://kickstartfx.xpipe.io).
 
-KickstartFX is more than just a basic template that opens a simple window. It contains a lot of code to handle the challenges of applications in the real world to achieve the best possible desktop application experience across all operating systems. The code is based on [XPipe](https://github.com/xpipe-io/kickstartfx), a well-established JavaFX application and is the result of years of experience developing desktop application that is used by many thousands of users right now.
+KickstartFX is more than just a basic template that opens a simple window. It contains a lot of code to handle the challenges of applications in the real world to achieve the best possible desktop application experience across all operating systems. The code is based on [XPipe](https://github.com/xpipe-io/kickstartfx), a well-established JavaFX application, and is the result of years of experience developing a desktop application that is used by many thousands of users right now.
 
 It features the following noteworthy features that you won't get with any other templates:
 - A fully up-to-date build using the latest features of JDK25, Gradle 9, JavaFX 25, WiX 6, and much more
 - Native executable and installer generation for all operating systems using native tools
 - A fully modularized build, including fully modularized dependencies and the usage of jmods
-- A ready-to-deploy GitHub actions pipeline to automatically build end release your application
+- A ready-to-deploy GitHub actions pipeline to automatically build and release your application
 - Close-to-native theming capabilities with AtlantaFX themes as the basis combined with many manual adjustments
 - Advanced error handling and issue tracking with support for Sentry
 - Markdown rendering capabilities out-of-the-box with flexmark
@@ -30,7 +30,7 @@ It features the following noteworthy features that you won't get with any other 
 - Plenty of checks to warn users about problems with their system configuration, environment, and compatibility
 - Robust dependency management and font handling, your application will even run in WSL
 - Hot-reload capabilities for all resources, including reapplying stylesheets
-- Application instant management via inter-process communication
+- Application instance management via inter-process communication
 - System tray icon support
 - Built-in support for Jackson and Lombok
 - Built-in translations support with language changes applying instantly

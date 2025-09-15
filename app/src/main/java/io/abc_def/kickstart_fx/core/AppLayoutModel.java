@@ -1,5 +1,7 @@
 package io.abc_def.kickstart_fx.core;
 
+import com.oracle.tools.fx.monkey.MainWindow;
+import com.oracle.tools.fx.monkey.MonkeyTesterApp;
 import io.abc_def.kickstart_fx.comp.Comp;
 import io.abc_def.kickstart_fx.comp.base.MarkdownComp;
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
@@ -17,6 +19,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -122,9 +127,15 @@ public class AppLayoutModel {
         });
     }
 
-    public void selectSettings() {
+    public void selectMonkeyTester() {
         PlatformThread.runLaterIfNeeded(() -> {
             selected.setValue(entries.get(6));
+        });
+    }
+
+    public void selectSettings() {
+        PlatformThread.runLaterIfNeeded(() -> {
+            selected.setValue(entries.get(7));
         });
     }
 
@@ -179,6 +190,19 @@ public class AppLayoutModel {
                                 ErrorEventFactory.fromThrowable(e).handle();
                                 return null;
                             }
+                        }),
+                        null),
+                new Entry(
+                        AppI18n.observable("monkeyTester"),
+                        new LabelGraphic.IconGraphic("mdi2s-shape"),
+                        Comp.of(() -> {
+                            var w = new MainWindow();
+                            var bp = (BorderPane) w.getScene().getRoot();
+                            var menuBar = (MenuBar) bp.getTop();
+                            menuBar.getStyleClass().add("background");
+                            var pane = (SplitPane) bp.getCenter();
+                            pane.setDividerPosition(0, 0.7);
+                            return bp;
                         }),
                         null),
                 new Entry(
