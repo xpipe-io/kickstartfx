@@ -111,7 +111,9 @@ public class AppSocketBeacon extends AppBeacon {
     protected void start() throws IOException {
         if (checkSocketExists()) {
             if (AppDataLock.hasLock()) {
-                Files.delete(getSocketAddress().getPath());
+                if (Files.exists(getSocketAddress().getPath())) {
+                    Files.delete(getSocketAddress().getPath());
+                }
             } else {
                 return;
             }

@@ -15,18 +15,13 @@ public class AppDataLock {
 
     private static FileChannel channel;
     private static FileLock lock;
-    private static Boolean lockState;
 
     private static Path getLockFile() {
         return AppProperties.get().getDataDir().resolve("lock");
     }
 
     public static boolean hasLock() {
-        if (lockState == null) {
-            return false;
-        }
-
-        return lockState;
+        return lock != null;
     }
 
     public static void init() {
@@ -39,13 +34,11 @@ public class AppDataLock {
                     // If it already exists, we lost the race
                     Files.createFile(file.toPath());
                 } catch (FileAlreadyExistsException f) {
-                    lockState = false;
                     return;
                 }
             }
             channel = new RandomAccessFile(file, "rw").getChannel();
             lock = channel.tryLock();
-            lockState = true;
         } catch (Exception ex) {
             ErrorEventFactory.fromThrowable(ex).build().handle();
         }
