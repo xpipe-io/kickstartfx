@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
-public class AppWindowsBeacon extends AppBeacon {
+public class AppNamedPipeBeacon extends AppBeacon {
 
     private static final int MAX_BUFFER_SIZE = 1024;
 
