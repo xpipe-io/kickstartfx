@@ -32,6 +32,8 @@ public class AppSocketBeacon extends AppBeacon {
             buffer.clear();
             buffer.put(JacksonMapper.getDefault().writeValueAsString(message).getBytes());
             buffer.flip();
+
+            channel.write(buffer);
         } catch (Exception e) {
             ErrorEventFactory.fromThrowable(e).handle();
         }

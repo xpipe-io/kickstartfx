@@ -56,7 +56,7 @@ public class AppInstance {
             });
             ThreadHelper.sleep(1000);
         }
-        TrackEvent.info("Another instance is already running on this port. Quitting ...");
+        TrackEvent.info("Another instance is already running. Quitting ...");
         AppOperationMode.halt(1);
     }
 }
