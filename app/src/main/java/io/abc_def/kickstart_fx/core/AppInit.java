@@ -81,6 +81,8 @@ public class AppInit {
             });
             AppI18n.init();
             AppPrefs.initLocal();
+            AppDataLock.init();
+            AppBeacon.init();
             AppInstance.init();
             // Initialize early to load in parallel
             PlatformInit.init(false);
