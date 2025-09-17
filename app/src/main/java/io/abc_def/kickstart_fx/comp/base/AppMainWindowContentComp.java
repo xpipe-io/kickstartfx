@@ -130,7 +130,7 @@ public class AppMainWindowContentComp extends SimpleComp {
 
             overlay.addListener((ListChangeListener<? super ModalOverlay>) c -> {
                 if (c.next() && c.wasAdded()) {
-                    AppMainWindow.get().focus();
+                    AppMainWindow.get().focus(false);
 
                     // Close blocking modal windows
                     var childWindows = Window.getWindows().stream()

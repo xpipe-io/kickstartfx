@@ -45,7 +45,6 @@ public class AppBaseMode extends AppOperationMode {
         AppDirectoryPermissionsCheck.checkDirectory(AppSystemInfo.ofCurrent().getTemp());
         WindowsRegistry.init();
         AppJavaOptionsCheck.check();
-        // AppBeaconServer.init();
         AppLayoutModel.init();
 
         // If we downloaded an update, and decided to no longer automatically update, don't remind us!
@@ -80,11 +79,12 @@ public class AppBaseMode extends AppOperationMode {
     public void finalTeardown() {
         TrackEvent.withInfo("Base mode shutdown started").build();
         AppPrefs.reset();
+        AppBeacon.reset();
         AppLayoutModel.reset();
         AppTheme.reset();
         PlatformState.reset();
         AppResources.reset();
-        AppDataLock.unlock();
+        AppDataLock.reset();
         GlobalTimer.reset();
         TrackEvent.info("Base mode shutdown finished");
     }
