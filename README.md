@@ -45,7 +45,7 @@ You can run the latest release right now to see for yourself. These releases wer
 
 ### Windows
 
-Installers are the easiest way to get started and come with an optional automatic update functionality:
+Installers are the easiest way to get started:
 
 - [Windows .msi Installer (x86-64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-windows-x86_64.msi)
 - [Windows .msi Installer (ARM 64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-windows-arm64.msi)
@@ -57,7 +57,7 @@ If you don't like installers, you can also use a portable version that is packag
 
 ### macOS
 
-Installers are the easiest way to get started and come with an optional automatic update functionality:
+Installers are the easiest way to get started:
 
 - [MacOS .pkg Installer (x86-64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-macos-x86_64.pkg)
 - [MacOS .pkg Installer (ARM 64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-macos-arm64.pkg)
