@@ -15,12 +15,21 @@ public class AppDataLock {
 
     private static FileChannel channel;
     private static FileLock lock;
+    private static Boolean lockState;
 
     private static Path getLockFile() {
         return AppProperties.get().getDataDir().resolve("lock");
     }
 
-    public static boolean lock() {
+    public static boolean hasLock() {
+        if (lockState == null) {
+            return false;
+        }
+
+        return lockState;
+    }
+
+    public static void init() {
         try {
             var file = getLockFile().toFile();
             FileUtils.forceMkdir(file.getParentFile());
@@ -30,19 +39,19 @@ public class AppDataLock {
                     // If it already exists, we lost the race
                     Files.createFile(file.toPath());
                 } catch (FileAlreadyExistsException f) {
-                    return false;
+                    lockState = false;
+                    return;
                 }
             }
             channel = new RandomAccessFile(file, "rw").getChannel();
             lock = channel.tryLock();
-            return lock != null;
+            lockState = true;
         } catch (Exception ex) {
             ErrorEventFactory.fromThrowable(ex).build().handle();
-            return false;
         }
     }
 
-    public static void unlock() {
+    public static void reset() {
         if (channel == null || lock == null) {
             return;
         }

@@ -80,7 +80,7 @@ public class AppBaseMode extends AppOperationMode {
         AppTheme.reset();
         PlatformState.reset();
         AppResources.reset();
-        AppDataLock.unlock();
+        AppDataLock.reset();
         GlobalTimer.reset();
         TrackEvent.info("Base mode shutdown finished");
     }

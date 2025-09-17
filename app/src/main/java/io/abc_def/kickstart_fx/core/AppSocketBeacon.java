@@ -110,7 +110,11 @@ public class AppSocketBeacon extends AppBeacon {
 
     protected void start() throws IOException {
         if (checkSocketExists()) {
-            return;
+            if (AppDataLock.hasLock()) {
+                Files.delete(getSocketAddress().getPath());
+            } else {
+                return;
+            }
         }
 
         createSocket();

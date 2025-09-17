@@ -1,9 +1,5 @@
 package io.abc_def.kickstart_fx.core;
 
-import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.WinBase;
-import com.sun.jna.platform.win32.WinError;
-import com.sun.jna.platform.win32.WinNT;
 import io.abc_def.kickstart_fx.core.mode.AppOperationMode;
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.issue.TrackEvent;
@@ -12,7 +8,6 @@ import io.abc_def.kickstart_fx.util.ThreadHelper;
 
 import java.awt.*;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 public class AppInstance {
@@ -23,7 +18,7 @@ public class AppInstance {
             // Even in case we are unable to reach another beacon server
             // there might be another instance running, for example
             // starting up
-            if (!AppDataLock.lock()) {
+            if (!AppDataLock.hasLock()) {
                 TrackEvent.info(
                         "Data directory " + AppProperties.get().getDataDir().toString()
                                 + " is already locked. Is another instance running?");
