@@ -25,7 +25,7 @@ import java.util.List;
 public class AboutCategory extends AppPrefsCategory {
 
     @Override
-    protected String getId() {
+    public String getId() {
         return "about";
     }
 
@@ -35,7 +35,7 @@ public class AboutCategory extends AppPrefsCategory {
     }
 
     @Override
-    protected Comp<?> create() {
+    public Comp<?> create() {
         var props = createProperties();
         var update = new UpdateCheckComp().prefWidth(600);
         return new VerticalComp(List.of(

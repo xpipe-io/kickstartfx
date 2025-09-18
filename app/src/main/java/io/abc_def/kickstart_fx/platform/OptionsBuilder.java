@@ -23,7 +23,6 @@ public class OptionsBuilder {
 
     private ObservableValue<String> name;
     private ObservableValue<String> description;
-    private String documentationLink;
     private Comp<?> comp;
     private Comp<?> lastCompHeadReference;
     private ObservableValue<String> lastNameReference;
@@ -33,9 +32,8 @@ public class OptionsBuilder {
             return;
         }
 
-        var entry = new OptionsComp.Entry(null, description, documentationLink, name, comp);
+        var entry = new OptionsComp.Entry(null, description, name, comp);
         description = null;
-        documentationLink = null;
         name = null;
         lastNameReference = null;
         comp = null;
@@ -60,7 +58,7 @@ public class OptionsBuilder {
     public OptionsBuilder addTitle(String titleKey) {
         finishCurrent();
         entries.add(new OptionsComp.Entry(
-                titleKey, null, null, null, new LabelComp(AppI18n.observable(titleKey)).styleClass("title-header")));
+                titleKey, null, null, new LabelComp(AppI18n.observable(titleKey)).styleClass("title-header")));
         return this;
     }
 

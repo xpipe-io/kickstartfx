@@ -37,6 +37,6 @@ public class AppOpenArguments {
 
         TrackEvent.withDebug("Handling arguments").elements(arguments).handle();
 
-        // TODO
+        // TODO: Handle any generic arguments passed to the app, e.g. file names to open
     }
 }

@@ -90,7 +90,7 @@ public class AppearanceCategory extends AppPrefsCategory {
     }
 
     @Override
-    protected String getId() {
+    public String getId() {
         return "appearance";
     }
 
@@ -100,7 +100,7 @@ public class AppearanceCategory extends AppPrefsCategory {
     }
 
     @Override
-    protected Comp<?> create() {
+    public Comp<?> create() {
         var prefs = AppPrefs.get();
         return new OptionsBuilder()
                 .addTitle("uiOptions")

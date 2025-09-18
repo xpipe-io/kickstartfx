@@ -36,8 +36,6 @@ public class UserReportComp extends ModalOverlayContentComp {
         var comp = new UserReportComp(event);
         var modal = ModalOverlay.of("errorHandler", comp);
         var sent = new SimpleBooleanProperty();
-        modal.addButtonBarComp(privacyPolicy());
-        modal.addButtonBarComp(Comp.hspacer());
         modal.addButton(new ModalButton(
                 "sendReport",
                 () -> {
@@ -48,33 +46,6 @@ public class UserReportComp extends ModalOverlayContentComp {
                 true));
         modal.showAndWait();
         return sent.get();
-    }
-
-    private static Comp<?> privacyPolicy() {
-        return Comp.of(() -> {
-            var dataPolicyButton = new Hyperlink(AppI18n.get("dataHandlingPolicies"));
-            AppFontSizes.xs(dataPolicyButton);
-            dataPolicyButton.setOnAction(event1 -> {
-                AppResources.with(AppResources.MAIN_MODULE, "misc/report_privacy_policy.md", file -> {
-                    var markDown = new MarkdownComp(Files.readString(file), s -> s, true)
-                            .apply(struc -> struc.get().setMaxWidth(500))
-                            .apply(struc -> struc.get().setMaxHeight(400));
-                    var popover = new Popover(markDown.createRegion());
-                    popover.setCloseButtonEnabled(true);
-                    popover.setHeaderAlwaysVisible(false);
-                    popover.setDetachable(true);
-                    AppFontSizes.xs(popover.getContentNode());
-                    popover.show(dataPolicyButton);
-                });
-                event1.consume();
-            });
-
-            var agree = new Label("Note the issue reporter ");
-            var buttons = new HBox(agree, dataPolicyButton);
-            buttons.setAlignment(Pos.CENTER_LEFT);
-            buttons.setMinWidth(Region.USE_PREF_SIZE);
-            return buttons;
-        });
     }
 
     @Override

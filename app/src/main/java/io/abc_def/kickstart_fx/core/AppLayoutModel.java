@@ -1,13 +1,10 @@
 package io.abc_def.kickstart_fx.core;
 
-import com.oracle.tools.fx.monkey.MainWindow;
-import com.oracle.tools.fx.monkey.MonkeyTesterApp;
 import io.abc_def.kickstart_fx.comp.Comp;
-import io.abc_def.kickstart_fx.comp.base.MarkdownComp;
-import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
+import io.abc_def.kickstart_fx.page.*;
 import io.abc_def.kickstart_fx.platform.LabelGraphic;
 import io.abc_def.kickstart_fx.platform.PlatformThread;
-import io.abc_def.kickstart_fx.prefs.AppPrefsComp;
+import io.abc_def.kickstart_fx.page.PrefsPageComp;
 import io.abc_def.kickstart_fx.util.GlobalTimer;
 import io.abc_def.kickstart_fx.util.Hyperlinks;
 import io.abc_def.kickstart_fx.util.ThreadHelper;
@@ -19,26 +16,14 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.SplitPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 
-import atlantafx.sampler.page.showcase.BlueprintsPage;
-import atlantafx.sampler.page.showcase.OverviewPage;
-import atlantafx.sampler.page.showcase.filemanager.FileManagerPage;
-import atlantafx.sampler.page.showcase.musicplayer.MusicPlayerPage;
 import lombok.*;
 import lombok.experimental.NonFinal;
 import lombok.extern.jackson.Jacksonized;
 
-import java.nio.file.Files;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.UnaryOperator;
 
 @Getter
 public class AppLayoutModel {
@@ -150,65 +135,42 @@ public class AppLayoutModel {
                 new Entry(
                         AppI18n.observable("blueprints"),
                         new LabelGraphic.IconGraphic("mdi2a-aspect-ratio"),
-                        Comp.of(BlueprintsPage::new),
+                        new BlueprintsPageComp(),
                         null),
                 new Entry(
                         AppI18n.observable("musicPlayer"),
                         new LabelGraphic.IconGraphic("mdi2m-music"),
-                        Comp.of(() -> {
-                            var bp = new MusicPlayerPage();
-                            return bp;
-                        }),
+                        new MusicPlayerPageComp(),
                         null),
                 new Entry(
                         AppI18n.observable("fileBrowser"),
                         new LabelGraphic.IconGraphic("mdi2f-file-cabinet"),
-                        Comp.of(() -> {
-                            var bp = new FileManagerPage();
-                            VBox vbox = (VBox) bp.getSnapshotTarget();
-                            return (Region) ((BorderPane) vbox.getChildren().getFirst()).getCenter();
-                        }),
+                        new FileBrowserPageComp(),
                         null),
                 new Entry(
                         AppI18n.observable("overview"),
                         new LabelGraphic.IconGraphic("mdi2l-list-box-outline"),
-                        Comp.of(() -> {
-                            var bp = new OverviewPage();
-                            return bp;
-                        }),
+                        new OverviewPageComp(),
                         null),
                 new Entry(
                         AppI18n.observable("markdown"),
                         new LabelGraphic.IconGraphic("mdi2l-language-markdown-outline"),
-                        Comp.of(() -> {
-                            try {
-                                var md = AppResources.getResourcePath(AppResources.MAIN_MODULE, "misc/markdown.md")
-                                        .orElseThrow();
-                                var string = Files.readString(md);
-                                return new MarkdownComp(string, UnaryOperator.identity(), true).createRegion();
-                            } catch (Exception e) {
-                                ErrorEventFactory.fromThrowable(e).handle();
-                                return null;
-                            }
-                        }),
+                        new MarkdownPageComp(),
                         null),
                 new Entry(
                         AppI18n.observable("monkeyTester"),
                         new LabelGraphic.IconGraphic("mdi2s-shape"),
-                        Comp.of(() -> {
-                            var w = new MainWindow();
-                            var bp = (BorderPane) w.getScene().getRoot();
-                            var menuBar = (MenuBar) bp.getTop();
-                            menuBar.getStyleClass().add("background");
-                            var pane = (SplitPane) bp.getCenter();
-                            pane.setDividerPosition(0, 0.7);
-                            return bp;
-                        }),
+                        new MonkeyTesterPageComp(),
+                        null),
+                new Entry(
+                        AppI18n.observable("developer"),
+                        new LabelGraphic.IconGraphic("mdi2c-code-tags"),
+                        new DeveloperPageComp(),
                         null),
                 new Entry(
                         AppI18n.observable("settings"),
                         new LabelGraphic.IconGraphic("mdsmz-miscellaneous_services"),
-                        new AppPrefsComp(),
+                        new PrefsPageComp(),
                         null),
                 new Entry(
                         AppI18n.observable("docs"),

@@ -76,53 +76,21 @@ public class OptionsComp extends Comp<CompStructure<VBox>> {
                 line.getChildren().add(name);
                 VBox.setMargin(name, new Insets(0, 0, 0, 1));
 
-                if (entry.description() != null) {
-                    var description = new Label();
-                    description.setWrapText(true);
-                    description.getStyleClass().add("description");
-                    description.textProperty().bind(entry.description());
-                    description.setAlignment(Pos.CENTER_LEFT);
-                    description.setMinHeight(Region.USE_PREF_SIZE);
-                    description.visibleProperty().bind(compRegion.visibleProperty());
-                    description.managedProperty().bind(compRegion.managedProperty());
+                var description = new Label();
+                description.setWrapText(true);
+                description.getStyleClass().add("description");
+                description.textProperty().bind(entry.description());
+                description.setAlignment(Pos.CENTER_LEFT);
+                description.setMinHeight(Region.USE_PREF_SIZE);
+                description.visibleProperty().bind(compRegion.visibleProperty());
+                description.managedProperty().bind(compRegion.managedProperty());
 
-                    if (entry.documentationLink() != null) {
-                        var link = new Button("... ?");
-                        link.setMinWidth(Region.USE_PREF_SIZE);
-                        link.getStyleClass().add(Styles.BUTTON_OUTLINED);
-                        link.getStyleClass().add(Styles.ACCENT);
-                        link.getStyleClass().add("long-description");
-                        link.setAccessibleText("Help");
-                        AppFontSizes.xl(link);
-                        link.setOnAction(e -> {
-                            Hyperlinks.open(entry.documentationLink());
-                            e.consume();
-                        });
-
-                        var tt = TooltipHelper.create(new SimpleStringProperty(entry.documentationLink()), null);
-                        tt.setShowDelay(Duration.millis(1));
-                        Tooltip.install(link, tt);
-
-                        var descriptionBox = new HBox(description, new Spacer(Orientation.HORIZONTAL), link);
-                        descriptionBox.getStyleClass().add("description-box");
-                        descriptionBox.setSpacing(5);
-                        HBox.setHgrow(descriptionBox, Priority.ALWAYS);
-                        descriptionBox.setAlignment(Pos.TOP_LEFT);
-                        line.getChildren().add(descriptionBox);
-                        VBox.setMargin(descriptionBox, new Insets(0, 0, 0, 1));
-                        descriptionBox.visibleProperty().bind(compRegion.visibleProperty());
-                        descriptionBox.managedProperty().bind(compRegion.managedProperty());
-                    } else {
-                        line.getChildren().add(description);
-                        line.getChildren().add(new Spacer(2, Orientation.VERTICAL));
-                        VBox.setMargin(description, new Insets(0, 0, 0, 1));
-                    }
-                }
+                line.getChildren().add(description);
+                line.getChildren().add(new Spacer(2, Orientation.VERTICAL));
+                VBox.setMargin(description, new Insets(0, 0, 0, 1));
 
                 compRegion.accessibleTextProperty().bind(name.textProperty());
-                if (entry.description() != null) {
-                    compRegion.accessibleHelpProperty().bind(entry.description());
-                }
+                compRegion.accessibleHelpProperty().bind(entry.description());
                 line.getChildren().add(compRegion);
                 compRegion.getStyleClass().add("options-content");
 
@@ -219,7 +187,6 @@ public class OptionsComp extends Comp<CompStructure<VBox>> {
     public record Entry(
             String key,
             ObservableValue<String> description,
-            String documentationLink,
             ObservableValue<String> name,
             Comp<?> comp) {}
 }

@@ -35,7 +35,7 @@ public class AppRestart {
 
     public static void restart() {
         AppOperationMode.executeAfterShutdown(() -> {
-            LocalExec.readStdoutIfPossible(createLaunchCommand(List.of()));
+            LocalExec.executeAsync(createLaunchCommand(List.of()));
         });
     }
 }

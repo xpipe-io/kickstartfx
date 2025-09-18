@@ -8,7 +8,7 @@ import io.abc_def.kickstart_fx.platform.OptionsBuilder;
 public class SystemCategory extends AppPrefsCategory {
 
     @Override
-    protected String getId() {
+    public String getId() {
         return "system";
     }
 

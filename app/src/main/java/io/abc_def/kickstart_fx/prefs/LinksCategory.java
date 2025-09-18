@@ -35,7 +35,7 @@ public class LinksCategory extends AppPrefsCategory {
     }
 
     @Override
-    protected String getId() {
+    public String getId() {
         return "links";
     }
 
@@ -45,7 +45,7 @@ public class LinksCategory extends AppPrefsCategory {
     }
 
     @Override
-    protected Comp<?> create() {
+    public Comp<?> create() {
         return createLinks().styleClass("information").styleClass("about-tab").apply(struc -> struc.get()
                 .setPrefWidth(600));
     }

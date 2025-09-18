@@ -36,7 +36,7 @@ public class TroubleshootCategory extends AppPrefsCategory {
     }
 
     @Override
-    protected String getId() {
+    public String getId() {
         return "troubleshoot";
     }
 
@@ -46,7 +46,7 @@ public class TroubleshootCategory extends AppPrefsCategory {
     }
 
     @Override
-    protected Comp<?> create() {
+    public Comp<?> create() {
         OptionsBuilder b = new OptionsBuilder()
                 .addTitle("troubleshootingOptions")
                 .spacer(19)

@@ -90,7 +90,7 @@ public class ErrorHandlerDialog {
             var stackTrace = ExceptionUtils.getStackTrace(event.getThrowable()).replace("\t", "");
             var tf = new TextArea(stackTrace);
             AppFontSizes.xs(tf);
-            tf.setWrapText(true);
+            tf.setWrapText(false);
             tf.setEditable(false);
             tf.setPadding(new Insets(10, 0, 10, 0));
             return tf;

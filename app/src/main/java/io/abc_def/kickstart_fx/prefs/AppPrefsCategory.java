@@ -5,13 +5,13 @@ import io.abc_def.kickstart_fx.platform.LabelGraphic;
 
 public abstract class AppPrefsCategory {
 
-    protected boolean show() {
+    public boolean show() {
         return true;
     }
 
-    protected abstract String getId();
+    public abstract String getId();
 
     protected abstract LabelGraphic getIcon();
 
-    protected abstract Comp<?> create();
+    public abstract Comp<?> create();
 }

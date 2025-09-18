@@ -7,7 +7,7 @@ import io.abc_def.kickstart_fx.platform.OptionsBuilder;
 public class UpdatesCategory extends AppPrefsCategory {
 
     @Override
-    protected String getId() {
+    public String getId() {
         return "updates";
     }
 

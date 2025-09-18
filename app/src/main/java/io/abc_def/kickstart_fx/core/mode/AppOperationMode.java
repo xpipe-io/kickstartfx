@@ -226,7 +226,8 @@ public abstract class AppOperationMode {
             }
 
             BACKGROUND.onSwitchTo();
-            if (newMode != GUI
+            newMode.onSwitchTo();
+            if (CURRENT != GUI && newMode != GUI
                     && AppMainWindow.get() != null
                     && AppMainWindow.get().getStage().isShowing()) {
                 GUI.onSwitchTo();

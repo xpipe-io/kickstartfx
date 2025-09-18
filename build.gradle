@@ -146,7 +146,6 @@ project.ext {
     // Names of your app
     productName = 'Kickstart FX'
     kebapProductName = 'kickstart-fx'
-    flatcaseProductName = 'kickstartfx'
     snakeProductName = 'kickstart_fx'
     // The names of your packages
     groupName = 'io.abc_def'
@@ -179,7 +178,7 @@ project.ext {
     jvmRunArgs = getJvmArgs()
 
     // JPackage config
-    jpackageExecutableName = "kickstartfx"
+    jpackageExecutableName = distName
     jpackageMacOsBundleName = "${groupName.replaceAll("_", "-")}.${artifactName.replaceAll("_", "-")}"
     jpackageReleaseArguments = jvmRunArgs + [
             "-D" + propertyName("version") + "=" + versionString,

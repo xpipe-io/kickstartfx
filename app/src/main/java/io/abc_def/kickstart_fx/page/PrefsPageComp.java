@@ -1,9 +1,12 @@
-package io.abc_def.kickstart_fx.prefs;
+package io.abc_def.kickstart_fx.page;
 
 import io.abc_def.kickstart_fx.comp.Comp;
 import io.abc_def.kickstart_fx.comp.SimpleComp;
 import io.abc_def.kickstart_fx.comp.base.VerticalComp;
 import io.abc_def.kickstart_fx.platform.PlatformThread;
+import io.abc_def.kickstart_fx.prefs.AppPrefs;
+import io.abc_def.kickstart_fx.prefs.AppPrefsCategory;
+import io.abc_def.kickstart_fx.prefs.AppPrefsSidebarComp;
 import io.abc_def.kickstart_fx.util.BooleanScope;
 
 import javafx.beans.property.SimpleBooleanProperty;
@@ -11,7 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 
-public class AppPrefsComp extends SimpleComp {
+public class PrefsPageComp extends SimpleComp {
 
     @Override
     protected Region createSimple() {
