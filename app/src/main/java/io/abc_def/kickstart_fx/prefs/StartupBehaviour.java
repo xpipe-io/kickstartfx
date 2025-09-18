@@ -15,11 +15,7 @@ public enum StartupBehaviour implements PrefsChoiceValue {
             return AppOperationMode.TRAY.isSupported();
         }
     },
-    BACKGROUND("app.startInBackground", AppOperationModeSelection.BACKGROUND) {
-        public boolean isSelectable() {
-            return !AppOperationMode.TRAY.isSupported();
-        }
-    };
+    BACKGROUND("app.startInBackground", AppOperationModeSelection.BACKGROUND) {};
 
     private final String id;
     private final AppOperationModeSelection mode;

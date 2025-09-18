@@ -13,16 +13,10 @@ public class AppAotTrain {
         }
 
         AppOperationMode.switchToSyncOrThrow(AppOperationMode.GUI);
-        ThreadHelper.sleep(1000);
-        AppLayoutModel.get().selectBlueprints();
-        ThreadHelper.sleep(1000);
-        AppLayoutModel.get().selectMusicPlayer();
-        ThreadHelper.sleep(1000);
-        AppLayoutModel.get().selectFileBrowser();
-        ThreadHelper.sleep(1000);
-        AppLayoutModel.get().selectOverview();
-        ThreadHelper.sleep(1000);
-        AppLayoutModel.get().selectSettings();
-        ThreadHelper.sleep(5000);
+
+        for (AppLayoutModel.Entry entry : AppLayoutModel.get().getEntries()) {
+            AppLayoutModel.get().getSelected().setValue(entry);
+            ThreadHelper.sleep(1000);
+        }
     }
 }

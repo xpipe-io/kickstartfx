@@ -12,7 +12,7 @@ public class AppTrayMode extends AppOperationMode {
 
     @Override
     public boolean isSupported() {
-        return OsType.ofLocal() == OsType.WINDOWS && Desktop.isDesktopSupported() && SystemTray.isSupported();
+        return SystemTray.isSupported();
     }
 
     @Override

@@ -72,7 +72,6 @@ application {
 
 run {
     systemProperty propertyName('useVirtualThreads'), 'false'
-    systemProperty propertyName('mode'), 'gui'
     systemProperty propertyName('writeLogs'), "true"
     systemProperty propertyName('writeSysOut'), "true"
     systemProperty propertyName('logLevel'), "trace"

@@ -82,6 +82,12 @@ public class AppLayoutModel {
         }
     }
 
+    public void selectBlueprints() {
+        PlatformThread.runLaterIfNeeded(() -> {
+            selected.setValue(entries.getFirst());
+        });
+    }
+
     public void selectMusicPlayer() {
         PlatformThread.runLaterIfNeeded(() -> {
             selected.setValue(entries.get(1));
@@ -100,33 +106,28 @@ public class AppLayoutModel {
         });
     }
 
-    public void selectDeveloper() {
+    public void selectMarkdown() {
         PlatformThread.runLaterIfNeeded(() -> {
             selected.setValue(entries.get(4));
         });
     }
 
-    public void selectMarkdown() {
+    public void selectMonkeyTester() {
         PlatformThread.runLaterIfNeeded(() -> {
             selected.setValue(entries.get(5));
         });
     }
 
-    public void selectMonkeyTester() {
+    public void selectDeveloper() {
         PlatformThread.runLaterIfNeeded(() -> {
             selected.setValue(entries.get(6));
         });
     }
 
+
     public void selectSettings() {
         PlatformThread.runLaterIfNeeded(() -> {
             selected.setValue(entries.get(7));
-        });
-    }
-
-    public void selectBlueprints() {
-        PlatformThread.runLaterIfNeeded(() -> {
-            selected.setValue(entries.getFirst());
         });
     }
 
