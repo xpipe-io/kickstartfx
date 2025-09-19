@@ -15,18 +15,6 @@ import org.gradle.crypto.checksum.Checksum
 
 import java.util.stream.Collectors
 
-tasks.register('createGithubChangelog', DefaultTask) {
-    doLast {
-        def template = file("$projectDir/changelog_format/github.md").text
-        def argument = changelog
-        def text = template.formatted(argument)
-        def dir = layout.buildDirectory.dir("dist/release").get()
-        mkdir(dir)
-        def target = dir.file("github-changelog.md").asFile
-        target.text = text
-    }
-}
-
 def distDir = layout.buildDirectory.get().dir('dist')
 tasks.register('createChecksums', Checksum) {
     inputFiles.setFrom(distDir.dir('artifacts').getAsFileTree().files)

@@ -14,7 +14,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.file.Files;
 
-public class AppSocketBeacon extends AppBeacon {
+public class AppUnixSocketBeacon extends AppBeacon {
 
     private static final int MAX_BUFFER_SIZE = 1024;
 

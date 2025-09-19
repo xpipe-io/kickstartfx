@@ -161,12 +161,6 @@ project.ext {
     buildId = UUID.nameUUIDFromBytes(versionString.getBytes())
     windowsSchemaCanonicalVersion = getWindowsSchemaCanonicalVersion()
 
-    // Changelog info
-    changelog = file("dist/changelog/${canonicalVersionString}.md").exists() ? file("dist/changelog/${canonicalVersionString}.md").text.strip() + '\n' : ""
-    changelogFile = file("$rootDir/dist/changelog/${versionString}.md").exists() ?
-            file("$rootDir/dist/changelog/${versionString}.md") :
-            file("$rootDir/dist/changelog/${canonicalVersionString}.md")
-
     // GPG signing config
     signingKeyId = project.hasProperty('signingKeyId') ? project.property("signingKeyId") : (System.getenv('GPG_KEY_ID') != null ? System.getenv('GPG_KEY_ID') : "")
     signingKey = project.hasProperty('signingKeyFile') ? file(project.property("signingKeyFile")).text : (System.getenv('GPG_KEY') != null ? System.getenv('GPG_KEY') : "")
@@ -250,8 +244,4 @@ if (!devProps.exists()) {
 
 if (System.getProperty("java.home").contains(" ")) {
     throw new IllegalArgumentException("Your JDK home path contains spaces. This will break several gradle plugins")
-}
-
-if (isFullRelease && rawVersion.contains("-")) {
-    throw new IllegalArgumentException("Releases must have canonical versions")
 }

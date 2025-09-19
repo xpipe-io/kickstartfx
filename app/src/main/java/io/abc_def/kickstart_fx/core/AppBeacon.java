@@ -15,7 +15,7 @@ public abstract class AppBeacon {
 
     public static void init() {
         try {
-            INSTANCE = OsType.ofLocal() == OsType.WINDOWS ? new AppNamedPipeBeacon() : new AppSocketBeacon();
+            INSTANCE = OsType.ofLocal() == OsType.WINDOWS ? new AppNamedPipeBeacon() : new AppUnixSocketBeacon();
             INSTANCE.start();
         } catch (Exception ex) {
             // Not terminal!

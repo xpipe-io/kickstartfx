@@ -1,5 +1,22 @@
 def distDir = layout.buildDirectory.get().dir('dist')
 
+tasks.register('createGithubChangelog', DefaultTask) {
+    doLast {
+        def sourceFile = file("dist/changelog/${canonicalVersionString}.md")
+        if (!sourceFile.exists()) {
+            return
+        }
+
+        def source = sourceFile.text
+        def template = file("$projectDir/changelog_format/github.md").text
+        def text = template.formatted(source)
+        def dir = layout.buildDirectory.dir("dist/release").get()
+        mkdir(dir)
+        def target = dir.file("github-changelog.md").asFile
+        target.text = text
+    }
+}
+
 tasks.register("prepareGitHubRelease") {
     doLast {
         file("$distDir/github-release").mkdirs()
@@ -7,19 +24,12 @@ tasks.register("prepareGitHubRelease") {
         copy {
             from "$distDir/artifacts/"
             into "$distDir/github-release"
-            exclude '*mapping*'
         }
 
         copy {
             from "$distDir/checksums/sha256sums.txt"
             from "$distDir/checksums/sha256sums.txt.asc"
             into "$distDir/github-release"
-        }
-
-        copy {
-            from changelogFile
-            into "$distDir/github-release"
-            rename {s -> 'changelog.md'}
         }
     }
 }
