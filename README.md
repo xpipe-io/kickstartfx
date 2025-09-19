@@ -48,24 +48,24 @@ You can run the latest release right now to see for yourself. These releases wer
 Installers are the easiest way to get started:
 
 - [Windows .msi Installer (x86-64)](../../releases/latest/download/kickstartfx-installer-windows-x86_64.msi)
-- [Windows .msi Installer (ARM 64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-windows-arm64.msi)
+- [Windows .msi Installer (ARM 64)](../../releases/latest/download/kickstartfx-installer-windows-arm64.msi)
 
 If you don't like installers, you can also use a portable version that is packaged as an archive:
 
-- [Windows .zip Portable (x86-64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-portable-windows-x86_64.zip)
-- [Windows .zip Portable (ARM 64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-portable-windows-arm64.zip)
+- [Windows .zip Portable (x86-64)](../../releases/latest/download/kickstartfx-portable-windows-x86_64.zip)
+- [Windows .zip Portable (ARM 64)](../../releases/latest/download/kickstartfx-portable-windows-arm64.zip)
 
 ### macOS
 
 Installers are the easiest way to get started:
 
-- [MacOS .pkg Installer (x86-64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-macos-x86_64.pkg)
-- [MacOS .pkg Installer (ARM 64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-macos-arm64.pkg)
+- [MacOS .pkg Installer (x86-64)](../../releases/latest/download/kickstartfx-installer-macos-x86_64.pkg)
+- [MacOS .pkg Installer (ARM 64)](../../releases/latest/download/kickstartfx-installer-macos-arm64.pkg)
 
 If you don't like installers, you can also use a portable version that is packaged as an archive:
 
-- [MacOS .dmg Portable (x86-64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-portable-macos-x86_64.dmg)
-- [MacOS .dmg Portable (ARM 64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-portable-macos-arm64.dmg)
+- [MacOS .dmg Portable (x86-64)](../../releases/latest/download/kickstartfx-portable-macos-x86_64.dmg)
+- [MacOS .dmg Portable (ARM 64)](../../releases/latest/download/kickstartfx-portable-macos-arm64.dmg)
 
 ### Linux
 
@@ -73,8 +73,8 @@ If you don't like installers, you can also use a portable version that is packag
 
 The following debian installers are available:
 
-- [Linux .deb Installer (x86-64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-linux-x86_64.deb)
-- [Linux .deb Installer (ARM 64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-linux-arm64.deb)
+- [Linux .deb Installer (x86-64)](../../releases/latest/download/kickstartfx-installer-linux-x86_64.deb)
+- [Linux .deb Installer (ARM 64)](../../releases/latest/download/kickstartfx-installer-linux-arm64.deb)
 
 Note that you should use apt to install the package with `sudo apt install <file>` as other package managers, for example dpkg,
 are not able to resolve and install any dependency packages.
@@ -83,8 +83,8 @@ are not able to resolve and install any dependency packages.
 
 The following rpm installers are available:
 
-- [Linux .rpm Installer (x86-64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-linux-x86_64.rpm)
-- [Linux .rpm Installer (ARM 64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-linux-arm64.rpm)
+- [Linux .rpm Installer (x86-64)](../../releases/latest/download/kickstartfx-installer-linux-x86_64.rpm)
+- [Linux .rpm Installer (ARM 64)](../../releases/latest/download/kickstartfx-installer-linux-arm64.rpm)
 
 The same applies here, you should use a package manager that supports resolving and installing required dependencies if needed.
 
@@ -92,8 +92,16 @@ The same applies here, you should use a package manager that supports resolving 
 
 In case you prefer to use an archive version that you can extract anywhere, you can use these:
 
-- [Linux .tar.gz Portable (x86-64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-portable-linux-x86_64.tar.gz)
-- [Linux .tar.gz Portable (ARM 64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-portable-linux-arm64.tar.gz)
+- [Linux .tar.gz Portable (x86-64)](../../releases/latest/download/kickstartfx-portable-linux-x86_64.tar.gz)
+- [Linux .tar.gz Portable (ARM 64)](../../releases/latest/download/kickstartfx-portable-linux-arm64.tar.gz)
 
 Note that the portable version assumes that you have some basic packages for graphical systems already installed
 as it is not a perfect standalone version. It should however run on most systems.
+
+## Showcase
+
+![Demo2](https://kickstartfx.xpipe.io/images/demo2.png)
+
+![Demo3](https://kickstartfx.xpipe.io/images/demo3.png)
+
+![Demo4](https://kickstartfx.xpipe.io/images/demo4.png)
