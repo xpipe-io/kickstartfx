@@ -2,17 +2,19 @@ def distDir = layout.buildDirectory.get().dir('dist')
 
 tasks.register('createGithubChangelog', DefaultTask) {
     doLast {
+        def dir = layout.buildDirectory.dir("dist/release").get()
+        mkdir(dir)
+        
+        def target = dir.file("github-changelog.md").asFile
         def sourceFile = file("dist/changelog/${canonicalVersionString}.md")
         if (!sourceFile.exists()) {
+            target.text = "";
             return
         }
 
         def source = sourceFile.text
         def template = file("$projectDir/changelog_format/github.md").text
         def text = template.formatted(source)
-        def dir = layout.buildDirectory.dir("dist/release").get()
-        mkdir(dir)
-        def target = dir.file("github-changelog.md").asFile
         target.text = text
     }
 }
