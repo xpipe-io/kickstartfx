@@ -47,7 +47,7 @@ You can run the latest release right now to see for yourself. These releases wer
 
 Installers are the easiest way to get started:
 
-- [Windows .msi Installer (x86-64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-windows-x86_64.msi)
+- [Windows .msi Installer (x86-64)](releases/latest/download/kickstartfx-installer-windows-x86_64.msi)
 - [Windows .msi Installer (ARM 64)](https://github.com/xpipe-io/kickstartfx/releases/latest/download/kickstartfx-installer-windows-arm64.msi)
 
 If you don't like installers, you can also use a portable version that is packaged as an archive:
