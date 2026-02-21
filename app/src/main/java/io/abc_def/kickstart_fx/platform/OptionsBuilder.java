@@ -3,6 +3,7 @@ package io.abc_def.kickstart_fx.platform;
 import io.abc_def.kickstart_fx.comp.Comp;
 import io.abc_def.kickstart_fx.comp.base.LabelComp;
 import io.abc_def.kickstart_fx.comp.base.OptionsComp;
+import io.abc_def.kickstart_fx.comp.base.TextFieldComp;
 import io.abc_def.kickstart_fx.comp.base.ToggleSwitchComp;
 import io.abc_def.kickstart_fx.core.AppI18n;
 import io.abc_def.kickstart_fx.prefs.AppPrefs;
@@ -125,6 +126,13 @@ public class OptionsBuilder {
     }
 
     public OptionsBuilder addComp(Comp<?> comp, Property<?> prop) {
+        pushComp(comp);
+        props.add(prop);
+        return this;
+    }
+
+    public OptionsBuilder addString(Property<String> prop) {
+        var comp = new TextFieldComp(prop, false);
         pushComp(comp);
         props.add(prop);
         return this;

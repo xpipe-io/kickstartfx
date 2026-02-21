@@ -90,6 +90,8 @@ public class AboutCategory extends AppPrefsCategory {
                                 + " "
                                 + System.getProperty("java.vm.version")),
                         null)
+                .name("javafxBuild")
+                .addComp(new LabelComp("JavaFX " + System.getProperty("javafx.runtime.version") + (Boolean.getBoolean("javafx.enablePreview") ? " + Preview" : "")))
                 .buildComp();
         return section.styleClass("properties-comp");
     }

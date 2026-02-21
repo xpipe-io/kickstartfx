@@ -123,6 +123,11 @@ public class AppLayoutModel {
                         new MonkeyTesterPageComp(),
                         null),
                 new Entry(
+                        AppI18n.observable("launcher"),
+                        new LabelGraphic.IconGraphic("mdi2p-play-circle"),
+                        new LauncherPageComp(),
+                        null),
+                new Entry(
                         AppI18n.observable("developer"),
                         new LabelGraphic.IconGraphic("mdi2c-code-tags"),
                         new DeveloperPageComp(),
