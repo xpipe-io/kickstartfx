@@ -28,6 +28,7 @@ if (customJavaFxLibsPath != null) {
         javafx files("$customJavaFxLibsPath/javafx.graphics.jar")
         javafx files("$customJavaFxLibsPath/javafx.media.jar")
         javafx files("$customJavaFxLibsPath/javafx.web.jar")
+        javafx files("$customJavaFxLibsPath/jdk.jsobject.jar")
 
         // Required by sample components, not necessary for base application
         javafx files("$customJavaFxLibsPath/javafx.fxml.jar")
@@ -44,6 +45,7 @@ if (customJavaFxLibsPath != null) {
         javafx "org.openjfx:javafx-graphics:${devJavafxVersion}:${platformClassifier}"
         javafx "org.openjfx:javafx-media:${devJavafxVersion}:${platformClassifier}"
         javafx "org.openjfx:javafx-web:${devJavafxVersion}:${platformClassifier}"
+        javafx "org.openjfx:jdk-jsobject:${devJavafxVersion}:${platformClassifier}"
 
         // Required by sample components, not necessary for base application
         javafx "org.openjfx:javafx-fxml:${devJavafxVersion}:${platformClassifier}"
