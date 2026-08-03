@@ -85,9 +85,9 @@ public abstract class AppInstallation {
             if (!isImage) {
                 return Path.of(System.getProperty("user.dir"));
             }
-            return getInstallationBasePathForJavaExecutable(path);
+            return toRealPathIfPossible(getInstallationBasePathForJavaExecutable(path));
         } else {
-            return getInstallationBasePathForDaemonExecutable(path);
+            return toRealPathIfPossible(getInstallationBasePathForDaemonExecutable(path));
         }
     }
 
