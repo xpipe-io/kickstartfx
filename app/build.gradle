@@ -59,7 +59,7 @@ dependencies {
     implementation "org.int4.fx:fx-builders:0.5"
 
     implementation files("$rootDir/gradle/gradle_scripts/atlantafx-sampler-2.1.0.jar")
-    implementation ("net.datafaker:datafaker:1.3.0") {
+    implementation ("net.datafaker:datafaker:2.5.3") {
         exclude group: "com.github.mifmif", module: "generex"
     }
 
