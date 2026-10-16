@@ -219,8 +219,11 @@ project.ext {
     // Development and production javafx versions can be different
     // Dev uses the maven dependencies and production uses jmods
     // unless jdkHasBundledJavaFx or customJavaFxJmodsPath is set
-    devJavafxVersion = '27-ea+20'
-    productionJavafxVersion = '27-ea+20'
+    // TODO: Choose JavaFX version
+    // Note that the production jmods are downloaded from Gluon servers, which delete -ea releases after a while
+    // You can use -ea releases, but expect that the downloads will fail at some point if you don't bump it
+    devJavafxVersion = '27'
+    productionJavafxVersion = '27'
     jdkHasBundledJavaFx = ModuleFinder.ofSystem().find("javafx.base").isPresent()
 
     // Define a custom JavaFX SDK location to use custom JavaFX jars instead of the default one

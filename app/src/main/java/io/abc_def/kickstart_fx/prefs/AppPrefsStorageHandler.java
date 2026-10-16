@@ -14,8 +14,10 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,11 +57,28 @@ public class AppPrefsStorageHandler {
                 } catch (IOException e) {
                     ErrorEventFactory.fromThrowable(e).handle();
                 }
+
+                // Keep a copy of an unreadable file so that the next save does not silently lose it
+                if (content == null) {
+                    backupCorruptedFile();
+                }
             }
 
             if (content == null) {
                 content = JsonNodeFactory.instance.objectNode();
             }
+        }
+    }
+
+    private void backupCorruptedFile() {
+        try {
+            var backup = file.resolveSibling(file.getFileName() + ".bak");
+            Files.copy(file, backup, StandardCopyOption.REPLACE_EXISTING);
+            TrackEvent.withWarn("Preferences file could not be read, created backup")
+                    .tag("backup", backup)
+                    .handle();
+        } catch (IOException e) {
+            ErrorEventFactory.fromThrowable(e).omit().expected().handle();
         }
     }
 
@@ -70,7 +89,14 @@ public class AppPrefsStorageHandler {
     void save() {
         try {
             FileUtils.forceMkdir(file.getParent().toFile());
-            JacksonMapper.getDefault().writeValue(file.toFile(), content);
+            // Write to a temporary file first so that a crash during the write can't corrupt the existing file
+            var temp = file.resolveSibling(file.getFileName() + ".tmp");
+            JacksonMapper.getDefault().writeValue(temp.toFile(), content);
+            try {
+                Files.move(temp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException e) {
+                Files.move(temp, file, StandardCopyOption.REPLACE_EXISTING);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -10,8 +10,8 @@ public interface ModuleLayerLoader {
                 ? ServiceLoader.load(layer, ModuleLayerLoader.class)
                 : ServiceLoader.load(ModuleLayerLoader.class);
         loaded.stream().forEach(moduleLayerLoaderProvider -> {
-            var instance = moduleLayerLoaderProvider.get();
             try {
+                var instance = moduleLayerLoaderProvider.get();
                 instance.init(layer);
             } catch (Throwable t) {
                 errorHandler.accept(t);

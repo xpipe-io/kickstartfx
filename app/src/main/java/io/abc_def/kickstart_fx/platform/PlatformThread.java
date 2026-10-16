@@ -94,7 +94,8 @@ public class PlatformThread {
             });
             try {
                 latch.await();
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         } else {
             catcher.run();

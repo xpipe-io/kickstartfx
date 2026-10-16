@@ -11,8 +11,9 @@ public class AppJavaOptionsCheck {
             return;
         }
 
-        var envVar = System.getenv("_JAVA_OPTIONS") != null ? "_JAVA_OPTIONS" :
-                System.getenv("JDK_JAVA_OPTIONS") != null ? "JDK_JAVA_OPTIONS" : null;
+        var envVar = System.getenv("_JAVA_OPTIONS") != null
+                ? "_JAVA_OPTIONS"
+                : System.getenv("JDK_JAVA_OPTIONS") != null ? "JDK_JAVA_OPTIONS" : null;
         if (envVar == null || System.getenv(envVar).isBlank()) {
             return;
         }

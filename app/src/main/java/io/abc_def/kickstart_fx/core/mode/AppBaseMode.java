@@ -12,7 +12,6 @@ import io.abc_def.kickstart_fx.platform.PlatformState;
 import io.abc_def.kickstart_fx.prefs.AppPrefs;
 import io.abc_def.kickstart_fx.update.UpdateAvailableDialog;
 import io.abc_def.kickstart_fx.util.GlobalTimer;
-import io.abc_def.kickstart_fx.util.ThreadHelper;
 import io.abc_def.kickstart_fx.util.WindowsRegistry;
 
 public class AppBaseMode extends AppOperationMode {
@@ -56,12 +55,13 @@ public class AppBaseMode extends AppOperationMode {
 
         AppRosettaCheck.check();
         AppWindowsArmCheck.check();
+        AppHardwareAccelerationDisableCheck.check();
         AppMainWindow.loadingText("loadingUserInterface");
         PlatformInit.init(true);
         AppImages.init();
 
-        // TODO: This delay is just here to demo the loading screen
-        ThreadHelper.sleep(1000);
+        // TODO: Use delay to see the loading screen
+        // ThreadHelper.sleep(1000);
         AppMainWindow.initContent();
 
         TrackEvent.info("Waiting for startup dialogs to close");

@@ -2,6 +2,7 @@ package io.abc_def.kickstart_fx.core;
 
 import io.abc_def.kickstart_fx.core.mode.AppOperationMode;
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
+import io.abc_def.kickstart_fx.util.LocalExec;
 import io.abc_def.kickstart_fx.util.OsType;
 
 import java.awt.*;
@@ -102,13 +103,19 @@ public class AppTrayIcon {
         }
     }
 
+    private static String escapeAppleScriptString(String s) {
+        if (s == null) {
+            return "";
+        }
+
+        return s.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
     private void showMacAlert(String subTitle, String message, String title) {
         String execute = String.format(
                 "display notification \"%s\"" + " with title \"%s\"" + " subtitle \"%s\"",
-                message != null ? message : "", title != null ? title : "", subTitle != null ? subTitle : "");
-        try {
-            Runtime.getRuntime().exec(new String[] {"osascript", "-e", execute});
-        } catch (IOException e) {
+                escapeAppleScriptString(message), escapeAppleScriptString(title), escapeAppleScriptString(subTitle));
+        if (LocalExec.executeAsync("osascript", "-e", execute) == null) {
             throw new UnsupportedOperationException("Cannot run osascript with given parameters.");
         }
     }

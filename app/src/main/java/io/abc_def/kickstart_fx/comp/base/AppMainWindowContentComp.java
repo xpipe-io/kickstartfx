@@ -129,7 +129,7 @@ public class AppMainWindowContentComp extends SimpleRegionBuilder {
             });
 
             overlay.addListener((ListChangeListener<? super ModalOverlay>) c -> {
-                if (c.next() && c.wasAdded()) {
+                if (c.next() && c.wasAdded() && c.getAddedSubList().stream().anyMatch(o -> o != null)) {
                     AppMainWindow.get().focus(false);
 
                     // Close blocking modal windows
@@ -145,7 +145,7 @@ public class AppMainWindowContentComp extends SimpleRegionBuilder {
             return pane;
         });
 
-        var modal = new ModalOverlayStackComp(bg, overlay);
+        var modal = new ModalOverlayStackComp(bg);
         var r = modal.build();
         var p = r.lookupAll(".modal-overlay-stack-element");
         sidebarPresent.subscribe(v -> {

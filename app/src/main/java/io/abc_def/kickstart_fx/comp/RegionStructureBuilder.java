@@ -1,6 +1,7 @@
 package io.abc_def.kickstart_fx.comp;
 
 import io.abc_def.kickstart_fx.platform.BindingsHelper;
+
 import javafx.scene.layout.Region;
 
 import org.int4.fx.builders.common.AbstractRegionBuilder;

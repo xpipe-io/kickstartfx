@@ -1,6 +1,7 @@
 package io.abc_def.kickstart_fx.comp.base;
 
 import io.abc_def.kickstart_fx.comp.SimpleRegionBuilder;
+import io.abc_def.kickstart_fx.core.window.AppDialog;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -9,16 +10,12 @@ import javafx.scene.layout.Region;
 
 import org.int4.fx.builders.common.AbstractRegionBuilder;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class ModalOverlayStackComp extends SimpleRegionBuilder {
 
     private final AbstractRegionBuilder<?, ?> background;
-    private final ObservableList<ModalOverlay> modalOverlay;
 
-    public ModalOverlayStackComp(AbstractRegionBuilder<?, ?> background, ObservableList<ModalOverlay> modalOverlay) {
+    public ModalOverlayStackComp(AbstractRegionBuilder<?, ?> background) {
         this.background = background;
-        this.modalOverlay = modalOverlay;
     }
 
     @Override
@@ -31,23 +28,14 @@ public class ModalOverlayStackComp extends SimpleRegionBuilder {
     }
 
     private AbstractRegionBuilder<?, ?> buildModalOverlay(AbstractRegionBuilder<?, ?> current, int index) {
-        AtomicInteger currentIndex = new AtomicInteger(index);
-        var prop = new SimpleObjectProperty<>(modalOverlay.size() > index ? modalOverlay.get(index) : null);
-        modalOverlay.addListener((ListChangeListener<? super ModalOverlay>) c -> {
-            var ex = prop.get();
-            // Don't shift just for an index change
-            if (ex != null && modalOverlay.contains(ex)) {
-                currentIndex.set(modalOverlay.indexOf(ex));
-                return;
-            } else {
-                currentIndex.set(index);
-            }
-
-            prop.set(modalOverlay.size() > index ? modalOverlay.get(index) : null);
+        ObservableList<ModalOverlay> modalOverlays = AppDialog.getModalOverlays();
+        var prop = new SimpleObjectProperty<>(modalOverlays.size() > index ? modalOverlays.get(index) : null);
+        modalOverlays.addListener((ListChangeListener<? super ModalOverlay>) c -> {
+            prop.set(modalOverlays.size() > index ? modalOverlays.get(index) : null);
         });
         prop.addListener((observable, oldValue, newValue) -> {
-            if (newValue == null && modalOverlay.indexOf(oldValue) == currentIndex.get()) {
-                modalOverlay.remove(oldValue);
+            if (newValue == null && oldValue != null) {
+                AppDialog.hide(oldValue);
             }
         });
         var comp = new ModalOverlayComp(current, prop);

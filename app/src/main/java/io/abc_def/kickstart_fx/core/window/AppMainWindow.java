@@ -314,8 +314,8 @@ public class AppMainWindow {
                 var image = stage.getScene().snapshot(null);
                 var awt = AppImages.toAwtImage(image);
                 var file = AppSystemInfo.ofCurrent()
-                        .getUserHome()
-                        .resolve("Desktop", AppNames.ofCurrent().getKebapName() + "-screenshot.png");
+                        .getDesktop()
+                        .resolve(AppNames.ofCurrent().getKebapName() + "-screenshot.png");
                 try {
                     ImageIO.write(awt, "png", file.toFile());
                 } catch (IOException e) {

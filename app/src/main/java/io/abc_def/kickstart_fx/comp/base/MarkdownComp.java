@@ -25,8 +25,11 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.util.HexFormat;
 import java.util.function.UnaryOperator;
 
 public class MarkdownComp extends RegionBuilder<StackPane> {
@@ -59,19 +62,17 @@ public class MarkdownComp extends RegionBuilder<StackPane> {
             return null;
         }
 
-        int hash;
+        // Key the file by the final html so that the padding and transformation are taken into account
+        var html = MarkdownHelper.toHtml(markdown, s -> s, htmlTransformation, bodyPadding ? "padded" : null);
         // Rebuild files for updates in case the css have been changed
-        if (AppProperties.get().isRuntimeImage()) {
-            hash = markdown.hashCode() + AppProperties.get().getVersion().hashCode();
-        } else {
-            hash = markdown.hashCode();
-        }
+        var hash = AppProperties.get().isRuntimeImage()
+                ? sha256(html + AppProperties.get().getVersion())
+                : sha256(html);
         var file = DIR.resolve("md-" + hash + ".html");
         if (Files.exists(file)) {
             return file;
         }
 
-        var html = MarkdownHelper.toHtml(markdown, s -> s, htmlTransformation, bodyPadding ? "padded" : null);
         try {
             // Workaround for https://bugs.openjdk.org/browse/JDK-8199014
             FileUtils.forceMkdir(file.getParent().toFile());
@@ -82,6 +83,12 @@ public class MarkdownComp extends RegionBuilder<StackPane> {
             ErrorEventFactory.fromThrowable(e).expected().handle();
             return null;
         }
+    }
+
+    @SneakyThrows
+    private static String sha256(String s) {
+        var digest = MessageDigest.getInstance("SHA-256").digest(s.getBytes(StandardCharsets.UTF_8));
+        return HexFormat.of().formatHex(digest);
     }
 
     @SneakyThrows
@@ -100,10 +107,9 @@ public class MarkdownComp extends RegionBuilder<StackPane> {
             AppPrefs.get().theme().subscribe((v) -> {
                 var refVal = ref.get();
                 if (refVal != null && v != null) {
-                    var theme = v.isDark()
-                            ? "misc/github-markdown-dark.css"
-                            : "misc/github-markdown-light.css";
-                    var url = AppResources.getResourceURL(AppResources.MAIN_MODULE, theme).orElseThrow();
+                    var theme = v.isDark() ? "misc/github-markdown-dark.css" : "misc/github-markdown-light.css";
+                    var url = AppResources.getResourceURL(AppResources.MAIN_MODULE, theme)
+                            .orElseThrow();
                     refVal.getEngine().setUserStyleSheetLocation(url.toString());
                 }
             });

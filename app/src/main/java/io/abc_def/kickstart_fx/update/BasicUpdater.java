@@ -7,6 +7,7 @@ import io.abc_def.kickstart_fx.util.Hyperlinks;
 import io.abc_def.kickstart_fx.util.LocalExec;
 import io.abc_def.kickstart_fx.util.OsType;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +54,16 @@ public class BasicUpdater extends UpdateHandler {
                         var url = rel.getRepository() + "/releases/download/" + rel.getVersion() + "/"
                                 + AppNames.ofCurrent().getDistName() + "-installer-windows-"
                                 + AppProperties.get().getArch() + ".msi";
+                        // Note that the downloaded installer is not verified against a checksum
+                        // Consider adding verification for production use
+                        var systemWide = AppInstallation.ofWindows().isSystemWide();
+                        var properties = "MSIFASTINSTALL=7 DISABLEROLLBACK=1" + (systemWide ? " ALLUSERS=1" : "");
+                        var command = "start \"\" /wait msiexec /i \"" + url + "\" /qb " + properties + "&start \"\" \""
+                                + AppInstallation.ofCurrent().getExecutablePath() + "\"";
                         AppOperationMode.executeAfterShutdown(() -> {
-                            var command = "set MSIFASTINSTALL=7&set DISABLEROLLBACK=1&start \"\" /wait msiexec /i \""
-                                    + url + "\" /qb&start \"\" \""
-                                    + AppInstallation.ofCurrent().getExecutablePath() + "\"";
-                            LocalExec.executeAsync("cmd", "/c", command);
+                            if (LocalExec.executeAsync("cmd", "/c", command) == null) {
+                                throw new IOException("Failed to launch update installer");
+                            }
                         });
                     },
                     false,
@@ -67,17 +73,33 @@ public class BasicUpdater extends UpdateHandler {
     }
 
     private boolean isUpdate(String releaseVersion) {
-        if (!AppProperties.get().getVersion().equals(releaseVersion)) {
-            event("Release has a different version");
+        var current = AppVersion.parse(stripPrefix(AppProperties.get().getVersion()));
+        var release = AppVersion.parse(stripPrefix(releaseVersion));
+        if (current.isEmpty() || release.isEmpty()) {
+            if (!stripPrefix(AppProperties.get().getVersion()).equals(stripPrefix(releaseVersion))) {
+                event("Release has a different unparsable version");
+                return true;
+            }
+
+            return false;
+        }
+
+        if (release.get().greaterThan(current.get())) {
+            event("Release has a newer version");
             return true;
         }
 
         return false;
     }
 
+    private static String stripPrefix(String version) {
+        return version.startsWith("v") ? version.substring(1) : version;
+    }
+
     public synchronized AvailableRelease refreshUpdateCheckImpl() throws Exception {
         var found = AppReleases.getMarkedLatestRelease();
         if (found.isEmpty()) {
+            lastUpdateCheckResult.setValue(null);
             return null;
         }
 
@@ -95,6 +117,6 @@ public class BasicUpdater extends UpdateHandler {
                         Instant.now())
                 : null;
         lastUpdateCheckResult.setValue(val);
-        return lastUpdateCheckResult.getValue();
+        return val;
     }
 }

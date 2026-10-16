@@ -14,6 +14,11 @@ import java.util.List;
 
 public class DesktopHelper {
 
+    private static boolean isSupported(Desktop.Action action) {
+        // Desktop.getDesktop() throws if the desktop is not supported at all, e.g. on minimal linux systems
+        return Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(action);
+    }
+
     public static void openUrlInBrowser(String uri) {
         if (uri == null) {
             return;
@@ -28,7 +33,7 @@ public class DesktopHelper {
             return;
         }
 
-        if (!Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+        if (!isSupported(Desktop.Action.BROWSE)) {
             if (OsType.ofLocal() == OsType.LINUX) {
                 LocalExec.executeAsync("xdg-open", parsed.toString());
                 return;
@@ -59,7 +64,7 @@ public class DesktopHelper {
             return;
         }
 
-        if (!Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+        if (!isSupported(Desktop.Action.OPEN)) {
             if (OsType.ofLocal() == OsType.LINUX) {
                 LocalExec.executeAsync("xdg-open", file.toString());
                 return;
@@ -68,7 +73,7 @@ public class DesktopHelper {
 
         // This can be a blocking operation
         ThreadHelper.runAsync(() -> {
-            if (Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+            if (isSupported(Desktop.Action.OPEN)) {
                 try {
                     Desktop.getDesktop().open(file.toFile());
                     return;
@@ -118,7 +123,7 @@ public class DesktopHelper {
                         "--type=method_call",
                         "/org/freedesktop/FileManager1",
                         action,
-                        "array:string:file://" + file,
+                        "array:string:" + file.toUri(),
                         "string:");
                 try {
                     var success = LocalExec.readStdoutIfPossible(args.toArray(String[]::new))
@@ -131,7 +136,7 @@ public class DesktopHelper {
                 }
             }
 
-            if (!Desktop.getDesktop().isSupported(Desktop.Action.BROWSE_FILE_DIR)) {
+            if (!isSupported(Desktop.Action.BROWSE_FILE_DIR)) {
                 browseFile(file.getParent());
                 return;
             }

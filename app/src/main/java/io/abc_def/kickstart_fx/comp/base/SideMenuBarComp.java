@@ -28,6 +28,7 @@ import org.int4.fx.builders.common.AbstractRegionBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 public class SideMenuBarComp extends RegionBuilder<VBox> {
@@ -128,10 +129,14 @@ public class SideMenuBarComp extends RegionBuilder<VBox> {
             AppFontSizes.lg(struc);
             struc.setAlignment(Pos.CENTER);
 
-            struc.pseudoClassStateChanged(selected, value.getValue().equals(e));
+            struc.pseudoClassStateChanged(selected, Objects.equals(value.getValue(), e));
+            if (e == null) {
+                return;
+            }
+
             value.addListener((c, o, n) -> {
                 PlatformThread.runLaterIfNeeded(() -> {
-                    struc.pseudoClassStateChanged(selected, n.equals(e));
+                    struc.pseudoClassStateChanged(selected, Objects.equals(n, e));
                 });
             });
         });
@@ -172,7 +177,7 @@ public class SideMenuBarComp extends RegionBuilder<VBox> {
                     .backgroundProperty()
                     .bind(Bindings.createObjectBinding(
                             () -> {
-                                if (value.getValue().equals(e)) {
+                                if (Objects.equals(value.getValue(), e)) {
                                     return selectedBorder.get();
                                 }
 

@@ -2,11 +2,7 @@
 	<Fragment>
 			<ComponentGroup Id="FileComponents" Directory="APPLICATIONFOLDER">
 				<Files Include="..\build\dist\installer-win\**" />
-				<Component Id="SystemFileIdentifier" Condition="ALLUSERS=1 OR (ALLUSERS=2 AND Privileged)">
-					<File Id="SystemFileIdentifierFile" Source="system" KeyPath="yes" />
-				</Component>
 			</ComponentGroup>
-
 
 			<!-- Start Menu Shortcut-->
 			<Component Id="StartMenuShortcut">

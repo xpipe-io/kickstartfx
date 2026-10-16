@@ -16,7 +16,7 @@ public class AppRosettaCheck {
             return;
         }
 
-        var ret = LocalExec.readStdoutIfPossible("sysctl -n sysctl.proc_translated");
+        var ret = LocalExec.readStdoutIfPossible("sysctl", "-n", "sysctl.proc_translated");
         if (ret.isEmpty()) {
             return;
         }

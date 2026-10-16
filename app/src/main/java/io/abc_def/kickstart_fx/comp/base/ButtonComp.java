@@ -48,6 +48,7 @@ public class ButtonComp extends RegionBuilder<Button> {
             graphic.subscribe(t -> {
                 PlatformThread.runLaterIfNeeded(() -> {
                     if (t == null) {
+                        button.setGraphic(null);
                         return;
                     }
 

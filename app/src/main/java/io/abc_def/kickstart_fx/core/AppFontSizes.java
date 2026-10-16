@@ -108,7 +108,7 @@ public class AppFontSizes {
             var l = Integer.parseInt(base.split("\\.")[0]);
             var r = "." + base.split("\\.")[1];
             return new AppFontSizes(
-                    (l - 1) + r, (l - 1) + "", base, (l + 1) + "", (l + 1) + r, (l + 2) + r, (l + 3) + r, (l + 7) + r);
+                    (l - 1) + r, l + "", base, (l + 1) + "", (l + 1) + r, (l + 2) + r, (l + 3) + r, (l + 7) + r);
         } else {
             var l = Integer.parseInt(base);
             return new AppFontSizes(

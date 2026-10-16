@@ -81,21 +81,24 @@ public enum PlatformState {
                 "java.lang.InternalError: Error loading stock shader",
                 "java.lang.RuntimeException: Error creating vertex shader",
                 "java.lang.RuntimeException: Error creating fragment shader",
-                "java.lang.RuntimeException: Error creating shader program"
-        );
-        if (AppPrefs.get() != null && AppPrefs.get().canSave() &&
-                !AppPrefs.get().disableHardwareAcceleration().get() && l.stream().anyMatch(msg::contains)) {
+                "java.lang.RuntimeException: Error creating shader program");
+        if (AppPrefs.get() != null
+                && AppPrefs.get().canSave()
+                && !AppPrefs.get().disableHardwareAcceleration().get()
+                && l.stream().anyMatch(msg::contains)) {
             restartQueued = true;
             AppCache.update("hardwareAccelerationDisabled", true);
             // Delay this to guarantee that the application starts up as much as possible
             // This is to ensure that any initialization on initial startup is run
             // It will get stuck at the first dialog if the graphics pipeline does not work
-            GlobalTimer.delay(() -> {
-                reset();
-                AppPrefs.get().disableHardwareAcceleration().set(true);
-                AppPrefs.get().save();
-                AppRestart.restart();
-            }, Duration.ofSeconds(5));
+            GlobalTimer.delay(
+                    () -> {
+                        reset();
+                        AppPrefs.get().disableHardwareAcceleration().set(true);
+                        AppPrefs.get().save();
+                        AppRestart.restart();
+                    },
+                    Duration.ofSeconds(5));
         }
     }
 

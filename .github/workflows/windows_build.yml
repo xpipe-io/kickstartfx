@@ -8,9 +8,8 @@ jobs:
       matrix:
         os:
           - windows-latest
-          # TODO: Configure your own GitHub runner with a custom runner name to run Windows ARM
-          # If you don't want to build on that platform, just remove this entry
-          # - windows-arm
+          # TODO: If you don't want to build on that platform, just remove this entry
+          - windows-11-arm
     runs-on: ${{ matrix.os }}
     permissions:
       actions: none
@@ -47,6 +46,9 @@ jobs:
           java-package: jdk
         if: ${{ contains(runner.arch, 'X64') == true }}
 
+      # TODO: Gluon does not publish JavaFX jmods or maven artifacts for Windows ARM64,
+      # so this build uses the JavaFX version bundled with the Liberica JDK instead of productionJavafxVersion.
+      # Make sure that the bundled JavaFX version is compatible with what your application uses
       - name: Set up ARM JDK
         uses: actions/setup-java@v5
         with:
@@ -74,7 +76,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: windows-artifacts
+          name: ${{ matrix.os }}-artifacts
           retention-days: 1
           compression-level: 1
           path: |

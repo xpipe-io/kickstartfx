@@ -6,6 +6,7 @@ import io.abc_def.kickstart_fx.core.AppResources;
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 
 import java.nio.file.Files;
 import java.util.function.UnaryOperator;
@@ -21,7 +22,7 @@ public class MarkdownPageComp extends SimpleRegionBuilder {
             return new MarkdownComp(string, UnaryOperator.identity(), true).build();
         } catch (Exception e) {
             ErrorEventFactory.fromThrowable(e).handle();
-            return null;
+            return new StackPane();
         }
     }
 }
