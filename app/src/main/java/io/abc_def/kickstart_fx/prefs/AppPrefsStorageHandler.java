@@ -4,14 +4,13 @@ import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.issue.TrackEvent;
 import io.abc_def.kickstart_fx.util.JacksonMapper;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.databind.util.TokenBuffer;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.StringNode;
 
 import java.io.IOException;
 import java.nio.file.AtomicMoveNotSupportedException;
@@ -54,7 +53,7 @@ public class AppPrefsStorageHandler {
                             content = (ObjectNode) read;
                         }
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     ErrorEventFactory.fromThrowable(e).handle();
                 }
 
@@ -105,7 +104,7 @@ public class AppPrefsStorageHandler {
     @SneakyThrows
     public void updateObject(String key, Object object, JavaType type) {
         if (object instanceof PrefsChoiceValue prefsChoiceValue) {
-            setContent(key, new TextNode(prefsChoiceValue.getId()));
+            setContent(key, new StringNode(prefsChoiceValue.getId()));
             return;
         }
 
@@ -115,10 +114,7 @@ public class AppPrefsStorageHandler {
         }
 
         var mapper = JacksonMapper.getDefault();
-        TokenBuffer buf = new TokenBuffer(mapper, false);
-        mapper.writerFor(type).writeValue(buf, object);
-        var tree = mapper.readTree(buf.asParser());
-        setContent(key, (JsonNode) tree);
+        setContent(key, mapper.writerFor(type).valueToTree(object));
     }
 
     @SuppressWarnings("unchecked")
@@ -137,7 +133,7 @@ public class AppPrefsStorageHandler {
             List<T> all = (List<T>) getAll(type.getRawClass());
             if (all != null) {
                 Class<PrefsChoiceValue> cast = (Class<PrefsChoiceValue>) type.getRawClass();
-                var in = tree.asText();
+                var in = tree.asString();
                 var found = all.stream()
                         .filter(t -> ((PrefsChoiceValue) t).getId().equalsIgnoreCase(in))
                         .findAny();

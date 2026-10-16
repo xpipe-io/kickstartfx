@@ -16,12 +16,12 @@ import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableValue;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Value;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.type.TypeFactory;
 
 import java.util.*;
 
@@ -280,7 +280,7 @@ public final class AppPrefs {
         public static class MappingBuilder {
 
             MappingBuilder valueClass(Class<?> clazz) {
-                this.valueType(TypeFactory.defaultInstance().constructType(clazz));
+                this.valueType(TypeFactory.createDefaultInstance().constructType(clazz));
                 return this;
             }
         }
