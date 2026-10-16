@@ -189,7 +189,7 @@ if (os.isWindows()) {
 }
 
 baseDist.dependsOn(licenses)
-baseDist.dependsOn(jpackage)
+baseDist.dependsOn(tasks.named('jpackage'))
 dist.dependsOn(baseDist)
 
 if (enableAot) {

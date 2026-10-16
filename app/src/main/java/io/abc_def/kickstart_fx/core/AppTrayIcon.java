@@ -20,12 +20,11 @@ public class AppTrayIcon {
 
         tray = SystemTray.getSystemTray();
 
-        var image =
-                switch (OsType.ofLocal()) {
-                    case OsType.Windows ignored -> "img/tray/tray_windows.png";
-                    case OsType.Linux ignored -> "img/tray/tray_linux.png";
-                    case OsType.MacOs ignored -> "img/tray/tray_macos.png";
-                };
+        var image = switch (OsType.ofLocal()) {
+            case OsType.Windows ignored -> "img/tray/tray_windows.png";
+            case OsType.Linux ignored -> "img/tray/tray_linux.png";
+            case OsType.MacOs ignored -> "img/tray/tray_macos.png";
+        };
         var url = AppResources.getResourceURL(AppResources.MAIN_MODULE, image).orElseThrow();
 
         PopupMenu popupMenu = new PopupMenu();

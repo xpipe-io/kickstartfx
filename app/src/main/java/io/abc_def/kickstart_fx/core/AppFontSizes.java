@@ -129,12 +129,11 @@ public class AppFontSizes {
 
     public static AppFontSizes forOs(AppFontSizes windows, AppFontSizes linux, AppFontSizes mac) {
         var inter = AppPrefs.get() != null && !AppPrefs.get().useSystemFont().getValue();
-        var r =
-                switch (OsType.ofLocal()) {
-                    case OsType.Linux ignored -> linux;
-                    case OsType.MacOs ignored -> mac;
-                    case OsType.Windows ignored -> windows;
-                };
+        var r = switch (OsType.ofLocal()) {
+            case OsType.Linux ignored -> linux;
+            case OsType.MacOs ignored -> mac;
+            case OsType.Windows ignored -> windows;
+        };
         return inter ? fallbackFontSize(r) : r;
     }
 

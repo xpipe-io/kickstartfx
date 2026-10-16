@@ -7,7 +7,6 @@ import io.abc_def.kickstart_fx.core.window.AppDialog;
 import io.abc_def.kickstart_fx.core.window.AppMainWindow;
 import io.abc_def.kickstart_fx.issue.TrackEvent;
 import io.abc_def.kickstart_fx.platform.ColorHelper;
-import io.abc_def.kickstart_fx.platform.PlatformThread;
 import io.abc_def.kickstart_fx.prefs.AppPrefs;
 
 import javafx.animation.*;
