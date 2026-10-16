@@ -166,7 +166,7 @@ public class AppMainWindow {
             // Clean up old window as the HWND might not be reused
             var oldControl = windowHandle;
             if (oldControl != null && !oldControl.getWindowHandle().equals(currentControl.getWindowHandle())) {
-                AppWindowsShutdown.unregisterHook(oldControl.getWindowHandle());
+                AppWindowsShutdown.unregisterHook();
                 windowHandle = null;
             }
 

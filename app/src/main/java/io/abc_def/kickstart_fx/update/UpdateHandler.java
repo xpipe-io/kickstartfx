@@ -22,6 +22,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
+@SuppressWarnings("InfiniteLoopStatement")
 @Getter
 public abstract class UpdateHandler {
 
@@ -38,7 +39,7 @@ public abstract class UpdateHandler {
         ThreadHelper.createPlatformThread("updater", true, () -> {
                     ThreadHelper.sleep(Duration.ofMinutes(1).toMillis());
                     event("Starting background updater thread");
-                    while (!Thread.currentThread().isInterrupted()) {
+                    while (true) {
                         if (AppPrefs.get() != null
                                 && AppPrefs.get().automaticallyUpdate().get()) {
                             event("Performing background update");

@@ -29,6 +29,7 @@ import org.int4.fx.builders.common.AbstractRegionBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 @AllArgsConstructor
 public class SideMenuBarComp extends RegionBuilder<VBox> {
@@ -84,35 +85,40 @@ public class SideMenuBarComp extends RegionBuilder<VBox> {
         vbox.getStyleClass().add("sidebar-comp");
 
         var queueButtons = new VBox();
+        Consumer<List<? extends AppLayoutModel.QueueEntry>> update = l -> {
+            queueButtons.getChildren().clear();
+            for (int i = l.size() - 1; i >= 0; i--) {
+                var item = l.get(i);
+                var b = new IconButtonComp(item.getIcon(), null);
+                b.apply(struc -> {
+                    var tt = TooltipHelper.create(item.getName(), null);
+                    tt.setShowDelay(Duration.millis(50));
+                    Tooltip.install(struc, tt);
+
+                    struc.setOnAction(e -> {
+                        struc.setDisable(true);
+                        ThreadHelper.runAsync(() -> {
+                            try {
+                                item.getAction().run();
+                            } finally {
+                                Platform.runLater(() -> {
+                                    queueEntries.remove(item);
+                                });
+                            }
+                        });
+                        e.consume();
+                    });
+                });
+                var stack = createStyle(null, b);
+                queueButtons.getChildren().add(stack.build());
+            }
+        };
+
+        update.accept(new ArrayList<>(queueEntries));
         queueEntries.addListener((ListChangeListener<? super AppLayoutModel.QueueEntry>) c -> {
             var l = new ArrayList<>(c.getList());
             PlatformThread.runLaterIfNeeded(() -> {
-                queueButtons.getChildren().clear();
-                for (int i = l.size() - 1; i >= 0; i--) {
-                    var item = l.get(i);
-                    var b = new IconButtonComp(item.getIcon(), null);
-                    b.apply(struc -> {
-                        var tt = TooltipHelper.create(item.getName(), null);
-                        tt.setShowDelay(Duration.millis(50));
-                        Tooltip.install(struc, tt);
-
-                        struc.setOnAction(e -> {
-                            struc.setDisable(true);
-                            ThreadHelper.runAsync(() -> {
-                                try {
-                                    item.getAction().run();
-                                } finally {
-                                    Platform.runLater(() -> {
-                                        queueEntries.remove(item);
-                                    });
-                                }
-                            });
-                            e.consume();
-                        });
-                    });
-                    var stack = createStyle(null, b);
-                    queueButtons.getChildren().add(stack.build());
-                }
+                update.accept(l);
             });
         });
         vbox.getChildren().add(queueButtons);

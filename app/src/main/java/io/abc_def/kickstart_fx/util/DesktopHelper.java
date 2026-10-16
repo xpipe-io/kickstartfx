@@ -103,9 +103,9 @@ public class DesktopHelper {
             if (OsType.ofLocal() == OsType.WINDOWS) {
                 // Explorer does not support single quotes, so use normal quotes
                 if (Files.isDirectory(file)) {
-                    LocalExec.readStdoutIfPossible("explorer", "\"" + file + "\"");
+                    LocalExec.executeAsync("explorer", "\"" + file + "\"");
                 } else {
-                    LocalExec.readStdoutIfPossible("explorer", "/select,", "\"" + file + "\"");
+                    LocalExec.executeAsync("explorer", "/select,", "\"" + file + "\"");
                 }
                 return;
             }

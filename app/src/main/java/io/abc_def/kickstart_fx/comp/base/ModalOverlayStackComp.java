@@ -21,7 +21,7 @@ public class ModalOverlayStackComp extends SimpleRegionBuilder {
     @Override
     protected Region createSimple() {
         var current = background;
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 6; i++) {
             current = buildModalOverlay(current, i);
         }
         return current.build();

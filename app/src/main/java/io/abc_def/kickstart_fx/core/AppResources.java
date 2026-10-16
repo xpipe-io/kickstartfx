@@ -23,17 +23,19 @@ public class AppResources {
     private static final Map<String, ModuleFileSystem> fileSystems = new ConcurrentHashMap<>();
 
     public static void reset() {
-        fileSystems.forEach((s, moduleFileSystem) -> {
-            try {
-                moduleFileSystem.close();
-            } catch (IOException ex) {
-                // Usually when updating, an exit signal is sent to this application.
-                // However, it takes a while to shut down but the installer is deleting files meanwhile.
-                // It can happen that the jar does not exist anymore
-                ErrorEventFactory.fromThrowable(ex).expected().omit().handle();
-            }
-        });
-        fileSystems.clear();
+        synchronized (fileSystems) {
+            fileSystems.forEach((s, moduleFileSystem) -> {
+                try {
+                    moduleFileSystem.close();
+                } catch (IOException ex) {
+                    // Usually when updating, an exit signal is sent to this application.
+                    // However, it takes a while to shut down but the installer is deleting files meanwhile.
+                    // It can happen that the jar does not exist anymore
+                    ErrorEventFactory.fromThrowable(ex).expected().omit().handle();
+                }
+            });
+            fileSystems.clear();
+        }
     }
 
     private static ModuleFileSystem openFileSystemIfNeeded(String module) throws IOException {

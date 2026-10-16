@@ -58,8 +58,14 @@ public class BasicUpdater extends UpdateHandler {
                         // Consider adding verification for production use
                         var systemWide = AppInstallation.ofWindows().isSystemWide();
                         var properties = "MSIFASTINSTALL=7 DISABLEROLLBACK=1" + (systemWide ? " ALLUSERS=1" : "");
-                        var command = "start \"\" /wait msiexec /i \"" + url + "\" /qb " + properties + "&start \"\" \""
-                                + AppInstallation.ofCurrent().getExecutablePath() + "\"";
+                        var logFile = AppLogs.get()
+                                .getSessionLogsDirectory()
+                                .getParent()
+                                .resolve("installer.log");
+                        var command = "start \"\" /wait msiexec /i \"" + url + "\" /lv \"" + logFile + "\" /qb "
+                                + properties + "&start \"\" \""
+                                + AppInstallation.ofCurrent().getExecutablePath()
+                                + "\"";
                         AppOperationMode.executeAfterShutdown(() -> {
                             if (LocalExec.executeAsync("cmd", "/c", command) == null) {
                                 throw new IOException("Failed to launch update installer");

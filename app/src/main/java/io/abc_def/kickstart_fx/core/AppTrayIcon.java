@@ -53,6 +53,10 @@ public class AppTrayIcon {
         }
 
         trayIcon.addActionListener(e -> {
+            if (AppOperationMode.isInShutdown()) {
+                return;
+            }
+
             if (OsType.ofLocal() != OsType.MACOS) {
                 tray.remove(trayIcon);
                 AppOperationMode.switchToAsync(AppOperationMode.GUI);

@@ -75,6 +75,7 @@ public class AppLayoutComp extends RegionStructureBuilder<BorderPane, AppLayoutC
             }
             PlatformThread.runNestedLoopIteration();
             sidebar.setDisable(false);
+            stack.requestFocus();
         }
 
         @Override
