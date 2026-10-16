@@ -13,7 +13,9 @@ public class AppAotTrain {
         }
 
         AppOperationMode.switchToSyncOrThrow(AppOperationMode.GUI);
+        ThreadHelper.sleep(5000);
 
+        // Pages are only built once they are shown, so visit all of them
         for (AppLayoutModel.Entry entry : AppLayoutModel.get().getEntries()) {
             AppLayoutModel.get().getSelected().setValue(entry);
             ThreadHelper.sleep(1000);

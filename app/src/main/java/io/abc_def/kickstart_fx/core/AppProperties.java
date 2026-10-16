@@ -34,6 +34,7 @@ public class AppProperties {
     boolean newBuildSession;
     boolean aotTrainMode;
     boolean debugPlatformThreadAccess;
+    boolean buildAllPages;
     AppArguments arguments;
     AppOperationModeSelection explicitMode;
     boolean logToSysOut;
@@ -85,6 +86,9 @@ public class AppProperties {
                 .orElse(true);
         debugPlatformThreadAccess = Optional.ofNullable(
                         System.getProperty(AppNames.propertyName("debugPlatformThreadAccess")))
+                .map(Boolean::parseBoolean)
+                .orElse(false);
+        buildAllPages = Optional.ofNullable(System.getProperty(AppNames.propertyName("buildAllPages")))
                 .map(Boolean::parseBoolean)
                 .orElse(false);
         showcase = Optional.ofNullable(System.getProperty(AppNames.propertyName("showcase")))

@@ -115,14 +115,12 @@ public class AppMainWindowContentComp extends SimpleRegionBuilder {
             loaded.subscribe(struc -> {
                 if (struc != null) {
                     TrackEvent.info("Window content node set");
-                    PlatformThread.runNestedLoopIteration();
                     struc.prepareAddition();
                     pane.getStyleClass().remove("background");
                     loadingAnimation.stop();
                     pane.getChildren().remove(loadingVbox);
                     pane.getChildren().add(struc.get());
                     sidebarPresent.set(true);
-                    PlatformThread.runNestedLoopIteration();
                     struc.show();
                     TrackEvent.info("Window content node shown");
                 }

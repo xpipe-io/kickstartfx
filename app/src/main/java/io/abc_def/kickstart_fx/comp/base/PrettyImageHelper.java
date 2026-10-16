@@ -2,7 +2,6 @@ package io.abc_def.kickstart_fx.comp.base;
 
 import io.abc_def.kickstart_fx.core.AppImages;
 import io.abc_def.kickstart_fx.core.window.AppMainWindow;
-import io.abc_def.kickstart_fx.platform.BindingsHelper;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -78,7 +77,7 @@ public class PrettyImageHelper {
             return new PrettyImageComp(new SimpleStringProperty(null), w, h);
         }
 
-        var binding = BindingsHelper.flatMap(img, s -> {
+        var binding = img.flatMap(s -> {
             return rasterizedImageIfExistsScaled(s, h, 16, 24, 40, 80);
         });
         return new PrettyImageComp(binding, w, h);

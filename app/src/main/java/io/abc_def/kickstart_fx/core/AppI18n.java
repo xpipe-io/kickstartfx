@@ -2,7 +2,6 @@ package io.abc_def.kickstart_fx.core;
 
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.issue.TrackEvent;
-import io.abc_def.kickstart_fx.platform.BindingsHelper;
 import io.abc_def.kickstart_fx.platform.GlobalObjectProperty;
 import io.abc_def.kickstart_fx.platform.PlatformState;
 import io.abc_def.kickstart_fx.platform.PlatformThread;
@@ -24,9 +23,7 @@ public class AppI18n {
     private AppI18nData english;
 
     public AppI18n() {
-        currentLocale.bind(BindingsHelper.map(
-                currentLanguage,
-                appI18nData -> appI18nData != null ? appI18nData.getLocale() : SupportedLocale.getEnglish()));
+        currentLocale.bind(currentLanguage.map(AppI18nData::getLocale).orElse(SupportedLocale.getEnglish()));
     }
 
     public static ObservableValue<SupportedLocale> activeLanguage() {

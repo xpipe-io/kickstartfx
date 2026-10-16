@@ -61,7 +61,8 @@ public class UpdateCheckComp extends SimpleRegionBuilder {
                     ThreadHelper.runFailableAsync(() -> {
                         AppDistributionType.get().getUpdateHandler().refreshUpdateCheck();
                         if (uh.getLastUpdateCheckResult().getValue() != null) {
-                            UpdateAvailableDialog.showIfNeeded(false);
+                            // We just checked, so there's no need to check again
+                            UpdateAvailableDialog.showIfNeeded(false, false);
                         }
                     });
                     actionEvent.consume();

@@ -1,6 +1,7 @@
 package io.abc_def.kickstart_fx.update;
 
 import io.abc_def.kickstart_fx.comp.base.ModalButton;
+import io.abc_def.kickstart_fx.core.AppProperties;
 import io.abc_def.kickstart_fx.issue.ErrorEventFactory;
 import io.abc_def.kickstart_fx.issue.TrackEvent;
 import io.abc_def.kickstart_fx.prefs.AppPrefs;
@@ -30,7 +31,7 @@ public abstract class UpdateHandler {
     protected final BooleanProperty busy = new SimpleBooleanProperty();
 
     protected UpdateHandler(boolean startBackgroundThread) {
-        if (startBackgroundThread) {
+        if (startBackgroundThread && !AppProperties.get().isAotTrainMode()) {
             startBackgroundUpdater();
         }
     }

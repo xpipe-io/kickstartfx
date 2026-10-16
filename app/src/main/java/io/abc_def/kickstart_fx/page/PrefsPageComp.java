@@ -10,12 +10,19 @@ import io.abc_def.kickstart_fx.util.BooleanScope;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 
 import org.int4.fx.builders.common.AbstractRegionBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PrefsPageComp extends SimpleRegionBuilder {
+
+    private final Map<AppPrefsCategory, Node> categoryNodes = new HashMap<>();
 
     @Override
     protected Region createSimple() {
@@ -91,15 +98,30 @@ public class PrefsPageComp extends SimpleRegionBuilder {
         return stack;
     }
 
+    private Node findCategoryNode(Parent box, AppPrefsCategory val) {
+        // This is called for every category on every scroll change, so avoid a full lookup each time
+        var cached = categoryNodes.get(val);
+        if (cached != null && cached.getScene() != null) {
+            return cached;
+        }
+
+        var found = box.lookup("." + val.getId());
+        if (found != null) {
+            categoryNodes.put(val, found);
+        } else {
+            categoryNodes.remove(val);
+        }
+        return found;
+    }
+
     private double computeCategoryOffset(VBox box, ScrollPane scrollPane, AppPrefsCategory val) {
-        var node = val != null ? box.lookup("." + val.getId()) : null;
+        var node = val != null ? findCategoryNode(box, val) : null;
         if (node != null && scrollPane.getHeight() > 0.0) {
-            var s = Math.min(
-                            box.getHeight(),
-                            node.getBoundsInParent().getMinY() > 0.0
-                                    ? node.getBoundsInParent().getMinY() + 20
-                                    : 0.0)
-                    / box.getHeight();
+            var minY = node.getBoundsInParent().getMinY();
+            if (minY <= 40.0) {
+                minY = 0.0;
+            }
+            var s = Math.min(box.getHeight(), minY > 0.0 ? minY + 20 : 0.0) / box.getHeight();
             var off = (scrollPane.getHeight() * s * 1.02) / box.getHeight();
             return s + off;
         } else {

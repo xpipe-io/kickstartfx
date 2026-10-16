@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
+import javafx.scene.Node;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
@@ -18,18 +19,25 @@ import java.util.Map;
 public class MultiContentComp extends SimpleRegionBuilder {
 
     private final boolean requestFocus;
+    private final boolean lazy;
     private final Map<AbstractRegionBuilder<?, ?>, ObservableValue<Boolean>> content;
 
     public MultiContentComp(boolean requestFocus, Map<AbstractRegionBuilder<?, ?>, ObservableValue<Boolean>> content) {
+        this(requestFocus, true, content);
+    }
+
+    public MultiContentComp(
+            boolean requestFocus, boolean lazy, Map<AbstractRegionBuilder<?, ?>, ObservableValue<Boolean>> content) {
         this.requestFocus = requestFocus;
+        this.lazy = lazy;
         this.content = FXCollections.observableMap(content);
     }
 
     @Override
     protected Region createSimple() {
-        ObservableMap<AbstractRegionBuilder<?, ?>, Region> m = FXCollections.observableHashMap();
+        ObservableMap<AbstractRegionBuilder<?, ?>, StackPane> m = FXCollections.observableHashMap();
         var stack = new StackPane();
-        m.addListener((MapChangeListener<? super AbstractRegionBuilder<?, ?>, Region>) change -> {
+        m.addListener((MapChangeListener<? super AbstractRegionBuilder<?, ?>, StackPane>) change -> {
             if (change.wasAdded()) {
                 stack.getChildren().add(change.getValueAdded());
             } else {
@@ -41,7 +49,7 @@ public class MultiContentComp extends SimpleRegionBuilder {
             if (newValue) {
                 var selected = content.entrySet().stream()
                         .filter(e -> e.getValue().getValue())
-                        .map(e -> m.get(e.getKey()))
+                        .map(e -> getFocusTarget(m.get(e.getKey())))
                         .findFirst();
                 if (selected.isPresent()) {
                     selected.get().requestFocus();
@@ -50,14 +58,22 @@ public class MultiContentComp extends SimpleRegionBuilder {
         });
 
         for (Map.Entry<AbstractRegionBuilder<?, ?>, ObservableValue<Boolean>> e : content.entrySet()) {
-            var r = e.getKey().build();
+            // Only build the content once it is shown for the first time to speed up the startup
+            var r = new StackPane();
+            if (!lazy) {
+                r.getChildren().add(e.getKey().build());
+            }
             e.getValue().subscribe(val -> {
                 PlatformThread.runLaterIfNeeded(() -> {
+                    if (val && r.getChildren().isEmpty()) {
+                        r.getChildren().add(e.getKey().build());
+                    }
+
                     r.setManaged(val);
                     r.setVisible(val);
                     if (requestFocus && val) {
                         Platform.runLater(() -> {
-                            r.requestFocus();
+                            getFocusTarget(r).requestFocus();
                         });
                     }
                 });
@@ -66,5 +82,9 @@ public class MultiContentComp extends SimpleRegionBuilder {
         }
 
         return stack;
+    }
+
+    private static Node getFocusTarget(StackPane holder) {
+        return holder.getChildren().isEmpty() ? holder : holder.getChildren().getFirst();
     }
 }

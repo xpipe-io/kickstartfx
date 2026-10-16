@@ -63,7 +63,8 @@ public class SideMenuBarComp extends RegionBuilder<VBox> {
         }
 
         {
-            var b = new IconButtonComp("mdi2u-update", () -> UpdateAvailableDialog.showIfNeeded(false));
+            // The button is only shown if an update was already found, so no need to check again
+            var b = new IconButtonComp("mdi2u-update", () -> UpdateAvailableDialog.showIfNeeded(false, false));
             var stack = createStyle(null, b);
             stack.invisible(Bindings.createBooleanBinding(
                     () -> {

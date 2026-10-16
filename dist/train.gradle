@@ -20,6 +20,8 @@ tasks.register('trainAot', DefaultTask) {
             execOps.exec {
                 commandLine cl
                 workingDir "$imageDir"
+                // Also log the cache assembly phase, which runs in a separate JVM
+                environment "JDK_AOT_VM_OPTIONS", "-Xlog:aot,cds"
                 // Important: The cache will contain AVX instructions if trained with AVX on (default)
                 // To make it not crash on systems without AVX, disable AVX while training
                 environment "CDS_JVM_OPTS",
@@ -43,7 +45,7 @@ tasks.register('trainAot', DefaultTask) {
             }
 
             def cfg = file("$imageDir/lib/app/${jpackageExecutableName}.cfg")
-            cfg.text = cfg.text + "java-options=-XX:SharedArchiveFile=\$APPDIR/../../lib/runtime/lib/server/cache.aot\n"
+            cfg.text = cfg.text + "java-options=-XX:AOTCache=\$APPDIR/../../lib/runtime/lib/server/cache.aot\n"
         }
 
         if (os.isMacOsX()) {
@@ -56,10 +58,12 @@ tasks.register('trainAot', DefaultTask) {
                 workingDir "$imageDir"
                 environment "CDS_JVM_OPTS",
                             "-XX:+AOTClassLinking -XX:AOTCacheOutput=./Contents/runtime/Contents/Home/lib/server/cache.aot -Xlog:aot" + (graal ? " --add-modules jdk.internal.vm.ci" : "")
+                // TODO: This seems to crash on intel macOS runners
+                ignoreExitValue = arch == "x86_64"
             }
 
             def cfg = file("$imageDir/Contents/app/${jpackageExecutableName}.cfg")
-            cfg.text = cfg.text + "java-options=-XX:SharedArchiveFile=\$ROOTDIR/Contents/runtime/Contents/Home/lib/server/cache.aot\n"
+            cfg.text = cfg.text + "java-options=-XX:AOTCache=\$ROOTDIR/Contents/runtime/Contents/Home/lib/server/cache.aot\n"
         }
 
         def dataDir = project.file("$distDir/local_train")

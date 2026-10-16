@@ -3,6 +3,7 @@ package io.abc_def.kickstart_fx.comp.base;
 import io.abc_def.kickstart_fx.comp.RegionStructure;
 import io.abc_def.kickstart_fx.comp.RegionStructureBuilder;
 import io.abc_def.kickstart_fx.core.AppLayoutModel;
+import io.abc_def.kickstart_fx.core.AppProperties;
 import io.abc_def.kickstart_fx.page.PrefsPageComp;
 import io.abc_def.kickstart_fx.platform.PlatformThread;
 import io.abc_def.kickstart_fx.prefs.AppPrefs;
@@ -39,7 +40,8 @@ public class AppLayoutComp extends RegionStructureBuilder<BorderPane, AppLayoutC
                                 model.getSelected()),
                         (v1, v2) -> v2,
                         LinkedHashMap::new));
-        var multi = new MultiContentComp(true, map);
+        // Pages are only built once they are shown, unless configured otherwise
+        var multi = new MultiContentComp(true, !AppProperties.get().isBuildAllPages(), map);
         multi.style("background");
 
         var pane = new BorderPane();

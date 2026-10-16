@@ -16,6 +16,14 @@ allprojects { subproject ->
     }
     apply from: "$rootDir/gradle/gradle_scripts/modules.gradle"
 
+    // Always download dependency sources when the project is imported into an IDE
+    apply plugin: 'idea'
+    idea {
+        module {
+            downloadSources = true
+        }
+    }
+
     // https://docs.gradle.org/9.0.0/userguide/upgrading_major_version_9.html#reproducible_archives_by_default
     tasks.withType(AbstractArchiveTask).configureEach {
         reproducibleFileOrder = false
@@ -102,7 +110,7 @@ def getJvmArgs() {
 
     // GC config
     jvmRunArgs += ['-XX:+UseG1GC',
-                   '-Xms300m',
+                   '-Xms150m',
                    '-Xmx4G',
                    '-XX:MinHeapFreeRatio=20',
                    '-XX:MaxHeapFreeRatio=30',
@@ -126,6 +134,12 @@ def getJvmArgs() {
         jvmRunArgs += "-Xdock:name=$productName"
     }
 
+    // JavaFX performance adjustments
+    jvmRunArgs += [
+            "-Dprism.scrollcacheopt=true",
+            "-Dprism.cacheshapes=true"
+    ]
+
     // Fix uncontrolled animation framerate issues on Linux, see https://bugs.openjdk.org/browse/JDK-8210547
     if (os.isLinux()) {
         jvmRunArgs += ["-Dquantum.multithreaded=false"]
@@ -133,9 +147,21 @@ def getJvmArgs() {
 
     // Why is this not on by default? ...
     // https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/net/doc-files/net-properties.html
+    // https://stackoverflow.com/questions/53333556/proxy-authentication-with-jdk-11-httpclient
+    // https://stackoverflow.com/questions/75150081/ioexception-too-many-authentication-attempts-limit-3-when-using-jdk-httpcli
     jvmRunArgs += [
-            '-Djava.net.useSystemProxies=true'
+            '-Djava.net.useSystemProxies=true',
+            '-Djdk.http.auth.proxying.disabledSchemes=""',
+            '-Djdk.http.auth.tunneling.disabledSchemes=""',
+            '-Djdk.httpclient.auth.retrylimit=1'
     ]
+
+    // Include host info in HTTP exceptions
+    // https://docs.oracle.com/en/java/javase/22/core/java-networking.htm
+    jvmRunArgs += [
+            '-Djdk.includeInExceptions=hostInfo'
+    ]
+
 
     return jvmRunArgs
 }
