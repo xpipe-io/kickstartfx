@@ -58,12 +58,10 @@ If you don't like installers, you can also use a portable version that is packag
 
 Installers are the easiest way to get started:
 
-- [MacOS .pkg Installer (x86-64)](../../releases/latest/download/kickstartfx-installer-macos-x86_64.pkg)
 - [MacOS .pkg Installer (ARM 64)](../../releases/latest/download/kickstartfx-installer-macos-arm64.pkg)
 
 If you don't like installers, you can also use a portable version that is packaged as an archive:
 
-- [MacOS .dmg Portable (x86-64)](../../releases/latest/download/kickstartfx-portable-macos-x86_64.dmg)
 - [MacOS .dmg Portable (ARM 64)](../../releases/latest/download/kickstartfx-portable-macos-arm64.dmg)
 
 ### Linux

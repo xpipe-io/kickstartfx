@@ -25,7 +25,7 @@ tasks.register('trainAot', DefaultTask) {
                 // Important: The cache will contain AVX instructions if trained with AVX on (default)
                 // To make it not crash on systems without AVX, disable AVX while training
                 environment "CDS_JVM_OPTS",
-                        (arch == "x86_64" ? "-XX:UseAVX=0 " : "") + "-XX:+AOTClassLinking -XX:AOTCacheOutput=./server/cache.aot -Xlog:aot" + (graal ? " --add-modules jdk.internal.vm.ci" : "")
+                        (arch == "x86_64" ? "-XX:UseAVX=0 " : "") + "-XX:+AOTClassLinking -XX:AOTCacheOutput=./server/cache.aot" + (graal ? " --add-modules jdk.internal.vm.ci" : "")
             }
 
             def cfg = file("$imageDir/app/${jpackageExecutableName}.cfg")
@@ -58,8 +58,6 @@ tasks.register('trainAot', DefaultTask) {
                 workingDir "$imageDir"
                 environment "CDS_JVM_OPTS",
                             "-XX:+AOTClassLinking -XX:AOTCacheOutput=./Contents/runtime/Contents/Home/lib/server/cache.aot -Xlog:aot" + (graal ? " --add-modules jdk.internal.vm.ci" : "")
-                // TODO: This seems to crash on intel macOS runners
-                ignoreExitValue = arch == "x86_64"
             }
 
             def cfg = file("$imageDir/Contents/app/${jpackageExecutableName}.cfg")

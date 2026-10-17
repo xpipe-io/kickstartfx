@@ -53,7 +53,6 @@ public class AppBaseMode extends AppOperationMode {
             UpdateAvailableDialog.showIfNeeded(true);
         }
 
-        AppRosettaCheck.check();
         AppWindowsArmCheck.check();
         AppHardwareAccelerationDisableCheck.check();
         AppMainWindow.loadingText("loadingUserInterface");
