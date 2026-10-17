@@ -74,12 +74,7 @@ public class JacksonMapper {
         @Override
         public void init(ModuleLayer layer) {
             synchronized (JacksonMapper.class) {
-                // This can be called multiple times, so don't register the same module twice
-                for (JacksonModule module : findModules(layer)) {
-                    if (MODULES.stream().noneMatch(m -> m.getClass().equals(module.getClass()))) {
-                        MODULES.add(module);
-                    }
-                }
+                MODULES.addAll(findModules(layer));
                 INSTANCE = BASE.rebuild().addModules(MODULES).build();
             }
         }
