@@ -5,10 +5,17 @@ on:
     branches:
       - '**'
 
+permissions: {}
+
 jobs:
   build-windows:
     uses: ./.github/workflows/windows_build.yml
-    secrets: inherit
+    secrets:
+      AZURE_KEY_VAULT_URI: ${{ secrets.AZURE_KEY_VAULT_URI }}
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      AZURE_CERT_NAME: ${{ secrets.AZURE_CERT_NAME }}
     name: Windows Build
     permissions:
       actions: none
@@ -28,7 +35,6 @@ jobs:
     if: contains(github.event.head_commit.message, '[release]')
   build-linux:
     uses: ./.github/workflows/linux_build.yml
-    secrets: inherit
     name: Linux Build
     permissions:
       actions: none
@@ -48,7 +54,16 @@ jobs:
     if: contains(github.event.head_commit.message, '[release]')
   build-macos:
     uses: ./.github/workflows/macos_build.yml
-    secrets: inherit
+    secrets:
+      MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE }}
+      MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
+      MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE: ${{ secrets.MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE }}
+      MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_PASSWORD }}
+      MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_NAME: ${{ secrets.MACOS_DEVELOPER_ID_INSTALLER_CERTIFICATE_NAME }}
+      MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_NAME: ${{ secrets.MACOS_DEVELOPER_ID_APPLICATION_CERTIFICATE_NAME }}
+      MACOS_NOTARIZATION_APPLE_ID: ${{ secrets.MACOS_NOTARIZATION_APPLE_ID }}
+      MACOS_NOTARIZATION_APP_SPECIFIC_PASSWORD: ${{ secrets.MACOS_NOTARIZATION_APP_SPECIFIC_PASSWORD }}
+      MACOS_NOTARIZATION_TEAM_ID: ${{ secrets.MACOS_NOTARIZATION_TEAM_ID }}
     name: macOS Build
     permissions:
       actions: none
@@ -91,11 +106,18 @@ jobs:
       statuses: none
     if: ${{ contains(github.event.head_commit.message, '[release]') }}
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: publish
+      cancel-in-progress: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
 
       - name: Set variables
         run: |
@@ -103,29 +125,38 @@ jobs:
           echo "VERSION=$VER" >> $GITHUB_ENV
 
       - name: Create version tag
-        uses: actions/github-script@v8
-        continue-on-error: true
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
-          github-token: ${{ secrets.GH_PAT }}
+          # The job token is scoped to this repository and run, unlike a personal access token
+          github-token: ${{ github.token }}
+          # The version is passed via the environment instead of being interpolated into the script source
           script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/${{ env.VERSION }}',
-              sha: context.sha
-            })
+            try {
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/tags/${process.env.VERSION}`,
+                sha: context.sha
+              });
+            } catch (e) {
+              // Allow rerunning a release for which the tag was already created
+              if (e.status === 422) {
+                core.info(`Tag ${process.env.VERSION} already exists`);
+              } else {
+                throw e;
+              }
+            }
         if: ${{ contains(github.event.head_commit.message, '[release]') }}
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           java-version: '25.0.2'
           distribution: 'zulu'
           java-package: jdk
-          cache: gradle
 
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           pattern: "*-artifacts"
           merge-multiple: true
@@ -141,11 +172,11 @@ jobs:
           GPG_KEY_PASSWORD: ${{ secrets.GPG_KEY_PASSWORD }}
 
       - name: Create release
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         if: ${{ contains(github.event.head_commit.message, '[release]') }}
         with:
           body_path: dist/build/dist/release/github-changelog.md
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ github.token }}
           preserve_order: true
           make_latest: true
           tag_name: ${{ env.VERSION }}

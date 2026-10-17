@@ -1,10 +1,29 @@
+
 version: 2
 updates:
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
       interval: "daily"
+    # Don't immediately pick up new releases, in case they turn out to be compromised
+    cooldown:
+      default-days: 7
+    ignore:
+      # The bundled atlantafx sampler jar is built against these versions
+      - dependency-name: "io.github.mkpaz:atlantafx-base"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "net.datafaker:datafaker"
+        update-types: ["version-update:semver-major"]
+      # The JNA version has to match the prebuilt jmods in dist/jna
+      - dependency-name: "net.java.dev.jna:*"
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: "daily"
+    # Don't immediately pick up new releases, in case they turn out to be compromised
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns:
+          - "*"
