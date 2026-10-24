@@ -32,13 +32,9 @@ public enum PlatformState {
     private static PlatformState current = PlatformState.NOT_INITIALIZED;
 
     private static Throwable lastError;
-    private static boolean expectedError;
     private static boolean restartQueued;
 
     public static Throwable getLastError() {
-        if (expectedError) {
-            ErrorEventFactory.expected(lastError);
-        }
         return lastError;
     }
 
@@ -119,11 +115,12 @@ public enum PlatformState {
 
             // Catch more than just the headless exception in case the graphics environment initialization completely
             // fails
-        } catch (HeadlessException h) {
-            var msg = getErrorMessage(h.getMessage());
+        } catch (HeadlessException | AWTError e) {
+            var msg = getErrorMessage(e.getMessage());
             PlatformState.setCurrent(PlatformState.EXITED);
-            expectedError = true;
-            lastError = new UnsupportedOperationException(msg, h);
+            lastError = new UnsupportedOperationException(msg, e);
+            ErrorEventFactory.expected(e);
+            ErrorEventFactory.expected(lastError);
             return;
         } catch (Throwable t) {
             PlatformState.setCurrent(PlatformState.EXITED);
@@ -137,7 +134,7 @@ public enum PlatformState {
         if (AppPrefs.get() != null) {
             var s = AppPrefs.get().uiScale().getValue();
             if (s != null) {
-                var i = Math.min(300, Math.max(25, s));
+                var i = Math.clamp(s, 25, 300);
                 var value = i + "%";
                 switch (OsType.ofLocal()) {
                     case OsType.Linux ignored -> System.setProperty("glass.gtk.uiScale", value);
@@ -149,15 +146,21 @@ public enum PlatformState {
 
         // This issue is now fixed in 27-ea+4
         // The bellsoft JavaFX build for ARM does not contain the fix yet
-        if (OsType.ofLocal() == OsType.WINDOWS && !AppProperties.get().getArch().equals("x86_64")) {
+        if (OsType.ofLocal() == OsType.WINDOWS
+                && !AppProperties.get().getArch().equals("x86_64")
+                && System.getProperty("prism.forceUploadingPainter") == null) {
             // This is primarily intended to fix Windows unified stage transparency issues
             // (https://bugs.openjdk.org/browse/JDK-8329382)
             // But apparently it can also occur without a custom stage on Windows
             System.setProperty("prism.forceUploadingPainter", "true");
         }
 
-        if (AppPrefs.get() != null
-                && AppPrefs.get().disableHardwareAcceleration().get()) {
+        // Assume that someone who has set this env variable wants to use the software renderer
+        var overrideDisableHardwareAcceleration =
+                OsType.ofLocal() == OsType.LINUX && "1".equals(System.getenv("LIBGL_ALWAYS_SOFTWARE"));
+        if (overrideDisableHardwareAcceleration
+                || (AppPrefs.get() != null
+                        && AppPrefs.get().disableHardwareAcceleration().get())) {
             System.setProperty("prism.order", "sw");
         }
 
@@ -186,6 +189,7 @@ public enum PlatformState {
                 // Platform initialization has failed in this case
                 var msg = getErrorMessage(t.getMessage());
                 var ex = new UnsupportedOperationException(msg, t);
+                ErrorEventFactory.expected(ex);
                 PlatformState.setCurrent(PlatformState.EXITED);
                 lastError = ex;
                 return;

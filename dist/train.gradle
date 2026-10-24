@@ -1,70 +1,71 @@
 def distDir = "${project.layout.buildDirectory.get()}/dist"
 
+// AOT adapter caching is disabled with -XX:+UnlockDiagnosticVMOptions -XX:-AOTAdapterCaching
+// as adapters are generated for the CPU features of the machine that creates the AOT cache
+// Without this, the app will crash on systems that do not support the same set of CPU features as the training machine
+// This isn't even really documented anywhere
+
 tasks.register('trainAot', DefaultTask) {
     doLast {
         def properties = [
                 "-D" + propertyName("dataDir") + "=$distDir/local_train",
-                "-D" + propertyName("acceptEula") + "=true",
                 "-D" + propertyName("aotTrainMode") + "=true",
                 "-D" + propertyName("writeSysOut") + "=true",
                 "-D" + propertyName("writeLogs") + "=false",
                 "-D" + propertyName("logLevel") + "=trace",
                 "-D" + propertyName("useVirtualThreads") + "=false",
         ]
+
         def jvmName = System.getProperty("java.vendor.version")
+        def graal = jvmName != null && jvmName.toLowerCase().contains("graal")
+
+        def imageDir
+        def command
+        // The cache output location is relative to the working directory of the launcher script
+        def cacheOutput
+        def cfgFile
+        // The cache location as seen from the launcher configuration
+        def cfgCache
         if (os.isWindows()) {
-            def imageDir = "$distDir/base"
-            def bat = "$imageDir/runtime/bin/${jpackageExecutableName}.bat"
-            def cl = ['cmd', '/c', bat] + properties
-            def graal = jvmName != null && jvmName.toLowerCase().contains("graal")
-            execOps.exec {
-                commandLine cl
-                workingDir "$imageDir"
-                // Also log the cache assembly phase, which runs in a separate JVM
-                environment "JDK_AOT_VM_OPTIONS", "-Xlog:aot,cds"
-                // Important: The cache will contain AVX instructions if trained with AVX on (default)
-                // To make it not crash on systems without AVX, disable AVX while training
-                environment "CDS_JVM_OPTS",
-                        (arch == "x86_64" ? "-XX:UseAVX=0 " : "") + "-XX:+AOTClassLinking -XX:AOTCacheOutput=./server/cache.aot" + (graal ? " --add-modules jdk.internal.vm.ci" : "")
-            }
-
-            def cfg = file("$imageDir/app/${jpackageExecutableName}.cfg")
-            cfg.text = cfg.text + "java-options=-XX:AOTCache=\$ROOTDIR/runtime/bin/server/cache.aot\n"
+            imageDir = "$distDir/base"
+            command = ['cmd', '/c', "$imageDir/runtime/bin/${jpackageExecutableName}.bat"]
+            cacheOutput = './server/cache.aot'
+            cfgFile = "$imageDir/app/${jpackageExecutableName}.cfg"
+            cfgCache = '$ROOTDIR/runtime/bin/server/cache.aot'
+        } else if (os.isLinux()) {
+            imageDir = "$distDir/base"
+            command = ["$imageDir/lib/runtime/bin/${jpackageExecutableName}"]
+            cacheOutput = './lib/runtime/lib/server/cache.aot'
+            cfgFile = "$imageDir/lib/app/${jpackageExecutableName}.cfg"
+            cfgCache = '$APPDIR/../../lib/runtime/lib/server/cache.aot'
+        } else {
+            imageDir = "$distDir/${productName}.app"
+            command = ["$imageDir/Contents/runtime/Contents/Home/bin/${jpackageExecutableName}"]
+            cacheOutput = './Contents/runtime/Contents/Home/lib/server/cache.aot'
+            cfgFile = "$imageDir/Contents/app/${jpackageExecutableName}.cfg"
+            cfgCache = '$ROOTDIR/Contents/runtime/Contents/Home/lib/server/cache.aot'
         }
 
-        if (os.isLinux()) {
-            def imageDir = "$distDir/base"
-            def script = "$imageDir/lib/runtime/bin/${jpackageExecutableName}"
-            def cl = [script.toString()] + properties
-            def graal = jvmName != null && jvmName.toLowerCase().contains("graal")
-            execOps.exec {
-                commandLine cl
-                workingDir "$imageDir"
-                environment "CDS_JVM_OPTS",
-                            "-XX:+AOTClassLinking -XX:AOTCacheOutput=./lib/runtime/lib/server/cache.aot -Xlog:aot" + (graal ? " --add-modules jdk.internal.vm.ci" : "")
-            }
-
-            def cfg = file("$imageDir/lib/app/${jpackageExecutableName}.cfg")
-            cfg.text = cfg.text + "java-options=-XX:AOTCache=\$APPDIR/../../lib/runtime/lib/server/cache.aot\n"
+        def jvmOptions = [
+                "-XX:+UnlockDiagnosticVMOptions",
+                "-XX:-AOTAdapterCaching",
+                "-XX:+AOTClassLinking",
+                "-XX:AOTCacheOutput=$cacheOutput",
+                "-Xlog:aot",
+        ]
+        if (graal) {
+            jvmOptions += ["--add-modules", "jdk.internal.vm.ci"]
         }
 
-        if (os.isMacOsX()) {
-            def imageDir = "$distDir/${productName}.app"
-            def script = "$imageDir/Contents/runtime/Contents/Home/bin/${jpackageExecutableName}"
-            def cl = [script.toString()] + properties
-            def graal = jvmName != null && jvmName.toLowerCase().contains("graal")
-            execOps.exec {
-                commandLine cl
-                workingDir "$imageDir"
-                environment "CDS_JVM_OPTS",
-                            "-XX:+AOTClassLinking -XX:AOTCacheOutput=./Contents/runtime/Contents/Home/lib/server/cache.aot -Xlog:aot" + (graal ? " --add-modules jdk.internal.vm.ci" : "")
-            }
-
-            def cfg = file("$imageDir/Contents/app/${jpackageExecutableName}.cfg")
-            cfg.text = cfg.text + "java-options=-XX:AOTCache=\$ROOTDIR/Contents/runtime/Contents/Home/lib/server/cache.aot\n"
+        execOps.exec {
+            commandLine((command + properties).collect { it.toString() })
+            workingDir imageDir
+            environment "CDS_JVM_OPTS", jvmOptions.join(" ")
         }
 
-        def dataDir = project.file("$distDir/local_train")
-        delete(dataDir)
+        def cfg = file(cfgFile)
+        cfg.text = cfg.text + "java-options=-XX:AOTCache=$cfgCache\n"
+
+        delete(project.file("$distDir/local_train"))
     }
 }
