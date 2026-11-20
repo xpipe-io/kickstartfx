@@ -16,7 +16,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Value;
 import lombok.experimental.NonFinal;
 import lombok.extern.jackson.Jacksonized;
 
