@@ -4,6 +4,7 @@ import io.abc_def.kickstart_fx.comp.RegionBuilder;
 import io.abc_def.kickstart_fx.comp.base.ModalButton;
 import io.abc_def.kickstart_fx.comp.base.ModalOverlay;
 import io.abc_def.kickstart_fx.core.AppI18n;
+import io.abc_def.kickstart_fx.issue.TrackEvent;
 import io.abc_def.kickstart_fx.platform.PlatformInit;
 import io.abc_def.kickstart_fx.platform.PlatformThread;
 import io.abc_def.kickstart_fx.util.ThreadHelper;
@@ -94,6 +95,8 @@ public class AppDialog {
             ThreadHelper.sleep(200);
         } else {
             var key = new Object();
+            // The nested loop might not have been entered, and exiting a loop that does not exist fails
+            var inNestedLoop = new AtomicBoolean();
             PlatformThread.runLaterIfNeededBlocking(() -> {
                 synchronized (modalOverlays) {
                     modalOverlays.add(o);
@@ -103,7 +106,7 @@ public class AppDialog {
                             if (!c.getList().contains(o)) {
                                 var transition = new PauseTransition(Duration.millis(200));
                                 transition.setOnFinished(e -> {
-                                    if (wait) {
+                                    if (inNestedLoop.get()) {
                                         PlatformThread.exitNestedEventLoop(key);
                                     }
                                 });
@@ -115,8 +118,18 @@ public class AppDialog {
                 }
             });
             if (wait) {
-                PlatformThread.enterNestedEventLoop(key);
-                waitForDialogClose(o);
+                // Busy waiting on the platform thread would block the dialog from ever closing
+                if (!Platform.canStartNestedEventLoop()) {
+                    TrackEvent.warn("Unable to wait for dialog close as no nested event loop can be started");
+                    return;
+                }
+
+                inNestedLoop.set(true);
+                try {
+                    PlatformThread.enterNestedEventLoop(key);
+                } finally {
+                    inNestedLoop.set(false);
+                }
             }
         }
     }

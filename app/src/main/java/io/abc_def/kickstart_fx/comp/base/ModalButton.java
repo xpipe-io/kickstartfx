@@ -57,7 +57,7 @@ public class ModalButton {
                 false);
     }
 
-    public static Runnable toggle(Property<Boolean> prop) {
+    public static Runnable setTrue(Property<Boolean> prop) {
         return () -> {
             prop.setValue(true);
         };

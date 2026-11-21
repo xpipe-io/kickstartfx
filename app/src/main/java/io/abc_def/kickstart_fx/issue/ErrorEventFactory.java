@@ -29,7 +29,7 @@ public class ErrorEventFactory {
                 t,
                 t.getMessage() != null
                         && Arrays.stream(s)
-                                .map(String::toLowerCase)
+                                .map(string -> string.toLowerCase(Locale.ROOT))
                                 .anyMatch(string ->
                                         t.getMessage().toLowerCase(Locale.ROOT).contains(string)));
     }

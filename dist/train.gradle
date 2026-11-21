@@ -66,6 +66,6 @@ tasks.register('trainAot', DefaultTask) {
         def cfg = file(cfgFile)
         cfg.text = cfg.text + "java-options=-XX:AOTCache=$cfgCache\n"
 
-        delete(project.file("$distDir/local_train"))
+        delete(file("$distDir/local_train"))
     }
 }

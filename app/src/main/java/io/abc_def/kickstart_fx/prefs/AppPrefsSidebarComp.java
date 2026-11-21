@@ -62,9 +62,14 @@ public class AppPrefsSidebarComp extends SimpleRegionBuilder {
         var vbox = new VerticalComp(buttons).style("sidebar");
         vbox.apply(struc -> {
             AppPrefs.get().getSelectedCategory().subscribe(val -> {
+                // Null is only set temporarily to reset the scroll position
+                if (val == null) {
+                    return;
+                }
+
                 PlatformThread.runLaterIfNeeded(() -> {
-                    var index = val != null ? effectiveCategories.indexOf(val) : 0;
-                    if (index >= struc.getChildren().size()) {
+                    var index = effectiveCategories.indexOf(val);
+                    if (index < 0 || index >= struc.getChildren().size()) {
                         return;
                     }
 

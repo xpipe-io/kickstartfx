@@ -6,10 +6,8 @@ import io.abc_def.kickstart_fx.core.AppI18n;
 import io.abc_def.kickstart_fx.core.AppProperties;
 import io.abc_def.kickstart_fx.core.mode.AppOperationMode;
 import io.abc_def.kickstart_fx.core.window.AppDialog;
-import io.abc_def.kickstart_fx.platform.PlatformInit;
 import io.abc_def.kickstart_fx.update.AppDistributionType;
 import io.abc_def.kickstart_fx.util.Hyperlinks;
-import io.abc_def.kickstart_fx.util.ModuleLayerLoader;
 import io.abc_def.kickstart_fx.util.ThreadHelper;
 
 public class TerminalErrorHandler extends GuiErrorHandlerBase implements ErrorHandler {
@@ -44,11 +42,6 @@ public class TerminalErrorHandler extends GuiErrorHandlerBase implements ErrorHa
 
     private void handleGui(ErrorEvent event) {
         try {
-            AppProperties.init();
-            ModuleLayerLoader.loadAll(ModuleLayer.boot(), t -> {
-                ErrorEventFactory.fromThrowable(t).handle();
-            });
-            PlatformInit.init(true);
             ErrorHandlerDialog.showAndWait(event);
         } catch (Throwable r) {
             event.clearAttachments();
